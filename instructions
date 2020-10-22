@@ -1,8 +1,21 @@
+## First, install Python3
+
 ## Instructions to create a virtual environment
 
 python3 -m pip install --user virtualenv
 python3 -m venv env
 source env/bin/activate
+
+## To install libs
+python3 install -r requirements.txt
+
+## DO NOT USE THIS
+## This is to create the django project once
+django-admin.py startproject aswapp
+
+## Start the development web server
+cd aswapp
+python3 manage.py runserver
 
 ## To deactivate use
 deactivate
