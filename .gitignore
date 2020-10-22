@@ -1,1 +1,3 @@
 env/*
+aswapp/aswapp/__pycache__
+aswapp/db.sqlite3
