@@ -1,3 +1,4 @@
 env/*
-aswapp/aswapp/__pycache__
+aswapp/*/__pycache__
+aswapp/*/migrations
 aswapp/db.sqlite3
