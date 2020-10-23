@@ -17,8 +17,24 @@ django-admin.py startproject aswapp
 cd aswapp
 python3 manage.py runserver
 
-## 
+## Run after new model 
+python3 manage.py makemigrations
+
+## Sync db with settings.py
 python3 manage.py migrate
 
-## To deactivate use
-deactivate
+## Create a django app
+## Django app - component
+python3 manage.py startapp NAME_OF_YOUR_APP
+
+## Create user with access to admin
+python3 manage.py createsuperuser NAME_OF_USER
+
+## Open Django shell
+python3 manage.py shell
+>> from APP_NAME.models import MODEL
+>> MODEL.objects.all() ## List all objects of that model
+>> MODEL.objects.create(**args) ## Create an object of that model 
+
+## To deactivate virtualenv use
+deactivate 
