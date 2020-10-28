@@ -11,6 +11,12 @@ class Contribution(models.Model):
 
     class Meta:
         abstract = True
+    
+    objects = models.Manager()
+
+    # def get_all (self):
+    #    rel_objs = self._meta.get_all_related_objects()
+    #    return [getattr(self, x.get_accessor_name()) for x in rel_objs if x.model != type(self)]
 
 class Url(Contribution):
     kind = 'url'
