@@ -22,7 +22,7 @@ urlpatterns = [
     path(r'admin/', admin.site.urls),
     #path(r'', news_view, name='news'),
     #path(r'contact/', news_view, name='contact')
-    #path(r'register/', include('register.urls')),
+    path(r'', include('contributions.urls')),
 ]
 
 
