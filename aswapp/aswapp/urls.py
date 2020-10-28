@@ -15,7 +15,27 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import include, url
+#from contributions.views import news_view, contact_view
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(r'admin/', admin.site.urls),
+    #path(r'', news_view, name='news'),
+    #path(r'contact/', news_view, name='contact')
+    #path(r'register/', include('register.urls')),
 ]
+
+
+"""
+
+urls.py file contains the project level URL information. 
+URL is universal resource locator and it provides you with 
+the address of the resource (images, webpages, web-applications) 
+and other resources for your website.
+
+The main purpose of this file is to connect the web-apps with 
+the project. Anything you will be typing in the URL bar will 
+be processed by this urls.py file. Then, it will correspond 
+your request to the designated app you connected to it.
+
+"""
