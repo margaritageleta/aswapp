@@ -5,5 +5,8 @@
 {% block content %}
 <h1>Hello {{ request.user }}!</h1>
 
+    {% for contribution in contributions %}
+        {{ contribution.content }}
+    {% endfor %}
 <p>This is a template</p>
 {% endblock %}
