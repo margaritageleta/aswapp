@@ -1,5 +1,12 @@
 from django.shortcuts import render
 from .models import Contribution, Url, Ask
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from django.views.generic import FormView
+from .forms import SubmissionForm
+
+
+
 
 # Create your views here.
 
@@ -14,13 +21,10 @@ def news_view(request, *args, **kwargs):
     context = {
       'contributions': contributions,
     }
-    print("-------------------------------------------")
-    print(context)
-
+    print("------------------------------")
     return render(request, "news.html", context) # the last is context
 
 def newest_view(request, *args, **kwargs):
-    print(request.user) # who is requesting
 
     contributions = Url.objects.all()
     contributions.append(Ask.objects.all())
@@ -28,12 +32,35 @@ def newest_view(request, *args, **kwargs):
     context = {
         'contributions': contributions,
     }
-    print("Newest - - - - ")
-    print("-------------------------------------------")
     print(context)
 
     return render(request, "newest.html", context) 
 
 def submit_view(request, *args, **kwargs):
-    print(request.user) # who is requesting
-    return render(request, "submit.html", {}) # the last is context
+    context = {}
+    return render(request, "submit.html", context) # the last is context
+
+
+class SubmitView(FormView):
+    form_class = SubmissionForm
+    template_name = 'submit.html'
+
+    def form_valid(self, form):
+        data = form.cleaned_data 
+        if (data['title'] is None): return HttpResponse('That is not a valid title')
+        else:            
+            if data['url'] is not None: 
+                contrib = Url.objects.create(
+                    title = data['title'],            
+                    content = data['text'],
+                    url = data['url']
+
+                )
+            else: 
+                contrib = Ask.objects.create(
+                    title = data['title'],            
+                    content = data['text']
+                )
+        
+        contrib.save()
+        return HttpResponse(contrib)

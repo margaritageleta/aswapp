@@ -15,19 +15,14 @@ class Contribution(models.Model):
         abstract = True
 
     objects = models.Manager()
-   
-    # @classmethod
-    # def get_subclasses(self, abstract_class):
-    #     result = []
-    #     for model in apps.get_app_config('contributions').get_models():
-    #         if issubclass(model, abstract_class) and model is not abstract_class:
-    #             result.append(model)
-    #     return result
 
 class Ask(Contribution):
+
     kind = 'ask'          
-class Url(Contribution):   
+class Url(Contribution): 
+    url = models.URLField(null=True)  
     kind = 'url'
+ 
     
 
 
