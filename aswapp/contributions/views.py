@@ -1,17 +1,18 @@
 from django.shortcuts import render
 from .models import Contribution, Url, Ask
 
-
-
 # Create your views here.
 
 def news_view(request, *args, **kwargs):
-    print(request.user) # who is requesting
-    urls = Contribution.objects.instance_of(Url)
-    print(urls)
+    
+    contributions = []
+    for subclass in Contribution.__subclasses__():
+        for instance in subclass.objects.all():
+            contributions.append(instance)
+    contributions.sort(key=lambda x: x.created_at, reverse=True)
 
     context = {
-      'contributions': urls,
+      'contributions': contributions,
     }
     print("-------------------------------------------")
     print(context)

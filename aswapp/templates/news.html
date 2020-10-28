@@ -6,8 +6,17 @@
 <h1>Hello {{ request.user }}!</h1>
 
     {% for contribution in contributions %}
-        {{  contribution.content }}
+    <div>
+        <div>
+            <p>{{ forloop.counter }}</p>
+            <div>
+                <p>{{ contribution.name }}</p>
+                <p>{{ contribution.content }}</p>
+                <p>{{ contribution.created_at }}</p>
+            </div>
+        </div>
+    </div>
+    <hr>
     {% endfor %}
 
-<p>This is a template</p>
 {% endblock %}
