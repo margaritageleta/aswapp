@@ -38,3 +38,6 @@ python3 manage.py shell
 
 ## To deactivate virtualenv use
 deactivate 
+
+## To link static files
+python3 manage.py collectstatic -link --noinput

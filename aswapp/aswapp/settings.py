@@ -57,10 +57,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'aswapp.urls'
 
+print(os.path.join(BASE_DIR,'templates'))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': ['aswapp/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -124,3 +125,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+print(BASE_DIR)
+print(os.path.join(BASE_DIR, 'static'))
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+STATICFILES_FINDERS = (
+   'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+   'django.contrib.staticfiles.finders.FileSystemFinder',
+)
+"""
+STATICFILES_DIRS =( os.path.join(STATIC_ROOT, 'css/'),
+                    os.path.join(STATIC_ROOT, 'javascript/'),
+                    os.path.join(STATIC_ROOT, 'images/')
+                  )
+"""
