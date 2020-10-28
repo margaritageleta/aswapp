@@ -4,3 +4,5 @@ aswapp/*/migrations
 aswapp/db.sqlite3
 .DS_Store
 aswapp/.DS_Store
+.vscode/launch.json
+.vscode/settings.json
