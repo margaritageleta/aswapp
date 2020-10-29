@@ -6,3 +6,4 @@ aswapp/db.sqlite3
 aswapp/.DS_Store
 .vscode/launch.json
 .vscode/settings.json
+aswapp/register/*
