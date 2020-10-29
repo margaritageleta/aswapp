@@ -49,18 +49,20 @@ class SubmitView(FormView):
         data = form.cleaned_data 
         if (data['title'] is None): return HttpResponse('That is not a valid title')
         else:            
-            if data['url'] is not None: 
-                contrib = Url.objects.create(
-                    title = data['title'],            
-                    content = data['text'],
-                    url = data['url']
+            # if data['url'] is not None: 
+            #     contrib = Url.objects.create(
+            #         title = data['title'],            
+            #         content = data['text'],
+            #         url = data['url']
 
-                )
-            else: 
-                contrib = Ask.objects.create(
-                    title = data['title'],            
-                    content = data['text']
-                )
-        
+            #     )
+            # else: 
+            #     contrib = Ask.objects.create(
+            #         title = data['title'],            
+            #         content = data['text']
+                # )
+            contrib = Url.objects.create(
+            title = data['title'],            
+            content = data['text'], )
         contrib.save()
         return HttpResponse(contrib)

@@ -17,10 +17,9 @@ class Contribution(models.Model):
     objects = models.Manager()
 
 class Ask(Contribution):
-
     kind = 'ask'          
 class Url(Contribution): 
-    url = models.URLField(null=True)  
+    # url = models.URLField(null=True)  
     kind = 'url'
  
     
