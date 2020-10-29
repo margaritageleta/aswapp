@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from .models import Contribution, Url, Ask
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import FormView
 from .forms import SubmissionForm
+from django.contrib import messages
 
 
 
@@ -36,33 +37,32 @@ def newest_view(request, *args, **kwargs):
 
     return render(request, "newest.html", context) 
 
-def submit_view(request, *args, **kwargs):
-    context = {}
-    return render(request, "submit.html", context) # the last is context
-
 
 class SubmitView(FormView):
     form_class = SubmissionForm
     template_name = 'submit.html'
+    context = {}
 
     def form_valid(self, form):
-        data = form.cleaned_data 
-        if (data['title'] is None): return HttpResponse('That is not a valid title')
-        else:            
-            # if data['url'] is not None: 
-            #     contrib = Url.objects.create(
-            #         title = data['title'],            
-            #         content = data['text'],
-            #         url = data['url']
+        data = form.cleaned_data
+        # print("_________________")
+        # print(data)
+        # print("_________________")
+        title = data['title']
+        url = data['url']
+        text = data['text']     
 
-            #     )
-            # else: 
-            #     contrib = Ask.objects.create(
-            #         title = data['title'],            
-            #         content = data['text']
-                # )
-            contrib = Url.objects.create(
-            title = data['title'],            
-            content = data['text'], )
+        if url is '': #Then is an Ask submission
+            contrib = Ask(title = title, content = text)
+            return HttpResponseRedirect('/news')
+        else: #An Url submission
+            contrib = Url(title=title, content=text, url=url)
+            return HttpResponseRedirect('/news')        
         contrib.save()
-        return HttpResponse(contrib)
+
+        
+
+
+
+
+
