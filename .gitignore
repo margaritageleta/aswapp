@@ -1,10 +1,11 @@
 env/*
 aswapp/*/__pycache__
 aswapp/*/migrations
-aswapp/db.sqlite3
 .DS_Store
 aswapp/.DS_Store
 .vscode/launch.json
 .vscode/settings.json
+aswapp/register/*
+aswapp/db.sqlite3
 aswapp/static/admin/*
 aswapp/static/staticfiles.json

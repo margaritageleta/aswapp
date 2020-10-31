@@ -1,15 +1,21 @@
 
+{% extends 'base.html' %}
 
-<h2>Submit</h2>
+  {% block title %} 
+    <title>Submit</title> 
+  {% endblock %}
 
-<body>
-    <form action="", method="POST">
+  {% block content %}
+    <body>
+      <form action="", method="POST">
         {% csrf_token %}
         {{form.as_p}}
-      <button type="submit">Submit </button>
-    </form>   
+        <button type="submit">Submit </button>
+      </form>   
 
-</body>
+    </body>
  
 
-<p>Leave url blank to submit a question for discussion. If there is no url, the text (if any) will appear at the top of the thread.</p>
+    <p>Leave url blank to submit a question for discussion. If there is no url, the text (if any) will appear at the top of the thread.</p>
+
+  {% endblock %}

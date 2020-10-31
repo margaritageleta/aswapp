@@ -9,6 +9,7 @@ class Contribution(models.Model):
     
     title = models.CharField(max_length=80)
     content = models.TextField()
+    url = models.URLField(null=True)
     created_at = models.DateTimeField(default=timezone.now())  
     
     class Meta:
@@ -17,9 +18,9 @@ class Contribution(models.Model):
     objects = models.Manager()
 
 class Ask(Contribution):
-    kind = 'ask'          
+    kind = 'ask'       
+    url = None
 class Url(Contribution): 
-    # url = models.URLField(null=True)  
     kind = 'url'
  
     
