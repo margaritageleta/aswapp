@@ -8,11 +8,11 @@
     <div style="height: 10px;"></div>
     <div class="contribution">
         <div>
-            <div class="counter"><p>{{ forloop.counter }}.</p></div>
+            <div class="counter"><p>{{ forloop.counter }}. ▲</p></div>
             <div>
                 <p class="title">{{ contribution.title }}</p>
                 <!--<p>{{ contribution.content }}</p>-->
-                <p class="created-at"><a href=''>{{ contribution.created_at|naturaltime }}</a></p>
+                <p class="created-at"><a href="{% url 'show_contribution_view' kind=contribution.kind id=contribution.id %}">{{ contribution.created_at|naturaltime }}</a></p>
             </div>
         </div>
     </div>
