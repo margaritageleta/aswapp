@@ -5,7 +5,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import FormView
 from .forms import SubmissionForm
 from django.contrib import messages
-
+from django.urls import reverse
+from django import forms
 
 
 
@@ -43,6 +44,33 @@ def newest_view(request, *args, **kwargs):
 
     return render(request, "newest.html", context) 
 
+class CommentForm(forms.Form):
+    text = forms.CharField(widget=forms.Textarea(attrs={'rows': 10, 'cols': 50}), max_length=160)
+
+def show_contribution_view (request, kind, id):
+     # get the contrib from the db
+    try:
+        if kind == 'ask':
+            contribution = Ask.objects.filter(id = id).first()
+        elif kind == 'url':
+            contribution = Url.objects.filter(id = id).first()
+        else:
+            print('nonsense')
+            raise Exception
+    except:
+        contribution = None
+    
+    # back to square one
+    if contribution is None:
+        return HttpResponseRedirect(reverse('news_view'))
+
+    context = {
+        'contribution': contribution,
+        'form': CommentForm()
+    }
+
+    return render(request, "contribution.html", context)
+    
 
 class SubmitView(FormView):
     form_class = SubmissionForm
