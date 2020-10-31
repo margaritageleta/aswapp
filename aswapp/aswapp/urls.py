@@ -18,12 +18,10 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
-#from contributions.views import news_view, contact_view
+from contributions.views import news_view
 
 urlpatterns = [
     path(r'admin/', admin.site.urls),
-    #path(r'', news_view, name='news'),
-    #path(r'contact/', news_view, name='contact')
     path(r'', include('contributions.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
