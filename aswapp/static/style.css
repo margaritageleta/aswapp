@@ -57,7 +57,7 @@ body > div {
 
 .contribution > div {
     display: grid;
-    grid-template-columns: 30px auto;
+    grid-template-columns: 50px auto;
 }
 
 .contribution .counter {
