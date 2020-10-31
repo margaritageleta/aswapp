@@ -3,20 +3,19 @@
 {% block title %}<title>News</title>{% endblock %}
 
 {% block content %}
-
+    {% load humanize %} 
     {% for contribution in contributions %}
+    <div style="height: 10px;"></div>
     <div class="contribution">
-        <h1>NEWS WELCOME</h1>
         <div>
-            <p>{{ forloop.counter }}</p>
+            <div class="counter"><p>{{ forloop.counter }}.</p></div>
             <div>
-                <p>{{ contribution.name }}</p>
-                <p>{{ contribution.content }}</p>
-                <p>{{ contribution.created_at }}</p>
+                <p class="title">{{ contribution.title }}</p>
+                <!--<p>{{ contribution.content }}</p>-->
+                <p class="created-at"><a href=''>{{ contribution.created_at|naturaltime }}</a></p>
             </div>
         </div>
     </div>
-    <hr>
     {% endfor %}
 
 {% endblock %}
