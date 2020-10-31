@@ -3,11 +3,9 @@
 {% block title %}<title>News</title>{% endblock %}
 
 {% block content %}
-<h1>Hello {{ request.user }}!</h1>
-
+    <h1>NEWEST WELCOME</h1>
     {% for contribution in contributions %}
         {{  contribution.content }}
     {% endfor %}
 
-<p>This is a template</p>
 {% endblock %}

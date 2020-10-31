@@ -22,18 +22,24 @@ def news_view(request, *args, **kwargs):
     context = {
       'contributions': contributions,
     }
-    print("------------------------------")
+    
+    print('NEWS')
+
     return render(request, "news.html", context) # the last is context
 
 def newest_view(request, *args, **kwargs):
 
-    contributions = Url.objects.all()
-    contributions.append(Ask.objects.all())
+    contributions = []
+    for subclass in Contribution.__subclasses__():
+        for instance in subclass.objects.all():
+            contributions.append(instance)
+    contributions.sort(key=lambda x: x.created_at, reverse=True)
 
     context = {
-        'contributions': contributions,
+      'contributions': contributions,
     }
-    print(context)
+    
+    print('NEWEST')
 
     return render(request, "newest.html", context) 
 

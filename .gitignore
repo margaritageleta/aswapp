@@ -7,3 +7,5 @@ aswapp/.DS_Store
 .vscode/settings.json
 aswapp/register/*
 aswapp/db.sqlite3
+aswapp/static/admin/*
+aswapp/static/staticfiles.json
