@@ -4,5 +4,5 @@ aswapp/*/migrations
 aswapp/db.sqlite3
 .DS_Store
 aswapp/.DS_Store
-aswapp/aswapp/static/admin/*
-aswapp/aswapp/static/staticfiles.json
+aswapp/static/admin/*
+aswapp/static/staticfiles.json
