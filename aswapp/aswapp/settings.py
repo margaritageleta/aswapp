@@ -60,7 +60,7 @@ ROOT_URLCONF = 'aswapp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,4 +123,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+
+STATIC_ROOT = '' #os.path.join(os.path.dirname(BASE_DIR), 'static')
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+   os.path.join(BASE_DIR,'static'),
+)
+
+print(f'ROOT: {STATIC_ROOT}')
+print(f'STATIC: {STATIC_URL}')
+print(f'DIRS: {STATICFILES_DIRS}')
+
+"""
+STATICFILES_FINDERS = (
+   'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+   'django.contrib.staticfiles.finders.FileSystemFinder',
+)
+"""
+"""
+STATICFILES_DIRS =( os.path.join(STATIC_ROOT, 'css/'),
+                    os.path.join(STATIC_ROOT, 'javascript/'),
+                    os.path.join(STATIC_ROOT, 'images/')
+                  )
+"""

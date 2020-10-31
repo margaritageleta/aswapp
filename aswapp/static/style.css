@@ -1,0 +1,43 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+html { 
+    display: flex;
+    justify-content: center;
+}
+
+body {
+    background-color: white;
+    width: 90%;
+    margin-top: 7.5px;
+}
+
+nav {
+    background-color: #ff6b0f;
+
+}
+
+ul, li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+li {
+    padding: 2px 6px;
+}
+
+body > div {
+    background-color: rgba(254, 250, 236, 0.851);
+    width: 100%;
+    height: max-content;
+}
+
+.contribution * {
+    padding: 0;
+    margin: 0;
+}

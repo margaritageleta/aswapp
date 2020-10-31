@@ -2,10 +2,12 @@
 <html lang="en">
     <head>
         <title>ASW app</title>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
         {% block title %}{% endblock %}
     </head>
     <body>
-        {% include 'navbar.html' %}
-        {% block content %}{% endblock %}
+        <nav>{% include 'navbar.html' %}</nav>
+        <div>{% block content %}{% endblock %}</div>
     </body>
 </html>
