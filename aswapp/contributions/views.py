@@ -52,9 +52,9 @@ class SubmitView(FormView):
         url = data['url']
         text = data['text']     
 
-        if url is '': #Then is an Ask submission
+        if url is not '' and text is not '': #Throw Error
             contrib = Ask(title = title, content = text)
-            return HttpResponseRedirect('/news')
+            return HttpResponseRedirect('/submit/badsubmission')
         else: #An Url submission
             contrib = Url(title=title, content=text, url=url)
             return HttpResponseRedirect('/news')        
