@@ -11,17 +11,22 @@ class Contribution(models.Model):
     content = models.TextField()
     url = models.URLField(null=True, unique=True)
     created_at = models.DateTimeField(default=timezone.now())  
+
+    comments = []
     
     class Meta:
         abstract = True
 
     objects = models.Manager()
+    def addComment(self, comment): 
+        self.comments.append(comment)
 
 class Ask(Contribution):
     kind = 'ask'       
     url = None
 class Url(Contribution): 
     kind = 'url'
+    
  
     
 
