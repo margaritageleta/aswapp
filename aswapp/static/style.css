@@ -1,3 +1,7 @@
+:root {
+    --orange-hn: #ff6b0f;
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -16,7 +20,7 @@ body {
 }
 
 nav {
-    background-color: #ff6b0f;
+    background-color: var(--orange-hn);
 
 }
 
@@ -31,6 +35,15 @@ li {
     padding: 2px 6px;
 }
 
+.bar::after {
+    content: '  |';
+    white-space: pre;
+}
+
+ul li:first-child {
+    padding: 2px 2px;
+}
+
 body > div {
     background-color: rgba(254, 250, 236, 0.851);
     width: 100%;
@@ -40,4 +53,42 @@ body > div {
 .contribution * {
     padding: 0;
     margin: 0;
+}
+
+.contribution > div {
+    display: grid;
+    grid-template-columns: 50px auto;
+}
+
+.contribution .counter {
+    align-self: flex-start;
+    justify-self: center;
+    color: grey;
+}
+
+.contribution .created-at {
+    color: grey;
+    font-size: small;
+}
+
+.logo { 
+    border: 1px white solid; 
+    height: 16px; 
+    width: 16px; 
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+a, a:link, a:active {
+    text-decoration: none;
+    color: black;
+    font-size: smaller;
+    align-self: center;
+    color: inherit
+}
+
+.created-at a:hover {
+    text-decoration: underline;
 }

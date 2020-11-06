@@ -9,7 +9,7 @@ class Contribution(models.Model):
     
     title = models.CharField(max_length=80)
     content = models.TextField()
-    url = models.URLField(null=True)
+    url = models.URLField(null=True, unique=True)
     created_at = models.DateTimeField(default=timezone.now())  
     
     class Meta:

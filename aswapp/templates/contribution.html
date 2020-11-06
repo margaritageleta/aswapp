@@ -4,18 +4,21 @@
 
 {% block content %}
     {% load humanize %} 
-    {% for contribution in contributions %}
     <div style="height: 10px;"></div>
     <div class="contribution">
-        <div>
-            <div class="counter"><p>{{ forloop.counter }}. ▲</p></div>
+        <div style="grid-template-columns: 30px auto;">
+            <div class="counter"><p>▲</p></div>
             <div>
                 <p class="title">{{ contribution.title }}</p>
                 <!--<p>{{ contribution.content }}</p>-->
                 <p class="created-at"><a href="{% url 'show_contribution_view' kind=contribution.kind id=contribution.id %}">{{ contribution.created_at|naturaltime }}</a></p>
+                <form action="", method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Submit </button>
+                </form> 
             </div>
         </div>
     </div>
-    {% endfor %}
 
 {% endblock %}
