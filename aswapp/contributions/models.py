@@ -7,6 +7,7 @@ from django.apps import apps
 
 class Contribution(models.Model):
     
+    
     title = models.CharField(max_length=80)
     content = models.TextField()
     url = models.URLField(null=True, unique=True)
@@ -26,6 +27,10 @@ class Ask(Contribution):
     url = None
 class Url(Contribution): 
     kind = 'url'
+
+    def exists(self, url):
+        if Url.objects.exists.url == url: return True
+        return False 
     
  
     
