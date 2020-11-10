@@ -7,3 +7,5 @@ class SubmissionForm(forms.Form):
     text = forms.CharField(required=False)
 
 
+class CommentForm(forms.Form):
+    comment = forms.CharField(widget=forms.Textarea(attrs={'rows': 10, 'cols': 50}), max_length=160)

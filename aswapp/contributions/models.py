@@ -7,30 +7,41 @@ from django.apps import apps
 
 class Contribution(models.Model):
     
-    
-    title = models.CharField(max_length=80)
-    content = models.TextField()
-    url = models.URLField(null=True, unique=True)
-    created_at = models.DateTimeField(default=timezone.now())  
-
-    comments = []
+    number_votes = models.IntegerField(default=0, null=False)
+    created_at = models.DateTimeField(default=timezone.now(), null=False)
+    modified_at = models.DateTimeField(null=True, blank=True)
     
     class Meta:
         abstract = True
 
     objects = models.Manager()
-    def addComment(self, comment): 
-        self.comments.append(comment)
 
-class Ask(Contribution):
-    kind = 'ask'       
-    url = None
-class Url(Contribution): 
-    kind = 'url'
 
-    def exists(self, url):
-        if Url.objects.exists.url == url: return True
-        return False 
+
+class Publication(Contribution):
+
+    class PublicationTypes(models.IntegerChoices):
+       ASK = 0
+       URL = 1
+    
+
+    title = models.CharField(max_length=80, null=False)
+    question = models.CharField(max_length=80, blank=True)
+    url = models.URLField(blank=True)
+    kind = models.IntegerField(max_length=1, choices=PublicationTypes.choices) 
+
+
+class Comment(Contribution):
+    #If parent is None then is the first comment, else is a reply to a existing comment
+    #If parent is None references_publication is not None
+    
+    comment = models.CharField(max_length=80, null=False)    
+    referenced_publication = models.ForeignKey(Publication, on_delete=models.CASCADE, blank=True, null=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, related_name="reply", null=True)
+
+
+
+
     
  
     
