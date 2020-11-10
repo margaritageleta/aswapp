@@ -8,6 +8,7 @@ from django.apps import apps
 class Contribution(models.Model):
     
     number_votes = models.IntegerField(default=0, null=False)
+    voted = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now(), null=False)
     modified_at = models.DateTimeField(null=True, blank=True)
     
