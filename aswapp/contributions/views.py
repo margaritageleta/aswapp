@@ -13,6 +13,33 @@ from django import forms
 # Create your views here.
 
 
+
+
+class NewsView(): 
+    #This class manages to show all the Url publications, sorted by the number of votes
+    pass
+    
+    def get_url_publications(): 
+    #This method gets all the publications type url
+        pass
+    def sort_url_publications():
+    #This method return the publications sorted by number of votes
+        pass
+    def show():
+    #This method build the html news.html with the url publications sorted. 
+        pass
+    pass
+
+class NewestView(): 
+    #This class manages to show all Publications, sorted by descendent creation date 
+    pass 
+class SubmitView(): 
+    #This class manages to ahow a form for creating a new Publication, and creates the publication with its features.
+    pass
+class PublicationView(): 
+    #This class manages to show a particular publication (Url or Ask) and show its comments and the replies to each comment. 
+    pass
+
 def news_view(request, *args, **kwargs):
 
     
