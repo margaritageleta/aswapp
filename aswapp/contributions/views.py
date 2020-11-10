@@ -173,15 +173,3 @@ def show_contribution_view (request, kind, id):
 
 #         return HttpResponseRedirect(reverse('news_view'))
     
-   
-
-
-
-
-
-        
-
-
-
-
-
