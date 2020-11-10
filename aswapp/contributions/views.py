@@ -107,20 +107,34 @@ class PublicationView(View):
 
     template_name = "contribution.html"
     publication = None
+    comments = {}
+
+    def get_replies(self, reply):
+        # Obtains replies of comments recursively
+        subcomments = {}
+        subreplies = Comment.objects.filter(referenced_publication=self.publication, parent=reply)
+        for subreply in subreplies:
+            subcomments[subreply] = self.get_replies(subreply)
+        return subcomments if subcomments else None
 
     def get(self, request, id, *args, **kwargs):
-        # This method builds the client page newests.html with the publications sorted 
+        # This method builds the client page newests.html with the 
+        # publications sorted 
         try:
-            publication = Publication.objects.filter(id=id).first()
+            self.publication = Publication.objects.filter(id=id).first()
             replies = Comment.objects.filter(referenced_publication=self.publication, parent=None)
+            
+            for reply in replies:
+                self.comments[reply] = self.get_replies(reply)
+        
         except Exception as e:
             # back to square one
             return HttpResponseRedirect(reverse('news_view'))
 
         context = {
-            'contribution': publication,
+            'contribution': self.publication,
             'form': CommentForm(),
-            'replies': replies
+            'replies': self.comments
         }
         # get_comment(request)
         return render(request, "contribution.html", context)
