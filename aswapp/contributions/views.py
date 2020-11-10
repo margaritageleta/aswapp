@@ -6,8 +6,9 @@ from django.views.generic import FormView
 from .forms import SubmissionForm
 from django.views import View
 # from django.contrib import messages
-# from django.urls import reverse
+from django.urls import reverse
 from django import forms
+from contributions.forms import CommentForm
 
 # Create your views here.
 
@@ -118,64 +119,30 @@ class SubmitView(FormView):
         
         return HttpResponseRedirect("/news")   
 
-class PublicationView(): 
-    #This class manages to show a particular publication (Url or Ask) and show its comments and the replies to each comment. 
-    pass
+class PublicationView(View): 
+    # This class manages to show a particular publication 
+    # (URL or Ask) and show its comments and the replies to each comment 
 
-class CommentForm(forms.Form):
-    text = forms.CharField(widget=forms.Textarea(attrs={'rows': 10, 'cols': 50}), max_length=160)
-   
+    template_name = "contribution.html"
+    publication = None
+
+    def get(self, request, id, *args, **kwargs):
+        # This method builds the client page newests.html with the publications sorted 
+        try:
+            publication = Publication.objects.filter(id=id).first()
+            replies = Comment.objects.filter(referenced_publication=self.publication, parent=None)
+        except Exception as e:
+            # back to square one
+            return HttpResponseRedirect(reverse('news_view'))
+
+        context = {
+            'contribution': publication,
+            'form': CommentForm(),
+            'replies': replies
+        }
+        # get_comment(request)
+        return render(request, "contribution.html", context)
     
-
-def show_contribution_view (request, kind, id):
-    
-     # get the contrib from the db
-    try:
-        # if kind == 'ask':
-        #     contribution = Ask.objects.filter(id = id).first()
-        # elif kind == 'url':
-        #     contribution = Url.objects.filter(id = id).first()
-        # else:
-        #     print('nonsense')
-        #     raise Exception
-        p = Publication.objects.filter(id = 1).first()
-        replies = Comment.objects.filter(referenced_publication=p, parent=None)
-
-    except:
-        contribution = None
-    
-    # # back to square one
-    # if contribution is None:
-    #     return HttpResponseRedirect(reverse('news_view'))
-
-    context = {
-        'contribution': replies,
-        'form': CommentForm()
-
-    }
-    # get_comment(request)
-    return render(request, "contribution.html", context)
-    
-# class ContributionView(FormView): 
-#     pass
-#     form_class = CommentForm
-#     template_name = 'contribution.html'
-#     context = {}
-
-#     def form_valid(self, form): 
-#         data = form.cleaned_data
-#         text = data['comment']
-        
-#         new_comment = Comment(title=' ', content=text)
-
-#         new_comment.save()
-        
-
-#         return HttpResponseRedirect(reverse('news_view'))
-    
-   
-
-
 
 
 
