@@ -5,7 +5,9 @@
             <span>Y</span>
         </div>
     </li>
-    {% if form %}
+    {% if type == 'comment' %}
+        <li><b>Add Comment</b></li>
+    {% elif type == 'submit' %}
         <li><b>Submit</b></li>
     {% else %}
         <li><b>Hacker News</b></li>

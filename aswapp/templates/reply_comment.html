@@ -1,0 +1,49 @@
+
+{% extends 'base.html' %}
+
+    {% block title %} 
+    <title>Add Comment</title> 
+    {% endblock %}
+
+{% block content %}
+    <form action="", method="POST">
+      {% csrf_token %}
+      <table>
+        {% for field in form %}
+          {% if forloop.counter == 1 %}
+          <tr>
+            <th></th>
+            <td></td> 
+          </tr>  
+          {% endif %}
+          <tr>
+            <th class="label-tag">{{ field.label_tag }}</th>
+            <td>
+              {{ field.errors }}
+              {{ field }}
+            </td>
+          </tr>
+          {% if forloop.counter == 2 %}
+          <tr>
+            <th></th>
+            <td><b>or</b></td> 
+          </tr>  
+          {% endif %}
+        {% endfor %}
+        <tr>
+          <th></th>
+          <td><button type="submit">Submit</button></td>
+        </tr>
+        <tr>
+          <th></th>
+          <td>
+          </td>
+        </tr>
+      </table>
+      
+    </form>  
+
+
+  
+
+{% endblock %}

@@ -21,6 +21,7 @@ class NewsView(View):
     def get_url_publications(self): 
         # This method gets all the publications of type URL
         self.publications = Publication.objects.filter(kind = 1).all() 
+        print(self.publications)
     
     def sort_url_publications(self):
         # This method returns the publications sorted by number of votes
@@ -62,6 +63,31 @@ class NewestView(View):
 
 
 
+class ReplyView(FormView):
+    form = CommentForm()
+    template_name = 'reply_comment.html'
+    context = {}
+    
+    def get(self, request, id):
+        print(id)
+        comment = Comment.objects.get(id=id)
+        self.parent = comment
+        context = {
+            'comment': comment,
+            'form': self.form,
+            'type': 'comment'
+        }
+        return render(request, self.template_name, context)
+        
+    def post(self, request, id):
+        reply_text = request.POST['comment']
+        parent_comment = Comment.objects.get(id=id)
+        print(parent_comment)
+        new_reply = Comment(comment=reply_text, parent=parent_comment)
+        new_reply.save()
+
+        return HttpResponseRedirect("/news")
+
 class CommentView(FormView):
     form_class = CommentForm
     template_name = 'contribution.html'
@@ -84,17 +110,22 @@ class SubmitView(FormView):
     # creating a new Publication, and creates the 
     # publication with its features.
 
-    form_class = SubmissionForm
+    form = SubmissionForm()
     template_name = 'submit.html'
-    context = {}
+    context = {
+        'form': form,
+        'type': 'submit'
+    }
 
-    def form_valid(self, form):
-        data = form.cleaned_data
+    def get(self, request):
+        return render(request, self.template_name, self.context)
 
-        title = data['title']
-        url = data['url']
-        text = data['text']             
+    def post(self, request):                  
         
+        title = request.POST['title']
+        url = request.POST['url']
+        text = request.POST['text']
+
         if url == '' or url is None:
             kind = 0 # Is an Ask publication
         else:
@@ -107,8 +138,10 @@ class SubmitView(FormView):
             return HttpResponseRedirect("/news")   
 
         else:
+            # print("here")
             new_publication = Publication(title=title, question=text, url=url, kind=kind)
             new_publication.save()
+            # print(new_publication)
 
             # If it is a URL publications and has a comment associated
             # Create the comment and associate with publication
@@ -118,6 +151,8 @@ class SubmitView(FormView):
                 new_comment.save()            
         
             return HttpResponseRedirect("/news")   
+
+
 
 
 class PublicationView(View): 

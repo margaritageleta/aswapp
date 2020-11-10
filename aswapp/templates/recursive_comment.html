@@ -7,7 +7,7 @@
 </div>
 <div id="content-to-hide-{{ reply.id }}">
     <p class="content">{{ reply.comment }}</p>
-    <p class="comment-reply"><a href="">reply</a></p>
+    <p class="comment-reply"><a href="{% url 'reply_view' id=reply.id %}">reply</a></p>
 
     {% if subreplies %}
         {% for r, s in subreplies.items %}
