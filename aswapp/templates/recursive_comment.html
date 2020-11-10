@@ -1,0 +1,9 @@
+
+<p>{{ reply.comment }}</p>
+{% if subreplies %}
+    {% for r, s in subreplies.items %}
+        {%with reply=r subreplies=s template_name="recursive_comment.html" %}
+            {% include template_name %}
+        {% endwith%}
+    {% endfor %}
+{% endif %}

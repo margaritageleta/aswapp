@@ -21,4 +21,10 @@
         </div>
     </div>
 
+    {% for reply, subreplies in replies.items %}
+       
+        {%include "recursive_comment.html" %}
+        
+    {% endfor %}
+
 {% endblock %}
