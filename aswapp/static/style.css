@@ -92,3 +92,17 @@ a, a:link, a:active {
 .created-at a:hover {
     text-decoration: underline;
 }
+
+table .label-tag {
+    font-weight: lighter !important;
+    text-align: left;
+}
+
+table {
+    font-size: small;
+    color: grey;
+}
+
+table input[type='text'], table input[type='url'], table textarea {
+    width: 80%;
+}
