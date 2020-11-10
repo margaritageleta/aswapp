@@ -6,16 +6,45 @@
   {% endblock %}
 
   {% block content %}
-    <body>
       <form action="", method="POST">
         {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Submit </button>
-      </form>   
-
-    </body>
+        <table>
+          {% for field in form %}
+            {% if forloop.counter == 1 %}
+            <tr>
+              <th></th>
+              <td></td> 
+            </tr>  
+            {% endif %}
+            <tr>
+              <th class="label-tag">{{ field.label_tag }}</th>
+              <td>
+                {{ field.errors }}
+                {{ field }}
+              </td>
+            </tr>
+            {% if forloop.counter == 2 %}
+            <tr>
+              <th></th>
+              <td><b>or</b></td> 
+            </tr>  
+            {% endif %}
+          {% endfor %}
+          <tr>
+            <th></th>
+            <td><button type="submit">Submit</button></td>
+          </tr>
+          <tr>
+            <th></th>
+            <td>
+              <p>Leave url blank to submit a question for discussion. If there is no url, the text (if any) will appear at the top of the thread.</p>
+            </td>
+          </tr>
+        </table>
+        
+      </form>  
  
 
-    <p>Leave url blank to submit a question for discussion. If there is no url, the text (if any) will appear at the top of the thread.</p>
+    
 
   {% endblock %}
