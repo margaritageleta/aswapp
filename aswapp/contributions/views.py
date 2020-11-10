@@ -4,79 +4,67 @@ from .models import Publication, Comment
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import FormView
 from .forms import SubmissionForm
+from django.views import View
 # from django.contrib import messages
 # from django.urls import reverse
 from django import forms
 
-
-
 # Create your views here.
 
-
-
-
-class NewsView(): 
-    #This class manages to show all the Url publications, sorted by the number of votes
-    pass
+class NewsView(View): 
+    # This class manages the display of the 
+    # URL publications, sorted by the number of votes
+    template_name = "news.html"
+    publications = []
     
-    def get_url_publications(): 
-    #This method gets all the publications type url
-        pass
-    def sort_url_publications():
-    #This method return the publications sorted by number of votes
-        pass
-    def show():
-    #This method build the html news.html with the url publications sorted. 
-        pass
-    pass
+    def get_url_publications(self): 
+        # This method gets all the publications of type URL
+        self.publications = Publication.objects.filter(kind = 1).all() 
+    
+    def sort_url_publications(self):
+        # This method returns the publications sorted by number of votes
+        self.publications = sorted(self.publications, key = lambda x: x.created_at, reverse=True)
+        
+    def get(self, request, *args, **kwargs):
+        # This method builds the client page news.html with the URL publications sorted 
+        
+        self.get_url_publications()
+        self.sort_url_publications()
+        
+        context = {'contributions': self.publications}
+    
+        return render(request, self.template_name, context)
 
-class NewestView(): 
-    #This class manages to show all Publications, sorted by descendent creation date 
-    pass 
+class NewestView(View): 
+    # This class manages the display of 
+    # all Publications, sorted by descendent creation date
+    template_name = "newest.html"
+    publications = []
+    
+    def get_publications(self): 
+        # This method gets all the publications
+        self.publications = Publication.objects.all() 
+    
+    def sort_publications(self):
+        # This method returns the publications sorted by number of votes
+        self.publications = sorted(self.publications, key = lambda x: x.created_at, reverse=True)
+        
+    def get(self, request, *args, **kwargs):
+        # This method builds the client page newests.html with the publications sorted 
+        
+        self.get_publications()
+        self.sort_publications()
+        
+        context = {'contributions': self.publications}
+        print(context)
+        return render(request, self.template_name, context) 
+
 class SubmitView(): 
     #This class manages to ahow a form for creating a new Publication, and creates the publication with its features.
     pass
 class PublicationView(): 
     #This class manages to show a particular publication (Url or Ask) and show its comments and the replies to each comment. 
     pass
-
-def news_view(request, *args, **kwargs):
-
-    
-    
-    contributions = Publication.objects.all() 
-    contributions = sorted(contributions, key = lambda x: x.created_at, reverse=True)
-
-    return render(request, "news.html", {'contributions': contributions})
-    # contributions = []
-    # for subclass in Contribution.__subclasses__():
-    #     for instance in subclass.objects.all():
-    #         contributions.append(instance)
-    # contributions.sort(key=lambda x: x.created_at, reverse=True)
-
-    # context = {
-    #   'contributions': contributions,
-    # }
-    
-    # print('NEWS')
-
-    # return render(request, "news.html", context) # the last is context
-
-def newest_view(request, *args, **kwargs):
-    pass
-    # contributions = []
-    # for subclass in Contribution.__subclasses__():
-    #     for instance in subclass.objects.all():
-    #         contributions.append(instance)
-    # contributions.sort(key=lambda x: x.created_at, reverse=True)
-
-    # context = {
-    #   'contributions': contributions,
-    # }
-    
-    # print('NEWEST')
-
-    # return render(request, "newest.html", context) 
 
 class CommentForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea(attrs={'rows': 10, 'cols': 50}), max_length=160)
@@ -191,7 +179,8 @@ class SubmitView(FormView):
         #     contrib = Ask(title=title, content=text)
         #     contrib.save() 
         
-        return HttpResponseRedirect("/news")        
+        return HttpResponseRedirect("/news")   
+
 
 
         
