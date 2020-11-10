@@ -1,2 +1,2 @@
-web: waitress-serve --port=$PORT aswapp.wsgi:application
+web: python aswapp/manage.py runserver 0.0.0.0:$PORT
 heroku ps:scale web=1
