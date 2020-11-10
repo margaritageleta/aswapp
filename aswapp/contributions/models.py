@@ -40,6 +40,9 @@ class Comment(Contribution):
     referenced_publication = models.ForeignKey(Publication, on_delete=models.CASCADE, blank=True, null=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, related_name="reply", null=True)
 
+    # author = User ... TODO
+    created_at = models.DateTimeField(default=timezone.now(), null=False)
+
 
 
 

@@ -1,7 +1,8 @@
 
+{% load humanize %} 
 <div class="about">
     <span>anonymous</span>
-    <span>2 hours ago</span>
+    <span>{{ reply.created_at|naturaltime }}</span>
     <span class="show-more">[ - ]</span>
 </div>
 <p class="content">{{ reply.comment }}</p>
