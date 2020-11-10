@@ -1,9 +1,23 @@
 
-<p>{{ reply.comment }}</p>
+<div class="about">
+    <span>anonymous</span>
+    <span>2 hours ago</span>
+    <span class="show-more">[ - ]</span>
+</div>
+<p class="content">{{ reply.comment }}</p>
+<p class="comment-reply"><a href="">reply</a></p>
+
 {% if subreplies %}
     {% for r, s in subreplies.items %}
-        {%with reply=r subreplies=s template_name="recursive_comment.html" %}
-            {% include template_name %}
-        {% endwith%}
+        <table border="0">
+            <tbody>
+                <td valign="top">▲</td>
+                <td>
+                    {%with reply=r subreplies=s template_name="recursive_comment.html" %}
+                        {% include template_name %}
+                    {% endwith %}
+                </td>
+            </tbody>
+        </table>
     {% endfor %}
 {% endif %}

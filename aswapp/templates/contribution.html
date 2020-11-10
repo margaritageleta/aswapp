@@ -22,9 +22,12 @@
     </div>
 
     {% for reply, subreplies in replies.items %}
-       
-        {%include "recursive_comment.html" %}
-        
+        <table class="comment-tree">
+            <tbody>
+                <td valign="top" style="width: 5px;">▲</td>
+                <td class="comment">{%include "recursive_comment.html" %}</td>
+            </tbody>
+        </table>
     {% endfor %}
 
 {% endblock %}
