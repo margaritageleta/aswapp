@@ -60,6 +60,25 @@ class NewestView(View):
         print(context)
         return render(request, self.template_name, context) 
 
+
+
+class CommentView(FormView):
+    form_class = CommentForm
+    template_name = 'contribution.html'
+    context = {} 
+
+
+    def post(self, request, id): 
+        publication =  Publication.objects.get(id=id)
+        text = request.POST['comment']
+        new_comment = Comment(comment=text, referenced_publication=publication)
+        new_comment.save()         
+
+        return HttpResponseRedirect('/item/' + str(id))
+
+            
+   
+
 class SubmitView(FormView):
     # This class manages the display of a form for 
     # creating a new Publication, and creates the 

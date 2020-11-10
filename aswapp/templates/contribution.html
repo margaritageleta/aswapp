@@ -12,7 +12,7 @@
                 <p class="title">{{ contribution.title }}</p>
                 <!--<p>{{ contribution.content }}</p>-->
                 <p class="created-at"><a href="{% url 'show_contribution_view' id=contribution.id %}">{{ contribution.created_at|naturaltime }}</a></p>
-                <form action="/comment/", method="POST">
+                <form action="{% url 'comment_view' id=contribution.id %}", method="POST">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <button type="submit">Submit </button>
