@@ -59,9 +59,65 @@ class NewestView(View):
         print(context)
         return render(request, self.template_name, context) 
 
-class SubmitView(): 
-    #This class manages to ahow a form for creating a new Publication, and creates the publication with its features.
-    pass
+class SubmitView(FormView):
+    # This class manages the display of a form for 
+    # creating a new Publication, and creates the 
+    # publication with its features.
+
+    form_class = SubmissionForm
+    template_name = 'submit.html'
+    context = {}
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+
+        title = data['title']
+        url = data['url']
+        text = data['text']     
+        
+        if url is '' or url is None:
+            kind = 0 # Is an Ask publication
+        else:
+            kind = 1 # Is an Url publication          
+
+        new_publication = Publication(title=title, question=text, url=url, kind=kind)
+        new_publication.save()
+
+        # If it is a URL publications and has a comment associated
+        # Create the comment and associate with publication
+
+        if kind == 1 and (text is not '' or text is not None): 
+            new_comment = Comment(comment=text, referenced_publication=new_publication)
+            new_comment.save()
+        
+            new_reply = Comment(comment="Hi, i'm a reply", parent=new_comment)
+            new_reply.save()
+
+        # if url is not '': #An url submission 
+
+        #     if (Url.objects.filter(url=url).count() == 1):#it already exists
+        #         # print("Hey i entered")  
+        #         my_id = Url.objects.get(url=url).id #id of the references contribution
+        #         # print(my_id)            
+        #         uri = r"/url/" + str(my_id)
+        #         return HttpResponseRedirect(uri)   
+        #     else: 
+        #         print("Im in the URL CZONE")
+        #         contrib = Url(title = title, url = url) 
+
+        #         if text is not '': #With a comment associated
+        #             # contrib.addComment(text)
+        #             pass
+                
+        #         contrib.save()
+
+        # else: #An ask submission
+        #     print("Im in the ask CZONE")
+        #     contrib = Ask(title=title, content=text)
+        #     contrib.save() 
+        
+        return HttpResponseRedirect("/news")   
+
 class PublicationView(): 
     #This class manages to show a particular publication (Url or Ask) and show its comments and the replies to each comment. 
     pass
@@ -119,67 +175,7 @@ def show_contribution_view (request, kind, id):
     
    
 
-class SubmitView(FormView):
-    # pass
-    form_class = SubmissionForm
-    template_name = 'submit.html'
-    context = {}
 
-    def form_valid(self, form):
-        data = form.cleaned_data
-        #print("_________________")
-        #print(data)
-        #print("_________________")
-        title = data['title']
-        url = data['url']
-        text = data['text']     
-        
-        if url is '' or url is None:
-            kind = 0 #Is an Ask publication
-        else:
-            kind = 1 #Is an Url publication          
-
-        
-        new_publication = Publication(title=title, question=text, url=url, kind=kind)
-        new_publication.save()
-
-        #If it is a URL publications and has a comment associated
-        #Create the comment and associate with publication
-        if kind == 1 and (text is not '' or text is not None): 
-            new_comment = Comment(comment=text, referenced_publication=new_publication)
-            new_comment.save()
-        
-            new_reply = Comment(comment="Hi, i'm a reply", parent=new_comment)
-            new_reply.save()
-        
-
-
-       
-
-        # if url is not '': #An url submission 
-
-        #     if (Url.objects.filter(url=url).count() == 1):#it already exists
-        #         # print("Hey i entered")  
-        #         my_id = Url.objects.get(url=url).id #id of the references contribution
-        #         # print(my_id)            
-        #         uri = r"/url/" + str(my_id)
-        #         return HttpResponseRedirect(uri)   
-        #     else: 
-        #         print("Im in the URL CZONE")
-        #         contrib = Url(title = title, url = url) 
-
-        #         if text is not '': #With a comment associated
-        #             # contrib.addComment(text)
-        #             pass
-                
-        #         contrib.save()
-
-        # else: #An ask submission
-        #     print("Im in the ask CZONE")
-        #     contrib = Ask(title=title, content=text)
-        #     contrib.save() 
-        
-        return HttpResponseRedirect("/news")   
 
 
 
