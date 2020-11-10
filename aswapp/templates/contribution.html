@@ -21,6 +21,38 @@
         </div>
     </div>
 
+    <script>
+        window.onload = function() {
+            if (window.jQuery) {
+                console.log('jQUERY ON BBY');
+            } else {
+                console.log('sad :(');
+            }
+            $(document).on('click', '[id^="hide-"]', function () {
+                var id = this.id.match(/\d+$/i);
+                var blockContent = "#content-to-hide-" + id;
+                var hiddenClass = "hidden";
+                if ($(blockContent).hasClass(hiddenClass)) {
+                    $(this).html('[ - ]');
+                    $(blockContent).removeClass(hiddenClass);
+                    $(blockContent).show();
+                    $(blockContent).find('*').each(function () {
+                        var elem = this;
+                        if (!$(elem).hasClass(hiddenClass)) {
+                            $(elem).show();
+                        } else {
+                            $(elem).hide();
+                        }
+                    });
+                } else {
+                    $(this).html('[ + ]');
+                    $(blockContent).addClass(hiddenClass);
+                    $(blockContent).find('*').hide();
+                }
+            });
+        }
+    </script>
+
     {% for reply, subreplies in replies.items %}
         <table class="comment-tree">
             <tbody>
