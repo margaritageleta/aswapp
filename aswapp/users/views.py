@@ -60,10 +60,10 @@ def register(request):
 
 def forgot(request):
     return render(request, "users/forgot.html")
+"""
 
 def logout(request):
     #end session
     do_logout(request)
     #deberia redireccionar a la misma donde se hace logout pero aun no se
-    return redirect('/')
-"""
+    return redirect('/news')
