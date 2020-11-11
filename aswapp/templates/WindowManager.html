@@ -17,3 +17,8 @@
         <li><a href="/submit/">Submit</a></li>
     {% endif %}
 </ul>
+{% if type != 'submit' %}
+<div class="login-wrapper">
+    <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">login</a>
+</div>
+{% endif %}

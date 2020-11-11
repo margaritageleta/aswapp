@@ -151,14 +151,12 @@ STATICFILES_DIRS = (
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SECRET')
-print(SOCIAL_AUTH_GOOGLE_OAUTH2_KEY)
-print(SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET)
 
+"""
 print(f'ROOT: {STATIC_ROOT}')
 print(f'STATIC: {STATIC_URL}')
 print(f'DIRS: {STATICFILES_DIRS}')
 
-"""
 STATICFILES_FINDERS = (
    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
    'django.contrib.staticfiles.finders.FileSystemFinder',

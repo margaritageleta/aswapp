@@ -21,7 +21,8 @@ body {
 
 nav {
     background-color: var(--orange-hn);
-
+    display: flex;
+    justify-content: space-between;
 }
 
 ul, li {
@@ -33,6 +34,10 @@ ul, li {
 
 li {
     padding: 2px 6px;
+}
+
+.login-wrapper > * {
+    margin-right: 5px;
 }
 
 .bar::after {
