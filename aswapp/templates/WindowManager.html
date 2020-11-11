@@ -24,7 +24,7 @@
     <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">login</a>
     {% else %}
     <a class="btn btn-primary" href="{% url 'profile_view' %}">anonymous</a>
-    <a class="btn btn-primary" href="{% url 'social:disconnect' 'google-oauth2' %}">logout</a>
+    <a class="btn btn-primary" href="{% url 'logout' %}">logout</a>
     {% endif %}
 
 </div>
