@@ -6,8 +6,11 @@
     {% endblock %}
 
 {% block content %}
+    {% load humanize %} 
     <div>
-       {{comment.comment}}
+      <span>anonymous</span>
+      <span>{{ comment.created_at|naturaltime }}</span>
+      <p>{{comment.comment }}</p>
     </div>
     <form action="", method="POST">
       {% csrf_token %}
