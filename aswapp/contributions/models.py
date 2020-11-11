@@ -8,6 +8,7 @@ from django.apps import apps
 class Contribution(models.Model):
     
     number_votes = models.IntegerField(default=0, null=False)
+    voted = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now(), null=False)
     modified_at = models.DateTimeField(null=True, blank=True)
     
@@ -38,6 +39,9 @@ class Comment(Contribution):
     comment = models.CharField(max_length=80, null=False)    
     referenced_publication = models.ForeignKey(Publication, on_delete=models.CASCADE, blank=True, null=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, related_name="reply", null=True)
+
+    # author = User ... TODO
+    created_at = models.DateTimeField(default=timezone.now(), null=False)
 
 
 

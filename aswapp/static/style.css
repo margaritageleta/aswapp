@@ -66,7 +66,7 @@ body > div {
     color: grey;
 }
 
-.contribution .created-at {
+.contribution .created-at, .comment-reply, .about > * {
     color: grey;
     font-size: small;
 }
@@ -105,4 +105,29 @@ table {
 
 table input[type='text'], table input[type='url'], table textarea {
     width: 80%;
+}
+
+.comment-tree {
+    width: 100%;
+}
+
+.comment-tree .comment {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.comment-tree .comment .content, .comment {
+    color: black;
+    font-size: initial;
+    margin: 5px 0;
+}
+
+.comment-reply {
+    margin: 0; 
+    margin-bottom: 5px;
+}
+
+.comment-tree .hide {
+    cursor: pointer;
 }

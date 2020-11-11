@@ -6,7 +6,7 @@
   {% endblock %}
 
   {% block content %}
-      <form action="", method="POST">
+      <form action="{% url 'submit_contribution_view' %}", method="POST">
         {% csrf_token %}
         <table>
           {% for field in form %}

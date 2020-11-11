@@ -11,8 +11,8 @@
             <div>
                 <p class="title">{{ contribution.title }}</p>
                 <!--<p>{{ contribution.content }}</p>-->
-                <p class="created-at"><a href="{% url 'show_contribution_view' kind=contribution.kind id=contribution.id %}">{{ contribution.created_at|naturaltime }}</a></p>
-                <form action="/comment/", method="POST">
+                <p class="created-at"><a href="{% url 'show_contribution_view' id=contribution.id %}">{{ contribution.created_at|naturaltime }}</a></p>
+                <form action="{% url 'comment_view' id=contribution.id %}", method="POST">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <button type="submit">Submit </button>
@@ -20,5 +20,46 @@
             </div>
         </div>
     </div>
+
+    <script>
+        window.onload = function() {
+            if (window.jQuery) {
+                console.log('jQUERY ON BBY');
+            } else {
+                console.log('sad :(');
+            }
+            $(document).on('click', '[id^="hide-"]', function () {
+                var id = this.id.match(/\d+$/i);
+                var blockContent = "#content-to-hide-" + id;
+                var hiddenClass = "hidden";
+                if ($(blockContent).hasClass(hiddenClass)) {
+                    $(this).html('[ - ]');
+                    $(blockContent).removeClass(hiddenClass);
+                    $(blockContent).show();
+                    $(blockContent).find('*').each(function () {
+                        var elem = this;
+                        if (!$(elem).hasClass(hiddenClass)) {
+                            $(elem).show();
+                        } else {
+                            $(elem).hide();
+                        }
+                    });
+                } else {
+                    $(this).html('[ + ]');
+                    $(blockContent).addClass(hiddenClass);
+                    $(blockContent).find('*').hide();
+                }
+            });
+        }
+    </script>
+
+    {% for reply, subreplies in replies.items %}
+        <table class="comment-tree">
+            <tbody>
+                <td valign="top" style="width: 5px;">▲</td>
+                <td class="comment">{%include "recursive_comment.html" %}</td>
+            </tbody>
+        </table>
+    {% endfor %}
 
 {% endblock %}
