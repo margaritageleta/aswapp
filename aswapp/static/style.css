@@ -40,7 +40,7 @@ li {
     margin-right: 5px;
 }
 
-.bar::after {
+.bar::after, .login-wrapper > *::after {
     content: '  |';
     white-space: pre;
 }

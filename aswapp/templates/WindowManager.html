@@ -18,7 +18,14 @@
     {% endif %}
 </ul>
 {% if type != 'submit' %}
+
 <div class="login-wrapper">
+    {% if not user.is_authenticated %}
     <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">login</a>
+    {% else %}
+    <a class="btn btn-primary" href="/news/">{{ user.name }}</a>
+    <a class="btn btn-primary" href="{% url 'social:disconnect' 'google-oauth2' %}">logout</a>
+    {% endif %}
+
 </div>
 {% endif %}

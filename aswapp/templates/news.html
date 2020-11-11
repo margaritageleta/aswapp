@@ -4,6 +4,9 @@
 
 {% block content %}
     {% load humanize %} 
+    {% if user.is_authenticated %}
+    <p>Logged!</p>
+    {% endif %}
     {% for contribution in contributions %}
     <div style="height: 10px;"></div>
     <div class="contribution">
