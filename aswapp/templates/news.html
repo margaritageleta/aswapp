@@ -10,7 +10,7 @@
         <div>
             <div class="counter"><p>{{ forloop.counter }}. ▲</p></div>
             <div>
-                <p class="title">{{ contribution.title }}</p>
+                <p class="title"><a href="{{ contribution.url }}">{{ contribution.title }}</a></p>
                 <!--<p>{{ contribution.content }}</p>-->
                 <p class="created-at"><a href="{% url 'show_contribution_view' id=contribution.id %}">{{ contribution.created_at|naturaltime }}</a></p>
             </div>
