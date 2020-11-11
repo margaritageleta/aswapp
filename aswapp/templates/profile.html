@@ -5,7 +5,24 @@
 {% block content %}
     {% load humanize %} 
     {% if user.is_authenticated %}
-    <p>Logged!</p>
+        <table>
+            <tr>
+                <th>user:</th>
+                <td>{{ user.first_name }} {{ user.last_name }}</td> 
+            </tr> 
+            <tr>
+                <th>created at:</th>
+                <td>null</td> 
+            </tr>
+            <tr>
+                <th>karma</th>
+                <td>+999</td> 
+            </tr>
+            <tr>
+                <th>email</th>
+                <td>{{ user.email }}</td> 
+            </tr> 
+        </table>
     {% endif %}
     
 

@@ -12,7 +12,7 @@ urlpatterns =[
     #path(r'login', views.login, name='login_view'),
     #path(r'forgot', views.forgot, name='forgot_view'),
     path(r'^logout/$', views.logout, name='logout'),
-    path (r'^profile', views.ProfileView.as_view(), name='profile_view'),
+    path (r'profile', views.ProfileView.as_view(), name='profile_view'),
     path('', include('social_django.urls', namespace='social')),
     
 

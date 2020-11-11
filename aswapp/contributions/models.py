@@ -1,12 +1,14 @@
 from django.db import models
 from django.utils import timezone
 from django.apps import apps
+from users.models import User
 
 
 # Create your models here.
 
 class Contribution(models.Model):
     
+    author = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False) 
     number_votes = models.IntegerField(default=0, null=False)
     voted = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now(), null=False)
@@ -39,8 +41,6 @@ class Comment(Contribution):
     comment = models.CharField(max_length=80, null=False)    
     referenced_publication = models.ForeignKey(Publication, on_delete=models.CASCADE, blank=True, null=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, related_name="reply", null=True)
-
-    # author = User ... TODO
     created_at = models.DateTimeField(default=timezone.now(), null=False)
 
 
