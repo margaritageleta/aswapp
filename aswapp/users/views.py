@@ -3,6 +3,34 @@ from django.contrib.auth import logout as do_logout
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as do_login
+from django.views import View
+
+# Create your views here.
+
+class ProfileView(View): 
+    # This class manages the display of the 
+    # users' profiles
+    template_name = "profile.html"
+
+    def get(self, request, *args, **kwargs):
+        # This method builds the client page profie.html 
+        # with the requested user data
+        
+        context = {}
+
+        return render(request, self.template_name, context)
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Create your views here.
 # def welcome(request):
@@ -10,6 +38,8 @@ from django.contrib.auth import login as do_login
 #         return render(request)
 
 #login y register en la misma pagina y luego pagina register para errores
+
+"""
 def login(request):
     form = AuthenticationForm()
     if request.method == "POST":
@@ -36,4 +66,4 @@ def logout(request):
     do_logout(request)
     #deberia redireccionar a la misma donde se hace logout pero aun no se
     return redirect('/')
-
+"""
