@@ -130,16 +130,19 @@ class SubmitView(FormView):
         url = request.POST['url']
         text = request.POST['text']
 
+        """
         if url == '' or url is None:
             kind = 0 # Is an Ask publication
         else:
-            kind = 1 # Is an Url publication          
+            kind = 1 # Is an Url publication   
+        """
 
-        #If url publication exists in out system then redirect to that publication 
+        kind = 0 if url == '' or url is None else 1
+
+        # If url publication exists in out system then redirect to that publication 
         if kind == 1 and Publication.objects.filter(url=url).exists(): 
             id = Publication.objects.get(url=url).id
             return HttpResponseRedirect('/item/' + str(id))
-        
 
         else:
             #Create a new publication 
@@ -178,15 +181,19 @@ class PublicationView(View):
     def get(self, request, id, *args, **kwargs):
         # This method builds the client page newests.html with the 
         # publications sorted 
+        
+        # Reset comments dict
+        self.comments = {}
+
         try:
             self.publication = Publication.objects.filter(id=id).first()
             replies = Comment.objects.filter(referenced_publication=self.publication, parent=None)
-            
+            # Get comments recursively
             for reply in replies:
                 self.comments[reply] = self.get_replies(reply)
-        
+            
         except Exception as e:
-            # back to square one
+            # Back to square one
             return HttpResponseRedirect(reverse('news_view'))
 
         context = {
@@ -194,5 +201,5 @@ class PublicationView(View):
             'form': CommentForm(),
             'replies': self.comments
         }
-        # get_comment(request)
+        
         return render(request, "contribution.html", context)
