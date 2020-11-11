@@ -66,7 +66,7 @@ body > div {
     color: grey;
 }
 
-.contribution .created-at, .comment-reply {
+.contribution .created-at, .comment-reply, .about > * {
     color: grey;
     font-size: small;
 }
@@ -117,7 +117,7 @@ table input[type='text'], table input[type='url'], table textarea {
     align-items: flex-start;
 }
 
-.comment-tree .comment .content {
+.comment-tree .comment .content, .comment {
     color: black;
     font-size: initial;
     margin: 5px 0;

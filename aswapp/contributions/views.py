@@ -82,15 +82,15 @@ class ReplyView(FormView):
     def post(self, request, id):
         reply_text = request.POST['comment']
         parent_comment = Comment.objects.get(id=id)
-        
-        new_reply = Comment(comment=reply_text, parent=parent_comment)
+        parent_publication = parent_comment.referenced_publication
+        new_reply = Comment(comment=reply_text, parent=parent_comment, referenced_publication=parent_publication)
         new_reply.save()
 
         # print("____________")
         # print(new_reply.parent.comment)
         # print("__________")
 
-        return HttpResponseRedirect("/news")
+        return HttpResponseRedirect(reverse('show_contribution_view',args=[parent_publication.pk]))
 
 class CommentView(FormView):
     form_class = CommentForm

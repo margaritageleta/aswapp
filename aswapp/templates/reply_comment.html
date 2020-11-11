@@ -7,10 +7,10 @@
 
 {% block content %}
     {% load humanize %} 
-    <div>
+    <div class="about">
       <span>anonymous</span>
-      <span>{{ comment.created_at|naturaltime }}</span>
-      <p>{{comment.comment }}</p>
+      <span>{{comment.created_at|naturaltime }}</span>
+      <p class="comment"> {{comment.comment }}</p>
     </div>
     <form action="", method="POST">
       {% csrf_token %}
