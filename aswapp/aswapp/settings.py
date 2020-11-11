@@ -26,7 +26,7 @@ SECRET_KEY = 'y=p&6$u0le5s-b0%#gm@77&w_0xb+zid2om+u%)o7(9e!066pp'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -83,6 +83,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'PORT': '8000',
     }
 }
 

@@ -23,6 +23,7 @@ from contributions.views import NewsView, NewestView, PublicationView
 urlpatterns = [
     path(r'admin/', admin.site.urls),
     path(r'', include('contributions.urls')),
+    path(r'', include('users.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
