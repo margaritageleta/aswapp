@@ -15,4 +15,10 @@ class SubmissionForm(forms.Form):
 
 
 class CommentForm(forms.Form):
-    comment = forms.CharField(widget=forms.Textarea(attrs={'rows': 10, 'cols': 50}), max_length=160)
+    comment = forms.CharField(
+        widget=forms.Textarea(
+            attrs={'rows': 10, 'cols': 50}
+        ), 
+        max_length=160,
+        label=''
+    )
