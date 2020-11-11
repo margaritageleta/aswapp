@@ -6,6 +6,9 @@
     {% endblock %}
 
 {% block content %}
+    <div>
+       {{comment.comment}}
+    </div>
     <form action="", method="POST">
       {% csrf_token %}
       <table>

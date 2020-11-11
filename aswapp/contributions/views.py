@@ -82,9 +82,13 @@ class ReplyView(FormView):
     def post(self, request, id):
         reply_text = request.POST['comment']
         parent_comment = Comment.objects.get(id=id)
-        print(parent_comment)
+        
         new_reply = Comment(comment=reply_text, parent=parent_comment)
         new_reply.save()
+
+        # print("____________")
+        # print(new_reply.parent.comment)
+        # print("__________")
 
         return HttpResponseRedirect("/news")
 
@@ -131,14 +135,14 @@ class SubmitView(FormView):
         else:
             kind = 1 # Is an Url publication          
 
+        #If url publication exists in out system then redirect to that publication 
         if kind == 1 and Publication.objects.filter(url=url).exists(): 
-            id = Publication.objects.get(url=url)
-            HttpResponseRedirect('/item/' + str(id))
+            id = Publication.objects.get(url=url).id
+            return HttpResponseRedirect('/item/' + str(id))
         
-            return HttpResponseRedirect("/news")   
 
         else:
-            # print("here")
+            #Create a new publication 
             new_publication = Publication(title=title, question=text, url=url, kind=kind)
             new_publication.save()
             # print(new_publication)
