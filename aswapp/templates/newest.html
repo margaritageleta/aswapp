@@ -3,9 +3,19 @@
 {% block title %}<title>News</title>{% endblock %}
 
 {% block content %}
-    <h1>NEWEST WELCOME</h1>
+    {% load humanize %} 
     {% for contribution in contributions %}
-        {{  contribution.title }}
+    <div style="height: 10px;"></div>
+    <div class="contribution">
+        <div>
+            <div class="counter"><p>{{ forloop.counter }}. ▲</p></div>
+            <div>
+                <p class="title">{{ contribution.title }}</p>
+                <!--<p>{{ contribution.content }}</p>-->
+                <p class="created-at"><a href="{% url 'show_contribution_view' id=contribution.id %}">{{ contribution.created_at|naturaltime }}</a></p>
+            </div>
+        </div>
+    </div>
     {% endfor %}
 
 {% endblock %}

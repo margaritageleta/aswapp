@@ -89,7 +89,7 @@ a, a:link, a:active {
     color: inherit
 }
 
-.created-at a:hover {
+.created-at a:hover, .comment-reply a:hover {
     text-decoration: underline;
 }
 
