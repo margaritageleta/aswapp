@@ -6,6 +6,7 @@
   {% endblock %}
 
   {% block content %}
+    <!--{% if user.is_authenticated %}-->
       <form action="{% url 'submit_contribution_view' %}", method="POST">
         {% csrf_token %}
         <table>
@@ -43,8 +44,12 @@
         </table>
         
       </form>  
- 
 
+    <!--{% else %}
+    <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
+      Login
+      </a>
+    {% endif %}-->
     
 
   {% endblock %}

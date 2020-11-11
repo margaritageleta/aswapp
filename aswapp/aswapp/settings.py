@@ -13,6 +13,23 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 
+# social auth configuration
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_URL = '/auth/login/google-oauth2/'
+LOGIN_REDIRECT_URL = '/manage/'
+LOGOUT_REDIRECT_URL = '/'
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+
+
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'social_django',
     # third party
     
     # own
@@ -130,6 +148,11 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
    os.path.join(BASE_DIR,'static'),
 )
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SECRET')
+print(SOCIAL_AUTH_GOOGLE_OAUTH2_KEY)
+print(SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET)
 
 print(f'ROOT: {STATIC_ROOT}')
 print(f'STATIC: {STATIC_URL}')
