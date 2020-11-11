@@ -146,7 +146,10 @@ class SubmitView(FormView):
 
         else:
             #Create a new publication 
-            new_publication = Publication(title=title, question=text, url=url, kind=kind)
+            if text == '' or text is None: 
+                 new_publication = Publication(title=title, url=url, kind=kind)
+            else:
+                new_publication = Publication(title=title, question=text, url=url, kind=kind)
             new_publication.save()
             # print(new_publication)
 
