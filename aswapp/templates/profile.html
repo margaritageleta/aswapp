@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}<title>News</title>{% endblock %}
+
+{% block content %}
+    {% load humanize %} 
+    {% if user.is_authenticated %}
+    <p>Logged!</p>
+    {% endif %}
+    
+
+{% endblock %}

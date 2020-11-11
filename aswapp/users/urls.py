@@ -15,7 +15,7 @@ urlpatterns =[
     #    LogoutView.as_view(template_name=settings.LOGOUT_REDIRECT_URL),
     #    name='logout'
     # ),
-    path (r'^profile', views.ProfileView.as_view(), name='profile_view'),
+    path (r'profile', views.ProfileView.as_view(), name='profile_view'),
     path('', include('social_django.urls', namespace='social')),
     
 
