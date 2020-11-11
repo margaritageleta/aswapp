@@ -41,3 +41,16 @@ deactivate
 
 ## To link static files
 python3 manage.py collectstatic -link --noinput
+
+## HEROKU
+
+# To push to heroku master from other branch and deploy
+git push heroku <origin>:master
+
+# To migrate the database changes
+heroku run python aswapp/manage.py makemigrations
+heroku run python aswapp/manage.py migrate --run-syncdb
+
+# To open heroku
+heroku open
+
