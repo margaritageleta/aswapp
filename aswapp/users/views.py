@@ -25,7 +25,7 @@ class ProfileView(View):
         if Hacker.objects.filter(user = user).count() == 0: 
             hacker = Hacker(user=user, username=user_name)
             hacker.save()
-            print("enter")
+            
         else: 
             hacker = Hacker.objects.get(user=user)
                  
