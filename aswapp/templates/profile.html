@@ -8,19 +8,19 @@
         <table>
             <tr>
                 <th>user:</th>
-                <td>{{ user.first_name }} {{ user.last_name }}</td> 
+                <td>{{ username }}</td> 
             </tr> 
             <tr>
                 <th>created at:</th>
-                <td>null</td> 
+                <td> {{ joined }} </td> 
             </tr>
             <tr>
                 <th>karma</th>
-                <td>+999</td> 
+                <td>{{ karma }}</td> 
             </tr>
             <tr>
                 <th>email</th>
-                <td>{{ user.email }}</td> 
+                <td>{{ email }}</td> 
             </tr> 
         </table>
     {% endif %}

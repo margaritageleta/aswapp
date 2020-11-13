@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as do_login
 from django.views import View
+from django.contrib.auth.models import User
+from users.models import Hacker
 
 # Create your views here.
 
@@ -14,22 +16,27 @@ class ProfileView(View):
 
     def get(self, request, *args, **kwargs):
         # This method builds the client page profie.html 
-        # with the requested user data
-        
-        context = {}
+        # with the requested user dataç
 
+        user_name = request.user
+        user = User.objects.get(username=user_name)
+    
+        # #See if the user has been registered in 
+        if Hacker.objects.filter(user = user).count() == 0: 
+            hacker = Hacker(user=user, username=user_name)
+        else: 
+            hacker = Hacker.objects.get(user=user)
+                 
+        context = {
+            'username': hacker.get_username(),
+            'karma': hacker.get_karma(),
+            'joined': hacker.get_created_time(),
+            'email': hacker.get_email(),
+            
+
+        }
+        print("_____________________________")
         return render(request, self.template_name, context)
-
-
-
-
-
-
-
-
-
-
-
 
 
 # Create your views here.
@@ -38,29 +45,6 @@ class ProfileView(View):
 #         return render(request)
 
 #login y register en la misma pagina y luego pagina register para errores
-
-"""
-def login(request):
-    form = AuthenticationForm()
-    if request.method == "POST":
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-
-            user = authenticate(username=username, password=password)
-
-            if user is not None:
-                do_login(request,user)
-                return redirect('/')
-    return render(request, "users/login.html", {'form': form})
-
-def register(request):
-    return render(request, "users/register.html")
-
-def forgot(request):
-    return render(request, "users/forgot.html")
-"""
 
 def logout(request):
     #end session

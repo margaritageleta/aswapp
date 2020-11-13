@@ -87,17 +87,7 @@ class ReplyView(FormView):
 
         parent_comment = Comment.objects.get(id=id)
         parent_publication = parent_comment.referenced_publication
-        user_name = request.user
-        user = User.objects.get(username=user_name)
-    
-        #See if the user has been registered in 
-        if Hacker.objects.exists(user):
-            hacker = Hacker.objects.get(user)
-
-        else:
-        #If firt time
-            hacker = Hacker(user=user, username=user.username)
-            hacker.save()
+        hacker = Hacker.objects.get(username=request.user)
 
         new_reply = Comment(comment=reply_text, parent=parent_comment, referenced_publication=parent_publication, author=hacker)
         new_reply.save()
@@ -117,17 +107,7 @@ class CommentView(FormView):
     def post(self, request, id): 
         publication =  Publication.objects.get(id=id)
         text = request.POST['comment']
-        user_name = request.user
-        user = User.objects.get(username=user_name)
-    
-        #See if the user has been registered in 
-        if Hacker.objects.exists(user):
-            hacker = Hacker.objects.get(user)
-
-        else:
-        #If firt time
-            hacker = Hacker(user=user, username=user.username)
-            hacker.save()
+        hacker = Hacker.objects.get(username=request.user)
 
 
         new_comment = Comment(comment=text, referenced_publication=publication, author=hacker)
@@ -159,16 +139,7 @@ class SubmitView(FormView):
         title = request.POST['title']
         url = request.POST['url']
         text = request.POST['text']
-        user_name = request.user
-        user = User.objects.get(username=user_name)
-        
-        #See if the user has been registered in 
-        if Hacker.objects.exists():
-            hacker = Hacker.objects.get(user)
-        else:
-        #If firt time
-            hacker = Hacker(user=user, username=user.username) 
-            hacker.save()
+        hacker = Hacker.objects.get(username=request.user)
 
         kind = 0 if url == '' or url is None else 1
 

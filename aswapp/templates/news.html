@@ -16,6 +16,7 @@
                 <p class="title"><a href="{{ contribution.url }}">{{ contribution.title }}</a></p>
                 <!--<p>{{ contribution.content }}</p>-->
                 <p class="created-at"><a href="{% url 'show_contribution_view' id=contribution.id %}">{{ contribution.created_at|naturaltime }}</a></p>
+                <p class="author"><a href="{% url 'show_contribution_view' id=contribution.id %}">{{ contribution.author.username }}</a></p>
             </div>
         </div>
     </div>
