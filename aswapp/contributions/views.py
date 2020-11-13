@@ -9,6 +9,8 @@ from django.views import View
 from django.urls import reverse
 from django import forms
 from contributions.forms import CommentForm
+from users.models import Hacker
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -66,7 +68,7 @@ class NewestView(View):
 class ReplyView(FormView):
     form = CommentForm()
     template_name = 'reply_comment.html'
-    context = {}
+    context = {} 
     
     def get(self, request, id):
         print(id)
@@ -80,10 +82,24 @@ class ReplyView(FormView):
         return render(request, self.template_name, context)
         
     def post(self, request, id):
+
         reply_text = request.POST['comment']
+
         parent_comment = Comment.objects.get(id=id)
         parent_publication = parent_comment.referenced_publication
-        new_reply = Comment(comment=reply_text, parent=parent_comment, referenced_publication=parent_publication)
+        user_name = request.user
+        user = User.objects.get(username=user_name)
+    
+        #See if the user has been registered in 
+        if Hacker.objects.exists(user):
+            hacker = Hacker.objects.get(user)
+
+        else:
+        #If firt time
+            hacker = Hacker(user=user, username=user.username)
+            hacker.save()
+
+        new_reply = Comment(comment=reply_text, parent=parent_comment, referenced_publication=parent_publication, author=hacker)
         new_reply.save()
 
         # print("____________")
@@ -101,7 +117,21 @@ class CommentView(FormView):
     def post(self, request, id): 
         publication =  Publication.objects.get(id=id)
         text = request.POST['comment']
-        new_comment = Comment(comment=text, referenced_publication=publication)
+        user_name = request.user
+        user = User.objects.get(username=user_name)
+    
+        #See if the user has been registered in 
+        if Hacker.objects.exists(user):
+            hacker = Hacker.objects.get(user)
+
+        else:
+        #If firt time
+            hacker = Hacker(user=user, username=user.username)
+            hacker.save()
+
+
+        new_comment = Comment(comment=text, referenced_publication=publication, author=hacker)
+
         new_comment.save()         
 
         return HttpResponseRedirect('/item/' + str(id))
@@ -129,13 +159,16 @@ class SubmitView(FormView):
         title = request.POST['title']
         url = request.POST['url']
         text = request.POST['text']
-
-        """
-        if url == '' or url is None:
-            kind = 0 # Is an Ask publication
+        user_name = request.user
+        user = User.objects.get(username=user_name)
+        
+        #See if the user has been registered in 
+        if Hacker.objects.exists():
+            hacker = Hacker.objects.get(user)
         else:
-            kind = 1 # Is an Url publication   
-        """
+        #If firt time
+            hacker = Hacker(user=user, username=user.username) 
+            hacker.save()
 
         kind = 0 if url == '' or url is None else 1
 
@@ -147,17 +180,18 @@ class SubmitView(FormView):
         else:
             #Create a new publication 
             if text == '' or text is None: 
-                 new_publication = Publication(title=title, url=url, kind=kind)
+                 new_publication = Publication(title=title, url=url, kind=kind, author=hacker)
             else:
-                new_publication = Publication(title=title, question=text, url=url, kind=kind)
+                new_publication = Publication(title=title, question=text, url=url, kind=kind, author=hacker)
+            
             new_publication.save()
             # print(new_publication)
 
             # If it is a URL publications and has a comment associated
             # Create the comment and associate with publication
 
-            if kind == 1 and (text is not '' or text is not None): 
-                new_comment = Comment(comment=text, referenced_publication=new_publication)
+            if kind == 1 and (text is not '' or text is not None):
+                new_comment = Comment(comment=text, referenced_publication=new_publication, author=hacker)
                 new_comment.save()            
         
             return HttpResponseRedirect("/news")   

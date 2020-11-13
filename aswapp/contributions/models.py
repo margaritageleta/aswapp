@@ -1,14 +1,14 @@
 from django.db import models
 from django.utils import timezone
 from django.apps import apps
-from users.models import User
+from users.models import Hacker
 
 
 # Create your models here.
 
 class Contribution(models.Model):
     
-    author = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False) 
+    author = models.ForeignKey(Hacker, on_delete=models.CASCADE, blank=False, null=False) 
     number_votes = models.IntegerField(default=0, null=False)
     voted = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now(), null=False)
@@ -18,6 +18,8 @@ class Contribution(models.Model):
         abstract = True
 
     objects = models.Manager()
+
+    
 
 
 
@@ -32,6 +34,9 @@ class Publication(Contribution):
     question = models.CharField(max_length=80, blank=True)
     url = models.URLField(blank=True)
     kind = models.IntegerField(max_length=1, choices=PublicationTypes.choices) 
+
+    def get_title(self):
+        return self.title
 
 
 class Comment(Contribution):
