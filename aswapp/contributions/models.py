@@ -3,12 +3,11 @@ from django.utils import timezone
 from django.apps import apps
 from users.models import Hacker
 
-
 # Create your models here.
 
 class Contribution(models.Model):
     
-    author = models.ForeignKey(Hacker, on_delete=models.CASCADE, blank=False, null=False) 
+    author = models.ForeignKey(Hacker, on_delete=models.CASCADE, blank=False, null=False)
     number_votes = models.IntegerField(default=0, null=False)
     voted = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now(), null=False)

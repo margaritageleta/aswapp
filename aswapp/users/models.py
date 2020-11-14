@@ -4,7 +4,6 @@ from django.apps import apps
 from django.utils import timezone
 
 
-# Create your models here.
 class Hacker(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=80)
@@ -61,7 +60,5 @@ class Hacker(models.Model):
     def get_karma(self):
         self.calculate_karma()
         return self.karma
-
-    
 
     
