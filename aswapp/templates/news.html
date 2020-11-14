@@ -18,7 +18,9 @@
                     <a href="{{ contribution.url }}">
                         {{ contribution.title }}
                     </a>
-                    <span class="url">({{ contribution.url | domain }})</span>
+                    {% if contribution.kind == 1 %} 
+                        <span class="url">({{ contribution.url | domain }})</span>
+                    {% endif %}
                 </p>
                 <div class="contrib-nav">
                     <p>
