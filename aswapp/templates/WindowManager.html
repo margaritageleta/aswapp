@@ -14,7 +14,9 @@
         <li class="bar"><a href="/admin/">Admin</a></li>
         <li class="bar"><a href="/news/">News/Principal</a></li>
         <li class="bar"><a href="/newest/">Newest</a></li>
-        <li><a href="/submit/">Submit</a></li>
+        {% if user.is_authenticated %}
+            <li><a href="/submit/">Submit</a></li>
+        {% endif %}
     {% endif %}
 </ul>
 {% if type != 'submit' %}
