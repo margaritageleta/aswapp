@@ -25,6 +25,7 @@ class ProfileView(View):
     # This class manages the display of the 
     # users' profiles
     template_name = "profile.html"
+    context = {}
 
     def get(self, request, *args, **kwargs):
         # This method builds the client page profie.html 
@@ -48,7 +49,6 @@ class ProfileView(View):
             'email': hacker.get_email(),           
 
         }
-        print("_____________________________")
         return render(request, self.template_name, context)
 
 class UserView(View):
@@ -56,11 +56,10 @@ class UserView(View):
     # This class manages the display of the 
     # users' profiles
     template_name = "profile.html"
-
+    context = {}
     def get(self, request, id):
         # This method builds the client page profie.html 
         # with the requested user dataç
-
 
         user = User.objects.get(id=id)
     
