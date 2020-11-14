@@ -22,7 +22,7 @@
                 <div class="contrib-nav">
                     <p>
                         <span class="created-at">
-                            <span>{{ contribution.number_votes }} points by</span>
+                            <span>{{ contribution.number_votes }} point{% if contribution.number_votes > 1 %}s{% endif %} by</span>
                             {% if user.id == contribution.author.id %}
                                 <a style="color: rgb(27, 160, 0) !important;" href="{% url 'show_user_view' id=contribution.author.id %}">
                                     {{ contribution.author.username }}

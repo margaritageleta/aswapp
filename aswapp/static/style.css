@@ -77,8 +77,13 @@ body > div {
     color: grey;
 }
 
-.contrib-nav *, .url {
+.contrib-nav * {
     font-size: smaller;
+    color: grey;
+}
+
+.url {
+    font-size: x-small;
     color: grey;
 }
 
