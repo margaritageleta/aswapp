@@ -82,6 +82,11 @@ body > div {
     color: grey;
 }
 
+.url {
+    font-size: x-small;
+    color: grey;
+}
+
 .contribution .created-at, .comment-reply, .about > * {
     color: grey;
     font-size: small;

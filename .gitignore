@@ -1,6 +1,7 @@
 env/*
 aswapp/*/__pycache__
 aswapp/*/migrations
+aswapp/*/templatetags/*
 .DS_Store
 aswapp/.DS_Store
 .vscode/launch.json
