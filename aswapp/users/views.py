@@ -9,6 +9,18 @@ from users.models import Hacker
 
 # Create your views here.
 
+
+class UserContributions(View): 
+    template_name = "news.html"
+    
+    def get(self, request, id): 
+        hacker = Hacker.objects.get(username=id)
+        context = {
+            'contributions': hacker.get_publications(),
+        }
+        return render(request, self.template_name, context)
+
+
 class ProfileView(View): 
     # This class manages the display of the 
     # users' profiles
@@ -33,8 +45,7 @@ class ProfileView(View):
             'username': hacker.get_username(),
             'karma': hacker.get_karma(),
             'joined': hacker.get_created_time(),
-            'email': hacker.get_email(),
-            
+            'email': hacker.get_email(),           
 
         }
         print("_____________________________")
@@ -66,6 +77,7 @@ class UserView(View):
             'karma': hacker.get_karma(),
             'joined': hacker.get_created_time(),
             'email': hacker.get_email(),
+
             
 
         }
