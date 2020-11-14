@@ -10,11 +10,24 @@
             <div class="counter"><p>▲</p></div>
             <div>
                 <p class="title">{{ contribution.title }}</p>
-                <!--<p>{{ contribution.content }}</p>-->
-                <p class="created-at"><a href="{% url 'show_contribution_view' id=contribution.id %}">{{ contribution.created_at|naturaltime }}</a></p>
-                {% if user.id == contribution.author.id %}
-                    <p class="delete" ><a href="{% url 'delete_publication_view' id=contribution.id %}"> delete </a></p>
-                {% endif %}
+                <div class="contrib-nav">
+                    <p>
+                        <span class="created-at">
+                            <a href="{% url 'show_contribution_view' id=contribution.id %}">
+                                {{ contribution.created_at | naturaltime }}
+                            </a>
+                        </span>
+                        {% if user.id == contribution.author.id %}
+                        <span> | </span>
+                        <span class="delete">
+                            <a href="{% url 'delete_publication_view' id=contribution.id %}"> 
+                                delete 
+                            </a>
+                        </span>
+                        {% endif %}
+                    </p>
+                </div>
+                
                 <form action="{% url 'comment_view' id=contribution.id %}", method="POST">
                     {% csrf_token %}
                     {{ form.as_p }}
