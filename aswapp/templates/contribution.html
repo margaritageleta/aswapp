@@ -12,10 +12,13 @@
                 <p class="title">{{ contribution.title }}</p>
                 <!--<p>{{ contribution.content }}</p>-->
                 <p class="created-at"><a href="{% url 'show_contribution_view' id=contribution.id %}">{{ contribution.created_at|naturaltime }}</a></p>
+                {% if user.id == contribution.author.id %}
+                    <p class="delete" ><a href="{% url 'delete_publication_view' id=contribution.id %}"> delete </a></p>
+                {% endif %}
                 <form action="{% url 'comment_view' id=contribution.id %}", method="POST">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <button type="submit">Add comment </button>
+                    <button type="submit"> Add comment </button>
                 </form> 
             </div>
         </div>

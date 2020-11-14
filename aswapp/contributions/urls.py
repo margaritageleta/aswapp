@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^item/(?P<id>[0-9A-Za-z_\-]+)/$', views.PublicationView.as_view(), name='show_contribution_view'),
     url (r'^item/(?P<id>[0-9A-Za-z_\-]+)/comment/$', views.CommentView.as_view(), name = 'comment_view'),
     url(r'^item/(?P<id>[0-9A-Za-z_\-]+)/comment/add_comment', views.ReplyView.as_view(), name = 'reply_view'),
+    url(r'delete/(?P<id>[0-9A-Za-z_\-]+)', views.DeleteView.as_view(), name='delete_publication_view'),
 ]

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Publication, Comment
+from .models import Contribution, Publication, Comment
 # from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import FormView
@@ -211,3 +211,9 @@ class PublicationView(View):
         }
         
         return render(request, "contribution.html", context)
+
+class DeleteView(View):
+
+    def get(self, request, id):
+        Publication.objects.get(id=id).delete()
+        return HttpResponseRedirect('/news')
