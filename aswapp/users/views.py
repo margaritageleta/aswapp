@@ -40,6 +40,10 @@ class ProfileView(View):
         print("_____________________________")
         return render(request, self.template_name, context)
 
+# class LoginView(View): 
+#     template_name = "profile.html"
+#     def get(self, request, *args, **kwargs):
+
 
 # Create your views here.
 # def welcome(request):
