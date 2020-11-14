@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     
     # own
     'contributions',
+    'users',
 ]
 
 MIDDLEWARE = [
