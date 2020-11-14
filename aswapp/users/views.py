@@ -45,10 +45,6 @@ class ProfileView(View):
 #     def get(self, request, *args, **kwargs):
 
 
-# Create your views here.
-# def welcome(request):
-#     if request.user.is_authenticated:
-#         return render(request)
 
 #login y register en la misma pagina y luego pagina register para errores
 
@@ -57,3 +53,26 @@ def logout(request):
     do_logout(request)
     #deberia redireccionar a la misma donde se hace logout pero aun no se
     return redirect('/news')
+
+class UserContributionsView(View): 
+    # This class manages the display of the 
+    # URL publications, sorted by the number of votes
+    template_name = "user_contributions.html"
+    publications = []
+    
+    def get_url_publications(self): 
+        # This method gets all the publications of type URL
+        self.publications = self.hacker.get_publications()
+        # print(self.publications)
+    
+    def sort_url_publications(self):
+        # This method returns the publications sorted by number of votes
+        self.publications = sorted(self.publications, key = lambda x: x.created_at, reverse=True)
+        
+    def get(self, request, id):
+        # This method builds the client page news.html with the URL publications sorted 
+        self.hacker = Hacker.objects.get(username=id)
+        print(self.hacker)
+        self.get_url_publications()
+        self.sort_url_publications()
+        return render(request, self.template_name, self.publications)
