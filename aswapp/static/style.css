@@ -76,6 +76,10 @@ body > div {
     justify-self: center;
     color: grey;
 }
+.contrib-nav {
+    display: flex;
+    flex-direction: row;
+}
 
 .contrib-nav * {
     font-size: smaller;
@@ -87,9 +91,9 @@ body > div {
     color: grey;
 }
 
-.contribution .created-at, .comment-reply, .about > * {
+.contribution .created-at, .about > *, .delete {
     color: grey;
-    font-size: small;
+    font-size: small !important;
 }
 
 .logo { 
@@ -153,7 +157,7 @@ table input[type='text'], table input[type='url'], table textarea {
     cursor: pointer;
 }
 
-.profile-options a {
+.profile-options a, .comment-reply {
     color: black;
     text-decoration: underline;
     font-size: small;
