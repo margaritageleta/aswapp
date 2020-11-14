@@ -215,5 +215,15 @@ class PublicationView(View):
 class DeleteView(View):
 
     def get(self, request, id):
-        Publication.objects.get(id=id).delete()
-        return HttpResponseRedirect('/news')
+        if Publication.objects.filter(id=id).exists():
+            Publication.objects.get(id=id).delete()
+            return HttpResponseRedirect('/news')
+
+        else:
+            id_pub = Comment.objects.get(id=id).referenced_publication.id
+            Comment.objects.get(id=id).delete() 
+            return HttpResponseRedirect("/item/" + str(id_pub))
+            
+        
+
+       

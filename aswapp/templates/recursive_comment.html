@@ -4,6 +4,9 @@
     <span>anonymous</span>
     <span>{{ reply.created_at|naturaltime }}</span>
     <span id="hide-{{ reply.id }}" class="hide">[ - ]</span>
+    {% if user.id == reply.author.id %}
+        <p class="delete" ><a href="{% url 'delete_publication_view' id=reply.id %}"> delete </a></p>
+    {% endif %}
 </div>
 <div id="content-to-hide-{{ reply.id }}">
     <p class="content">{{ reply.comment }}</p>
