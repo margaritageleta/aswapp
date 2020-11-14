@@ -36,11 +36,17 @@ li {
     padding: 2px 6px;
 }
 
-.login-wrapper > * {
-    margin-right: 5px;
+.login-wrapper {
+    display: flex;
+    flex-direction: row;
 }
 
-.bar::after, .login-wrapper > *::after {
+.login-wrapper > * {
+    margin-right: 5px;
+    align-self: center;
+}
+
+.bar::after {
     content: '  |';
     white-space: pre;
 }
@@ -68,6 +74,11 @@ body > div {
 .contribution .counter {
     align-self: flex-start;
     justify-self: center;
+    color: grey;
+}
+
+.contrib-nav * {
+    font-size: smaller;
     color: grey;
 }
 
