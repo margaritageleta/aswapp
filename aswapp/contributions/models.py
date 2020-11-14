@@ -7,8 +7,9 @@ from users.models import Hacker
 
 class Contribution(models.Model):
     
-    author = models.ForeignKey(Hacker, on_delete=models.CASCADE, blank=False, null=False)
-    number_votes = models.IntegerField(default=0, null=False)
+
+    author = models.ForeignKey(Hacker, on_delete=models.CASCADE, blank=False, null=False) 
+    number_votes = models.IntegerField(default=1, null=False)
     voted = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now(), null=False)
     modified_at = models.DateTimeField(null=True, blank=True)
