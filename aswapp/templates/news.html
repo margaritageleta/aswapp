@@ -4,6 +4,7 @@
 
 {% block content %}
     {% load humanize %} 
+    {% load get_domain %}
     <!-- {% if user.is_authenticated %}
     <p>Logged! {{ user.first_name }}</p>
     {% endif %} -->
@@ -13,8 +14,12 @@
         <div>
             <div class="counter"><p>{{ forloop.counter }}. ▲</p></div>
             <div>
-                <p class="title"><a href="{{ contribution.url }}">{{ contribution.title }}</a></p>
-                <!--<p>{{ contribution.content }}</p>-->
+                <p class="title">
+                    <a href="{{ contribution.url }}">
+                        {{ contribution.title }}
+                    </a>
+                    <span class="url">({{ contribution.url | domain }})</span>
+                </p>
                 <div class="contrib-nav">
                     <p>
                         <span class="created-at">
