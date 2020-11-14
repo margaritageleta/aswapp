@@ -40,17 +40,37 @@ class ProfileView(View):
         print("_____________________________")
         return render(request, self.template_name, context)
 
-# class LoginView(View): 
-#     template_name = "profile.html"
-#     def get(self, request, *args, **kwargs):
+class UserView(View):
+
+    # This class manages the display of the 
+    # users' profiles
+    template_name = "profile.html"
+
+    def get(self, request, id):
+        # This method builds the client page profie.html 
+        # with the requested user dataç
 
 
-# Create your views here.
-# def welcome(request):
-#     if request.user.is_authenticated:
-#         return render(request)
+        user = User.objects.get(id=id)
+    
+        # #See if the user has been registered in 
+        if Hacker.objects.filter(user = user).count() == 0: 
+            hacker = Hacker(user=user, username=user.username)
+            hacker.save()
+            
+        else: 
+            hacker = Hacker.objects.get(user=user)
+                 
+        context = {
+            'username': hacker.get_username(),
+            'karma': hacker.get_karma(),
+            'joined': hacker.get_created_time(),
+            'email': hacker.get_email(),
+            
 
-#login y register en la misma pagina y luego pagina register para errores
+        }
+        print("_____________________________")
+        return render(request, self.template_name, context)
 
 def logout(request):
     #end session

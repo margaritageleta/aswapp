@@ -4,7 +4,6 @@
 
 {% block content %}
     {% load humanize %} 
-    {% if user.is_authenticated %}
         <table>
             <tr>
                 <th>user:</th>
@@ -23,7 +22,7 @@
                 <td>{{ email }}</td> 
             </tr> 
         </table>
-    {% endif %}
+
     
 
 {% endblock %}
