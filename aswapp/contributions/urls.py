@@ -11,4 +11,5 @@ urlpatterns = [
     url (r'^item/(?P<id>[0-9A-Za-z_\-]+)/comment/$', views.CommentView.as_view(), name = 'comment_view'),
     url(r'^item/(?P<id>[0-9A-Za-z_\-]+)/comment/add_comment', views.ReplyView.as_view(), name = 'reply_view'),
     url(r'delete/(?P<id>[0-9A-Za-z_\-]+)', views.DeleteView.as_view(), name='delete_publication_view'),
+    url(r'vote/(?P<id>[0-9A-Za-z_\-]+)', views.VoteView.as_view(), name='vote_publication_view'),
 ]

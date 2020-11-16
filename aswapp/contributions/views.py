@@ -34,8 +34,9 @@ class NewsView(View):
         
         self.get_url_publications()
         self.sort_url_publications()
+        hacker = Hacker.objects.get(user=request.user)
         
-        context = {'contributions': self.publications}
+        context = {'contributions': self.publications, 'hacker': hacker}
     
         return render(request, self.template_name, context)
 
@@ -58,8 +59,9 @@ class NewestView(View):
         
         self.get_publications()
         self.sort_publications()
+        hacker = Hacker.objects.get(user=request.user)
         
-        context = {'contributions': self.publications}
+        context = {'contributions': self.publications, 'hacker': hacker}
         print(context)
         return render(request, self.template_name, context) 
 
@@ -227,6 +229,31 @@ class DeleteView(View):
             id_pub = Comment.objects.get(id=id).referenced_publication.id
             Comment.objects.get(id=id).delete() 
             return HttpResponseRedirect("/item/" + str(id_pub))
+
+class VoteView(View):
+
+    def get(self, request, id):
+        hacker = Hacker.objects.get(user=request.user)
+
+        if Publication.objects.filter(id=id).exists():
+            print('voted publi')
+            publi = Publication.objects.get(id=id) 
+
+            hacker.voted_publications.add(publi)
+            hacker.save() 
+            
+            publi.author.add_upvotes()
+            publi.author.save()
+
+            publi.add_votes()
+            publi.save()
+            
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        else:
+            id_pub = Comment.objects.get(id=id).referenced_publication.id
+            print('voted comment')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             
         
 

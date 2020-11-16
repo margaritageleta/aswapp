@@ -7,7 +7,11 @@
     <div style="height: 10px;"></div>
     <div class="contribution">
         <div style="grid-template-columns: 30px auto;">
-            <div class="counter"><p>▲</p></div>
+            {% if user.id == contribution.author.id %}
+                <div class="counter"><p>*</p></div>
+            {% else %}
+                <div class="counter"><p>▲</p></div>
+            {% endif %}
             <div>
                 <p class="title">{{ contribution.title }}</p>
                 <div class="contrib-nav">

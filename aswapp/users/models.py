@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.apps import apps
 from django.utils import timezone
 
-
 # Create your models here.
 class Hacker(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -13,6 +12,10 @@ class Hacker(models.Model):
     downvotes = models.IntegerField(default=0)
     created_at = models.DateTimeField(default=timezone.now(), null=False)
     description = models.CharField(max_length=500)
+
+    voted_publications = models.ManyToManyField('contributions.Publication', blank=True)
+    voted_comments = models.ManyToManyField('contributions.Comment', blank=True)
+
 
     objects = models.Manager()    
 
