@@ -156,19 +156,20 @@ class SubmitView(FormView):
                 new_publication = Publication(title=title, url=url, kind=kind, author=hacker)
                 new_publication.save()
                 #If has text associated - it is a comment associated to the publication
-                if text.isspace() :
+                print(text.isspace())
+                if len(text) > 0:
                     new_comment = Comment(comment=text, referenced_publication=new_publication, author=hacker)
                     new_comment.save() 
         #Ask Submission
         else:  
             new_publication = Publication(title=title, kind=kind, author=hacker, question=text)
             new_publication.save()
+
+            if len(text) > 0:
+                new_comment = Comment(comment=text, referenced_publication=new_publication, author=hacker)
+                new_comment.save() 
     
-        
         return HttpResponseRedirect("/news")   
-
-
-
 
 class PublicationView(View): 
     # This class manages to show a particular publication 
