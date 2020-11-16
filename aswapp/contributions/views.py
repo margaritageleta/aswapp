@@ -87,7 +87,8 @@ class ReplyView(FormView):
 
         parent_comment = Comment.objects.get(id=id)
         parent_publication = parent_comment.referenced_publication
-        hacker = Hacker.objects.get(username=request.user)
+        user = User.objects.get(username=request.user)
+        hacker = Hacker.objects.get(user=user)
 
         new_reply = Comment(comment=reply_text, parent=parent_comment, referenced_publication=parent_publication, author=hacker)
         new_reply.save()
@@ -107,7 +108,8 @@ class CommentView(FormView):
     def post(self, request, id): 
         publication =  Publication.objects.get(id=id)
         text = request.POST['comment']
-        hacker = Hacker.objects.get(username=request.user)
+        user = User.objects.get(username=request.user)
+        hacker = Hacker.objects.get(user=user)
 
 
         new_comment = Comment(comment=text, referenced_publication=publication, author=hacker)
@@ -140,7 +142,8 @@ class SubmitView(FormView):
         url = request.POST['url']
         text = request.POST['text']
 
-        hacker = Hacker.objects.get(username=request.user)
+        user = User.objects.get(username=request.user)
+        hacker = Hacker.objects.get(user=user)
 
         kind = 0 if url == '' or url is None else 1
 
