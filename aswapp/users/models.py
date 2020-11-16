@@ -12,14 +12,13 @@ class Hacker(models.Model):
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
     created_at = models.DateTimeField(default=timezone.now(), null=False)
+    description = models.CharField(max_length=500)
 
     objects = models.Manager()    
 
     
     def get_username(self):
         return self.user.username 
-
-
         
     def get_publications(self):
         Publication = apps.get_model('contributions', 'Publication') #This is done due circular imports
@@ -53,7 +52,8 @@ class Hacker(models.Model):
         self.calculate_karma()
 
     def set_username(self, new_username):
-        self.username = new_username
+        self.user.username = new_username
+        self.user.save()
     
     def calculate_karma(self): 
         self.karma = self.upvotes-self.downvotes
@@ -61,6 +61,12 @@ class Hacker(models.Model):
     def get_karma(self):
         self.calculate_karma()
         return self.karma
+
+    def get_description(self):
+        return self.description
+
+    def set_description(self, new_description):
+        self.description = new_description
 
     
 

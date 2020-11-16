@@ -22,11 +22,20 @@
                 <td>{{ email }}</td> 
             </tr> 
             <tr>
+                <th>description</th>
+                <td>{{ description }}</td>
+            </tr>
+            <form action="{% url 'profile_view' %}", method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit"> update </button>
+            </form>
+            <tr>
                 <th>
                     <p><a href="{% url 'show_contributions_user' id=username %}">Submissions</a></p>
                 </th>
-                
             </tr>
+           
         </table>
 
     

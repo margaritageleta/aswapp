@@ -3,6 +3,7 @@ from contributions import views
 
 
 urlpatterns = [
+    
     url(r'news', views.NewsView.as_view(), name='news_view'),
     url(r'newest', views.NewestView.as_view(), name='newest_view'),
     url(r'submit/', views.SubmitView.as_view(), name='submit_contribution_view'),
