@@ -3,11 +3,6 @@ from django.contrib.auth.models import User
 from django.apps import apps
 from django.utils import timezone
 
-<<<<<<< HEAD
-
-=======
-# Create your models here.
->>>>>>> 23ce00c64709199194fe92a46bb8ad45e2acc66b
 class Hacker(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=80)
