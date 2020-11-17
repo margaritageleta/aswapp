@@ -55,6 +55,27 @@ class Comment(Contribution):
     created_at = models.DateTimeField(default=timezone.now(), null=False)
 
 
+class Vote(models.Model):
+    voter = models.ForeignKey(Hacker, on_delete=models.CASCADE, blank=False, null=False) 
+    
+    class Meta:
+        abstract = True
+
+    objects = models.Manager()
+
+class VotePublication(Vote):
+    contribution =  models.ForeignKey(Publication, on_delete=models.CASCADE, blank=False, null=False) 
+
+    class Meta:
+        unique_together = (("voter", "contribution"),)
+
+
+class VoteComment(Vote):
+    contribution =  models.ForeignKey(Comment, on_delete=models.CASCADE, blank=False, null=False) 
+
+    class Meta:
+        unique_together = (("voter", "contribution"),)
+
 
 
     

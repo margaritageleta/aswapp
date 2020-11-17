@@ -12,10 +12,6 @@ class Hacker(models.Model):
     created_at = models.DateTimeField(default=timezone.now(), null=False)
     description = models.CharField(default="",max_length=500)
 
-    voted_publications = models.ManyToManyField('contributions.Publication', blank=True)
-    voted_comments = models.ManyToManyField('contributions.Comment', blank=True)
-
-
     objects = models.Manager()    
 
     
@@ -44,7 +40,6 @@ class Hacker(models.Model):
         self.upvotes += 1
         self.calculate_karma()
     
-    
     def add_downvotes(self):
         self.downvotes += 1
         self.calculate_karma()
@@ -69,5 +64,3 @@ class Hacker(models.Model):
 
     def set_description(self, new_description):
         self.description = new_description
-
-    
