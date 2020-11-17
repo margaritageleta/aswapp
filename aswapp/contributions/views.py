@@ -39,6 +39,8 @@ class NewsView(View):
         if request.user.is_authenticated:
             hacker = Hacker.objects.get(user=request.user)
             context = {'contributions': self.publications, 'hacker': hacker}
+        else:
+            context = {'contributions': self.publications}
         return render(request, self.template_name, context)
 
 class NewestView(View): 
