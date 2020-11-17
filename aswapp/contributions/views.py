@@ -38,9 +38,21 @@ class NewsView(View):
         
         context = {'contributions': self.publications}
 
-        if request.user.is_authenticated:
+        if request.user.is_authenticated and request.user.username != 'root':
             hacker = Hacker.objects.get(user=request.user)
+
+            voted_publications = VotePublication.objects.filter(voter=hacker).all()
+            print(voted_publications)
+
             context['hacker'] = hacker
+
+            votes = set()
+            for c in self.publications:
+                if VotePublication.objects.filter(contribution=c).exists():
+                    votes.add(c.id)
+            
+            context['votes'] = votes
+
         return render(request, self.template_name, context)
 
 class NewestView(View): 
@@ -64,7 +76,7 @@ class NewestView(View):
         self.sort_publications()
         context = {'contributions': self.publications}
 
-        if request.user.is_authenticated:
+        if request.user.is_authenticated and request.user.username != 'root':
             hacker = Hacker.objects.get(user=request.user)
             context['hacker'] = hacker
 
@@ -238,8 +250,8 @@ class DeleteView(View):
 class VoteView(View):
 
     def get(self, request, id):
-
-        if request.user.is_authenticated:
+        print('VOTE')
+        if request.user.is_authenticated and request.user.username != 'root':
 
             hacker = Hacker.objects.get(user=request.user)
 
@@ -250,14 +262,52 @@ class VoteView(View):
                 if VotePublication.objects.filter(voter=hacker, contribution=publi).count() == 0:
                     
                     vote = VotePublication.objects.create(voter=hacker, contribution=publi)
-                    vote.save(force_insert=True)
+                    # vote.save(force_insert=True)
                     
                     publi.author.add_upvotes()
                     publi.author.save()
 
                     publi.add_votes()
                     publi.save()
-                
+                else:
+                    print('NO PUEDES PASAR HAHAAHAH')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+            else:
+                id_pub = Comment.objects.get(id=id).referenced_publication.id
+                print('voted comment')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+        else:
+            return HttpResponseRedirect('/login/google-oauth2') # TODO
+
+
+class UnvoteView(View):
+
+    def get(self, request, id):
+        print('UNVOTE')
+        if request.user.is_authenticated and request.user.username != 'root':
+
+            hacker = Hacker.objects.get(user=request.user)
+
+            if Publication.objects.filter(id=id).exists():
+
+                publi = Publication.objects.get(id=id) 
+
+                print(f'Cuantos hay {VotePublication.objects.filter(voter=hacker, contribution=publi).count()}')
+
+                if VotePublication.objects.filter(voter=hacker, contribution=publi).count() > 0:
+                    
+                    VotePublication.objects.filter(voter=hacker, contribution=publi).delete()
+                    
+                    publi.author.remove_upvotes()
+                    publi.author.save()
+
+                    publi.remove_votes()
+                    publi.save()
+                    
+                else:
+                    print('NO PUEDES PASAR HAHAAHAH')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             else:
