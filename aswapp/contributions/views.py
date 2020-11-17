@@ -11,6 +11,7 @@ from django import forms
 from contributions.forms import CommentForm
 from users.models import Hacker
 from django.contrib.auth.models import User
+from contributions.models import VotePublication, VoteComment
 
 # Create your views here.
 
@@ -34,13 +35,12 @@ class NewsView(View):
         
         self.get_url_publications()
         self.sort_url_publications()
-        context = {}
+        
+        context = {'contributions': self.publications}
 
         if request.user.is_authenticated:
             hacker = Hacker.objects.get(user=request.user)
-            context = {'contributions': self.publications, 'hacker': hacker}
-        else:
-            context = {'contributions': self.publications}
+            context['hacker'] = hacker
         return render(request, self.template_name, context)
 
 class NewestView(View): 
@@ -62,10 +62,12 @@ class NewestView(View):
         
         self.get_publications()
         self.sort_publications()
-        hacker = Hacker.objects.get(user=request.user)
-        
-        context = {'contributions': self.publications, 'hacker': hacker}
-        print(context)
+        context = {'contributions': self.publications}
+
+        if request.user.is_authenticated:
+            hacker = Hacker.objects.get(user=request.user)
+            context['hacker'] = hacker
+
         return render(request, self.template_name, context) 
 
 
@@ -236,27 +238,35 @@ class DeleteView(View):
 class VoteView(View):
 
     def get(self, request, id):
-        hacker = Hacker.objects.get(user=request.user)
 
-        if Publication.objects.filter(id=id).exists():
-            print('voted publi')
-            publi = Publication.objects.get(id=id) 
+        if request.user.is_authenticated:
 
-            hacker.voted_publications.add(publi)
-            hacker.save() 
-            
-            publi.author.add_upvotes()
-            publi.author.save()
+            hacker = Hacker.objects.get(user=request.user)
 
-            publi.add_votes()
-            publi.save()
-            
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            if Publication.objects.filter(id=id).exists():
+                print('voted publi')
+                publi = Publication.objects.get(id=id) 
 
+                if VotePublication.objects.filter(voter=hacker, contribution=publi).count() == 0:
+                    
+                    vote = VotePublication.objects.create(voter=hacker, contribution=publi)
+                    vote.save(force_insert=True)
+                    
+                    publi.author.add_upvotes()
+                    publi.author.save()
+
+                    publi.add_votes()
+                    publi.save()
+                
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+            else:
+                id_pub = Comment.objects.get(id=id).referenced_publication.id
+                print('voted comment')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
         else:
-            id_pub = Comment.objects.get(id=id).referenced_publication.id
-            print('voted comment')
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect('/login/google-oauth2') # TODO
             
         
 
