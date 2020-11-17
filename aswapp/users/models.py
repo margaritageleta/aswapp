@@ -37,7 +37,7 @@ class Hacker(models.Model):
         self.calculate_karma()
     
     def remove_upvotes(self):
-        self.upvotes += 1
+        self.upvotes -= 1
         self.calculate_karma()
     
     def add_downvotes(self):
