@@ -34,10 +34,11 @@ class NewsView(View):
         
         self.get_url_publications()
         self.sort_url_publications()
-        hacker = Hacker.objects.get(user=request.user)
-        
-        context = {'contributions': self.publications, 'hacker': hacker}
-    
+        context = {}
+
+        if request.user.is_authenticated:
+            hacker = Hacker.objects.get(user=request.user)
+            context = {'contributions': self.publications, 'hacker': hacker}
         return render(request, self.template_name, context)
 
 class NewestView(View): 

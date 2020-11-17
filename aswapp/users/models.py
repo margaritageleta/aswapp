@@ -10,7 +10,7 @@ class Hacker(models.Model):
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
     created_at = models.DateTimeField(default=timezone.now(), null=False)
-    description = models.CharField(max_length=500)
+    description = models.CharField(default="",max_length=500)
 
     voted_publications = models.ManyToManyField('contributions.Publication', blank=True)
     voted_comments = models.ManyToManyField('contributions.Comment', blank=True)
