@@ -12,7 +12,15 @@
     <div style="height: 10px;"></div>
     <div class="contribution">
         <div>
-            <div class="counter"><p>{{ forloop.counter }}. ▲</p></div>
+            {% if user.id == contribution.author.id %}
+                <div class="counter"><p>{{ forloop.counter }}. *</p></div>
+            {% else %}
+                <div class="counter">
+                    <p>{{ forloop.counter }}. 
+                        <a href="{% url 'vote_publication_view' id=contribution.id %}">▲</a>
+                    </p>
+                </div>
+            {% endif %}
             <div>
                 <p class="title">
                     <a href="{{ contribution.url }}">

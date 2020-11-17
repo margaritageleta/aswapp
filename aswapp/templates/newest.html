@@ -7,9 +7,24 @@
     {% load get_domain %}
     {% for contribution in contributions %}
     <div style="height: 10px;"></div>
+        <p>{{contribution}}</p>
+        <p>{{hacker.voted_publications}}</p>
     <div class="contribution">
         <div>
-            <div class="counter"><p>{{ forloop.counter }}. ▲</p></div>
+            {% if user.id == contribution.author.id %}
+                <div class="counter"><p>{{ forloop.counter }}. *</p></div>
+            {% else %}
+                
+                {% if contribution in user.voted_publications %}
+                    <p>Hello</p>
+                    
+                {% endif %}
+                <div class="counter">
+                    <p>{{ forloop.counter }}. 
+                        <a href="{% url 'vote_publication_view' id=contribution.id %}">▲</a>
+                    </p>
+                </div>
+            {% endif %}
             <div>
                 <p class="title">
                     <a href="{% url 'show_contribution_view' id=contribution.id %}">

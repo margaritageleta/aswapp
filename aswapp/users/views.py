@@ -6,6 +6,11 @@ from django.contrib.auth import login as do_login
 from django.views import View
 from django.contrib.auth.models import User
 from users.models import Hacker
+from users.forms import ProfileForm
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+
+
 
 # Create your views here.
 
@@ -26,6 +31,7 @@ class ProfileView(View):
     # users' profiles
     template_name = "profile.html"
     context = {}
+    form = ProfileForm
 
     def get(self, request, *args, **kwargs):
         # This method builds the client page profie.html 
@@ -41,15 +47,32 @@ class ProfileView(View):
             
         else: 
             hacker = Hacker.objects.get(user=user)
-                 
+        
+        self.form.username = hacker.get_username()
+        
+
         context = {
             'username': hacker.get_username(),
             'karma': hacker.get_karma(),
             'joined': hacker.get_created_time(),
-            'email': hacker.get_email(),           
+            'email': hacker.get_email(),  
+            'description': hacker.get_description(),
+            'form': self.form         
 
         }
         return render(request, self.template_name, context)
+
+    def post(self, request):
+        new_username = request.POST['username']
+        new_description = request.POST['description']
+        
+        user = User.objects.get(username=request.user)
+        hacker = Hacker.objects.get(user=user)
+        hacker.set_username(new_username)
+        hacker.set_description(new_description)
+        hacker.save()
+        return HttpResponseRedirect(reverse('profile_view'))
+ 
 
 class UserView(View):
 

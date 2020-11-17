@@ -19,8 +19,14 @@ class Contribution(models.Model):
 
     objects = models.Manager()
 
-    
+    def add_votes(self): 
+        self.number_votes += 1
 
+    def delete_votes(self): 
+        self.number_votes -= 1
+    
+    def get_votes(self):
+        return self.number_votes
 
 
 class Publication(Contribution):

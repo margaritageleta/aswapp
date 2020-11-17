@@ -34,8 +34,9 @@ class NewsView(View):
         
         self.get_url_publications()
         self.sort_url_publications()
+        hacker = Hacker.objects.get(user=request.user)
         
-        context = {'contributions': self.publications}
+        context = {'contributions': self.publications, 'hacker': hacker}
     
         return render(request, self.template_name, context)
 
@@ -58,8 +59,9 @@ class NewestView(View):
         
         self.get_publications()
         self.sort_publications()
+        hacker = Hacker.objects.get(user=request.user)
         
-        context = {'contributions': self.publications}
+        context = {'contributions': self.publications, 'hacker': hacker}
         print(context)
         return render(request, self.template_name, context) 
 
@@ -87,7 +89,8 @@ class ReplyView(FormView):
 
         parent_comment = Comment.objects.get(id=id)
         parent_publication = parent_comment.referenced_publication
-        hacker = Hacker.objects.get(username=request.user)
+        user = User.objects.get(username=request.user)
+        hacker = Hacker.objects.get(user=user)
 
         new_reply = Comment(comment=reply_text, parent=parent_comment, referenced_publication=parent_publication, author=hacker)
         new_reply.save()
@@ -107,7 +110,8 @@ class CommentView(FormView):
     def post(self, request, id): 
         publication =  Publication.objects.get(id=id)
         text = request.POST['comment']
-        hacker = Hacker.objects.get(username=request.user)
+        user = User.objects.get(username=request.user)
+        hacker = Hacker.objects.get(user=user)
 
 
         new_comment = Comment(comment=text, referenced_publication=publication, author=hacker)
@@ -140,7 +144,8 @@ class SubmitView(FormView):
         url = request.POST['url']
         text = request.POST['text']
 
-        hacker = Hacker.objects.get(username=request.user)
+        user = User.objects.get(username=request.user)
+        hacker = Hacker.objects.get(user=user)
 
         kind = 0 if url == '' or url is None else 1
 
@@ -156,19 +161,20 @@ class SubmitView(FormView):
                 new_publication = Publication(title=title, url=url, kind=kind, author=hacker)
                 new_publication.save()
                 #If has text associated - it is a comment associated to the publication
-                if text.isspace() :
+                print(text.isspace())
+                if len(text) > 0:
                     new_comment = Comment(comment=text, referenced_publication=new_publication, author=hacker)
                     new_comment.save() 
         #Ask Submission
         else:  
             new_publication = Publication(title=title, kind=kind, author=hacker, question=text)
             new_publication.save()
+
+            if len(text) > 0:
+                new_comment = Comment(comment=text, referenced_publication=new_publication, author=hacker)
+                new_comment.save() 
     
-        
         return HttpResponseRedirect("/news")   
-
-
-
 
 class PublicationView(View): 
     # This class manages to show a particular publication 
@@ -223,6 +229,31 @@ class DeleteView(View):
             id_pub = Comment.objects.get(id=id).referenced_publication.id
             Comment.objects.get(id=id).delete() 
             return HttpResponseRedirect("/item/" + str(id_pub))
+
+class VoteView(View):
+
+    def get(self, request, id):
+        hacker = Hacker.objects.get(user=request.user)
+
+        if Publication.objects.filter(id=id).exists():
+            print('voted publi')
+            publi = Publication.objects.get(id=id) 
+
+            hacker.voted_publications.add(publi)
+            hacker.save() 
+            
+            publi.author.add_upvotes()
+            publi.author.save()
+
+            publi.add_votes()
+            publi.save()
+            
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        else:
+            id_pub = Comment.objects.get(id=id).referenced_publication.id
+            print('voted comment')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             
         
 
