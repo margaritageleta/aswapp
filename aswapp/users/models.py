@@ -24,7 +24,7 @@ class Hacker(models.Model):
     
     def get_comments(self):
         Comment = apps.get_model('contributions', 'Comment')
-        return Comment.objects.filter(author=self)
+        return Comment.objects.filter(author=self, parent=None)
 
     def get_created_time(self):
         return self.user.date_joined
