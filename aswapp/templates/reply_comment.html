@@ -13,6 +13,11 @@
           {{ comment.author.username }}
         </a>        
       </span>
+      <span class="about" >
+        <a href="{% url 'show_contribution_view' id=comment.referenced_publication.id %}"> 
+            | on: {{ comment.referenced_publication.title }} |
+        </a>
+    </span>
       <span>{{comment.created_at|naturaltime }}</span>
       <p class="comment"> {{comment.comment }}</p>
     </div>
