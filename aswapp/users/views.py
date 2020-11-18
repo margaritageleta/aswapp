@@ -140,10 +140,10 @@ class UserView(View):
             'description': hacker.get_description(),
         }
         
-        if (str(hacker.get_username()) == str(request.user)): 
-            return HttpResponseRedirect(reverse('show_user_view', kwargs={'id':hacker.user.id}))
-        else: 
-            return render(request, self.template_name, context)
+        # if (str(hacker.get_username()) == str(request.user)): 
+        #     return HttpResponseRedirect(reverse('show_user_view', kwargs={'id':hacker.user.id}))
+        # else: 
+        return render(request, self.template_name, context)
 
 def logout(request):
     # end session
