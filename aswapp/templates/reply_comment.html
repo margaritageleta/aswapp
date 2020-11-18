@@ -10,12 +10,31 @@
     <div style="height: 10px;"></div>
     <div class="about" style="margin-left: 23px;">
       <div style="grid-template-columns: 30px auto;">
-        <span>
-          <a href="{% url 'show_user_view' id=comment.author.id %}">
-            {{ comment.author.username }}
-          </a>        
-        </span>
-        <span>{{comment.created_at|naturaltime }}</span>
+        {% if user.id == contribution.author.id %}
+                <div class="counter"><p class="star">*</p></div>
+            {% else %}
+                <div class="counter">
+                  <span>
+                  {% if not comment_vote and comment.author.id != user.id %}
+                      <a href="{% url 'vote_publication_view' kind='comment' id=comment.id %}">▲</a>
+                  {% endif %}
+                  </span>
+                  <span>
+                    <a href="{% url 'show_user_view' id=comment.author.id %}">
+                      {{ comment.author.username }}
+                    </a>        
+                  </span>
+                  <span>{{comment.created_at|naturaltime }}</span>
+                  {% if comment_vote %}
+                      <span> | </span>
+                      <a href="{% url 'unvote_publication_view' kind='comment' id=comment.id %}">
+                          unvote
+                      </a> 
+                  {% endif %}
+                </div>
+            {% endif %}
+        
+        
         <p class="comment"> {{comment.comment }}</p>
       </div>
         <form action="", method="POST">
