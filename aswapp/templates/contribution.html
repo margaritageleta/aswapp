@@ -6,11 +6,19 @@
     {% load humanize %} 
     <div style="height: 10px;"></div>
     <div class="contribution">
+        <p>{{ votes }}</p>
+        
         <div style="grid-template-columns: 30px auto;">
             {% if user.id == contribution.author.id %}
                 <div class="counter"><p>*</p></div>
             {% else %}
-                <div class="counter"><p>▲</p></div>
+                <div class="counter">
+                    <p>
+                    {% if not publi_vote %}
+                        <a href="{% url 'vote_publication_view' id=contribution.id %}">▲</a>
+                    {% endif %}
+                    </p>
+                </div>
             {% endif %}
             <div>
                 <p class="title">{{ contribution.title }}</p>
@@ -34,6 +42,12 @@
                                 <span> | </span>
                                 <a href="{% url 'delete_publication_view' id=contribution.id %}">
                                     delete
+                                </a> 
+                            {% endif %}
+                            {% if publi_vote %}
+                                <span> | </span>
+                                <a href="{% url 'unvote_publication_view' id=contribution.id %}">
+                                    unvote
                                 </a> 
                             {% endif %}
                         </span>
