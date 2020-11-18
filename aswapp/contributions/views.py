@@ -97,14 +97,20 @@ class ReplyView(FormView):
     context = {} 
     
     def get(self, request, id):
-        print(id)
         comment = Comment.objects.get(id=id)
         self.parent = comment
+
         context = {
             'comment': comment,
             'form': self.form,
             'type': 'comment'
         }
+
+        if request.user.is_authenticated and request.user.username != 'root':
+            hacker = Hacker.objects.get(user=request.user)
+
+            context['comment_vote'] = VoteComment.objects.filter(voter=hacker, contribution=comment).exists()
+
         return render(request, self.template_name, context)
         
     def post(self, request, id):
@@ -118,10 +124,6 @@ class ReplyView(FormView):
 
         new_reply = Comment(comment=reply_text, parent=parent_comment, referenced_publication=parent_publication, author=hacker)
         new_reply.save()
-
-        # print("____________")
-        # print(new_reply.parent.comment)
-        # print("__________")
 
         return HttpResponseRedirect(reverse('show_contribution_view',args=[parent_publication.pk]))
 
