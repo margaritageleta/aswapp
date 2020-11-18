@@ -23,6 +23,7 @@ nav {
     background-color: var(--orange-hn);
     display: flex;
     justify-content: space-between;
+    font-size: medium
 }
 
 ul, li {
