@@ -16,6 +16,7 @@ import dj_database_url
 import dotenv
 import django_heroku
 
+
 # social auth configuration
 
 AUTHENTICATION_BACKENDS = (
@@ -24,7 +25,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_URL = '/auth/login/google-oauth2/'
-LOGIN_REDIRECT_URL = '/profile'
+LOGIN_REDIRECT_URL = '/^profile/$'
 LOGOUT_REDIRECT_URL = '/'
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 

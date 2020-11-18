@@ -15,7 +15,18 @@ from django.urls import reverse
 # Create your views here.
 
 
-class UserContributions(View): 
+class UserComments(View): 
+    template_name = "news.html"
+
+    def get(self, request, id): 
+        hacker = Hacker.objects.get(username=id)
+        context = {
+            'contributions': hacker.get_comments(),
+        }
+        return render(request, self.template_name, context)
+
+class UserContributions(View):
+ 
     template_name = "news.html"
     
     def get(self, request, id): 
