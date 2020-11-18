@@ -7,56 +7,60 @@
 
 {% block content %}
     {% load humanize %} 
-    <div class="about">
-      <span>
-        <a href="{% url 'show_user_view' id=comment.author.id %}">
-          {{ comment.author.username }}
-        </a>        
-      </span>
-      <span class="about" >
-        <a href="{% url 'show_contribution_view' id=comment.referenced_publication.id %}"> 
-            | on: {{ comment.referenced_publication.title }} |
-        </a>
-    </span>
-      <span>{{comment.created_at|naturaltime }}</span>
-      <p class="comment"> {{comment.comment }}</p>
-    </div>
-    <form action="", method="POST">
-      {% csrf_token %}
-      <table>
-        {% for field in form %}
-          {% if forloop.counter == 1 %}
-          <tr>
-            <th></th>
-            <td></td> 
-          </tr>  
-          {% endif %}
-          <tr>
-            <th class="label-tag">{{ field.label_tag }}</th>
-            <td>
-              {{ field.errors }}
-              {{ field }}
-            </td>
-          </tr>
-          {% if forloop.counter == 2 %}
-          <tr>
-            <th></th>
-            <td><b>or</b></td> 
-          </tr>  
-          {% endif %}
-        {% endfor %}
-        <tr>
-          <th></th>
-          <td><button type="submit">Add comment</button></td>
-        </tr>
-        <tr>
-          <th></th>
-          <td>
-          </td>
-        </tr>
-      </table>
+    <div style="height: 10px;"></div>
+    <div class="about" style="margin-left: 23px;">
+      <div style="grid-template-columns: 30px auto;">
+        <span>
+          <a href="{% url 'show_user_view' id=comment.author.id %}">
+            {{ comment.author.username }}
+          </a>        
+        </span>
+        <span class="about" >
+          <a href="{% url 'show_contribution_view' id=comment.referenced_publication.id %}"> 
+              | on: {{ comment.referenced_publication.title }} |
+          </a>
+        </span>
+        <span>{{comment.created_at|naturaltime }}</span>
+        <p class="comment"> {{comment.comment }}</p>
+      </div>
+        <form action="", method="POST">
+          {% csrf_token %}
+          <table>
+            {% for field in form %}
+              {% if forloop.counter == 1 %}
+              <tr>
+                <th></th>
+                <td></td> 
+              </tr>  
+              {% endif %}
+              <tr>
+                <th class="label-tag">{{ field.label_tag }}</th>
+                <td>
+                  {{ field.errors }}
+                  {{ field }}
+                </td>
+              </tr>
+              {% if forloop.counter == 2 %}
+              <tr>
+                <th></th>
+                <td><b>or</b></td> 
+              </tr>  
+              {% endif %}
+            {% endfor %}
+            <tr>
+              <th></th>
+              <td><button type="submit">Add comment</button></td>
+            </tr>
+            <tr>
+              <th></th>
+              <td>
+              </td>
+            </tr>
+          </table>
+          
+        </form>  
       
-    </form>  
+    </div>
 
 
   
