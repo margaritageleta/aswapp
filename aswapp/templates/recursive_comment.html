@@ -18,6 +18,13 @@
         </a>
     </span>
     {% endif %}
+    {% if reply.id in c_votes %}
+    <span class="delete" >
+        <a href="{% url 'unvote_publication_view' kind='comment' id=reply.id %}"> 
+            | unvote
+        </a>
+    </span>
+    {% endif %}
     <span id="hide-{{ reply.id }}" class="hide">[ - ]</span>
     
 </div>
@@ -29,7 +36,11 @@
         {% for r, s in subreplies.items %}
             <table border="0">
                 <tbody>
-                    <td valign="top">▲</td>
+                    <td valign="top">
+                        {% if r.id not in c_votes %}
+                        <a href="{% url 'vote_publication_view' kind='comment' id=r.id %}">▲</a>
+                        {% endif %}
+                    </td>
                     <td>
                         {%with reply=r subreplies=s template_name="recursive_comment.html" %}
                             {% include template_name %}

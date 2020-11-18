@@ -210,6 +210,17 @@ class PublicationView(View):
             subcomments[subreply] = self.get_replies(subreply)
         return subcomments if subcomments else None
 
+    def create_comment_set(self, setc, voter, comments):
+        for c, v in comments.items():
+            print(f'{c}={v}')
+            if VoteComment.objects.filter(voter=voter, contribution=c).exists():
+                setc.add(c.id)
+                print(c.id)
+            if v != None: 
+                self.create_comment_set(setc, voter, v)
+            else: 
+                pass
+
     def get(self, request, id, *args, **kwargs):
         # This method builds the client page newests.html with the 
         # publications sorted 
@@ -237,7 +248,11 @@ class PublicationView(View):
         if request.user.is_authenticated and request.user.username != 'root':
             hacker = Hacker.objects.get(user=request.user)
             context['publi_vote'] = VotePublication.objects.filter(voter=hacker, contribution=self.publication).exists()
-        print(context)
+
+            votes_c = set()
+            self.create_comment_set(votes_c, hacker, self.comments)
+            
+            context['c_votes'] = votes_c
         return render(request, "contribution.html", context)
 
 class DeleteView(View):
@@ -254,18 +269,19 @@ class DeleteView(View):
 
 class VoteView(View):
 
-    def get(self, request, id):
+    def get(self, request, kind, id):
         
         if request.user.is_authenticated and request.user.username != 'root':
-
             hacker = Hacker.objects.get(user=request.user)
 
-            if Publication.objects.filter(id=id).exists():
-                print('voted publi')
+            if kind == 'publication' and Publication.objects.filter(id=id).exists():
                 publi = Publication.objects.get(id=id) 
 
+                # If the publication is not voted by hacker
                 if VotePublication.objects.filter(voter=hacker, contribution=publi).count() == 0:
                     
+                    # Create a new vote and update the votes in both
+                    # the author (to recompute karma) & publication's
                     vote = VotePublication.objects.create(voter=hacker, contribution=publi)
                     
                     publi.author.add_upvotes()
@@ -273,17 +289,23 @@ class VoteView(View):
 
                     publi.add_votes()
                     publi.save()
-                else:
-                    print('NO PUEDES PASAR HAHAAHAH')
-                    print(VotePublication.objects.filter(voter=hacker, contribution=publi).count())
-                
+                   
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             
-            else:
-                id_pub = Comment.objects.get(id=id).referenced_publication.id
-                print('voted comment')
+            elif kind == 'comment' and Comment.objects.filter(id=id).exists():
+                comment = Comment.objects.get(id=id) 
+                
+                # If the comment is not voted by hacker
+                if VoteComment.objects.filter(voter=hacker, contribution=comment).count() == 0:
+                    
+                    # Create a new vote and update the votes 
+                    # the author (to recompute karma) 
+                    vote = VoteComment.objects.create(voter=hacker, contribution=comment)
+                    
+                    comment.author.add_upvotes()
+                    comment.author.save()
+
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        
         
         else:
             return HttpResponseRedirect('/login/google-oauth2') # TODO
@@ -291,20 +313,19 @@ class VoteView(View):
 
 class UnvoteView(View):
 
-    def get(self, request, id):
+    def get(self, request, kind, id):
 
         if request.user.is_authenticated and request.user.username != 'root':
-
             hacker = Hacker.objects.get(user=request.user)
 
-            if Publication.objects.filter(id=id).exists():
-
+            if kind == 'publication' and Publication.objects.filter(id=id).exists():
                 publi = Publication.objects.get(id=id) 
 
-                print(f'Cuantos hay {VotePublication.objects.filter(voter=hacker, contribution=publi).count()}')
-
+                # If the publication is voted by hacker
                 if VotePublication.objects.filter(voter=hacker, contribution=publi).count() > 0:
                     
+                    # Delete the vote and update the votes in both
+                    # the author (to recompute karma) & publication's
                     VotePublication.objects.get(voter=hacker, contribution=publi).delete()
                     
                     publi.author.remove_upvotes()
@@ -313,16 +334,22 @@ class UnvoteView(View):
                     publi.delete_votes()
                     publi.save()
                     
-                else:
-                    print('NO PUEDES PASAR HAHAAHAH')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+ 
+            elif kind == 'comment' and Comment.objects.filter(id=id).exists():
+                comment = Comment.objects.get(id=id)
 
-            
-            else:
-                id_pub = Comment.objects.get(id=id).referenced_publication.id
-                print('voted comment')
+                # If the comment is voted by hacker
+                if VoteComment.objects.filter(voter=hacker, contribution=comment).count() > 0:
+                    
+                    # Delete the vote and update the votes 
+                    # the author (to recompute karma) 
+                    VoteComment.objects.get(voter=hacker, contribution=comment).delete()
+                    
+                    comment.author.remove_upvotes()
+                    comment.author.save()
+                    
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             
-        
         else:
             return HttpResponseRedirect('/login/google-oauth2') # TODO

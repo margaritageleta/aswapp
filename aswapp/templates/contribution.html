@@ -15,7 +15,7 @@
                 <div class="counter">
                     <p>
                     {% if not publi_vote %}
-                        <a href="{% url 'vote_publication_view' id=contribution.id %}">▲</a>
+                        <a href="{% url 'vote_publication_view' kind='publication' id=contribution.id %}">▲</a>
                     {% endif %}
                     </p>
                 </div>
@@ -46,7 +46,7 @@
                             {% endif %}
                             {% if publi_vote %}
                                 <span> | </span>
-                                <a href="{% url 'unvote_publication_view' id=contribution.id %}">
+                                <a href="{% url 'unvote_publication_view' kind='publication' id=contribution.id %}">
                                     unvote
                                 </a> 
                             {% endif %}
@@ -97,7 +97,11 @@
     {% for reply, subreplies in replies.items %}
         <table class="comment-tree">
             <tbody>
-                <td valign="top" style="width: 5px;">▲</td>
+                <td valign="top" style="width: 5px;">
+                    {% if reply.id not in c_votes %}
+                    <a href="{% url 'vote_publication_view' kind='comment' id=reply.id %}">▲</a>
+                    {% endif %}
+                </td>
                 <td class="comment">{%include "recursive_comment.html" %}</td>
             </tbody>
         </table>
