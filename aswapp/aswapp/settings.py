@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
+import dotenv
+import django_heroku
 
 # social auth configuration
 
@@ -32,6 +35,10 @@ SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 
 # Quick-start development settings - unsuitable for production
@@ -66,12 +73,14 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'aswapp.urls'
@@ -98,13 +107,36 @@ WSGI_APPLICATION = 'aswapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
+ON_HEROKU = os.environ.get('ON_HEROKU')
+HEROKU_SERVER = os.environ.get('HEROKU_SERVER')
+
+
+if ON_HEROKU:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'postgresql',
+        }
+    }
+else:
+    DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
         'PORT': '8000',
     }
 }
+
+# DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'PORT': '8000',
+#     }
+# }
 
 # DATABASES = {
 #     'default': {
@@ -161,9 +193,16 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
    os.path.join(BASE_DIR,'static'),
 )
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SECRET')
+
+django_heroku.settings(locals())
+
+options = DATABASES['default'].get('OPTIONS', {})
+options.pop('sslmode', None)
+
 
 """
 print(f'ROOT: {STATIC_ROOT}')
