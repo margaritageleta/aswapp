@@ -153,7 +153,10 @@ class SubmitView(FormView):
     }
 
     def get(self, request):
-        return render(request, self.template_name, self.context)
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect('/login/google-oauth2')
+        else:
+            return render(request, self.template_name, self.context)
 
     def post(self, request):                  
         
