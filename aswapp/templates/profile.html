@@ -22,26 +22,26 @@
                 <th class="profile-tag">email:</th>
                 <td>{{ email }}</td> 
             </tr> 
-            <form action="{% url 'profile_view' %}" method="POST"></form>
+            <form action="{% url 'profile_view' %}" method="POST">
                 <tr>
-                    {% if user.id != hackerid %}
+                {% if user.id != hackerid %}
                     <th class="profile-tag">description:</th>
                     <td>{{ description }}</td>
-                    {% else %}
-                        
+                {% else %}  
                     {% csrf_token %}
                     {% for field in form %}
-                    <th class="label-tag" valign="top">{{ field.label_tag }}</th>
-                    <td>
-                        {{ field.errors }}
-                        {{ field }}
-                    </td>
+                        <th class="label-tag" valign="top">{{ field.label_tag }}</th>
+                        <td>
+                            {{ field.errors }}
+                            {{ field }}
+                        </td>
                     {% endfor %}
-                    {% endif %}
+                    
                 </tr>
                 <tr>
                     <th></th>
                     <td><button type="submit"> update </button></td>
+                {% endif %}
                 </tr>
             </form>
             <tr class="profile-options">
