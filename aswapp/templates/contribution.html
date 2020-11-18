@@ -10,7 +10,7 @@
         
         <div style="grid-template-columns: 30px auto;">
             {% if user.id == contribution.author.id %}
-                <div class="counter"><p>*</p></div>
+                <div class="counter"><p class="star">*</p></div>
             {% else %}
                 <div class="counter">
                     <p>
@@ -100,7 +100,9 @@
                 <td valign="top" style="width: 5px;">
                     {% if not user.is_authenticated %}
                     <a href="{% url 'social:begin' 'google-oauth2' %}">▲</a>
-                    {% elif reply.id not in c_votes %}
+                    {% elif reply.author.id == user.id %}
+                    <span class="star">*</span>
+                    {% elif reply.id not in c_votes and reply.author.id != user.id %}
                     <a href="{% url 'vote_publication_view' kind='comment' id=reply.id %}">▲</a>
                     {% endif %}
                 </td>

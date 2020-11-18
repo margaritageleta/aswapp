@@ -145,7 +145,6 @@ table input[type='text'], table input[type='url'], table textarea {
 
 .comment-tree .comment .content, .comment {
     color: black;
-    font-size: initial;
     margin: 5px 0;
 }
 
@@ -162,4 +161,8 @@ table input[type='text'], table input[type='url'], table textarea {
     color: black;
     text-decoration: underline;
     font-size: small;
+}
+
+.star {
+    color: var(--orange-hn);
 }

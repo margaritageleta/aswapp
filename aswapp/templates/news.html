@@ -10,7 +10,7 @@
     <div class="contribution">
         <div>
             {% if user.id == contribution.author.id %}
-                <div class="counter"><p>{{ forloop.counter }}. *</p></div>
+                <div class="counter"><p>{{ forloop.counter }}. <span class='star'>*</span></p></div>
             {% else %}
                 <div class="counter">
                     <p>{{ forloop.counter }}. 

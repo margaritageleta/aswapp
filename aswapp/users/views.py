@@ -9,6 +9,7 @@ from users.forms import ProfileForm
 from contributions.models import Comment
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from contributions.models import VoteComment
 
 
 
@@ -27,18 +28,29 @@ class UserComments(View):
             subcomments[subreply] = self.get_replies(subreply)
         return subcomments if subcomments else None
 
+    def create_comment_set(self, setc, voter, comments):
+        for c, v in comments.items():
+            print(f'{c}={v}')
+            if VoteComment.objects.filter(voter=voter, contribution=c).exists():
+                setc.add(c.id)
+                print(c.id)
+            if v != None: 
+                self.create_comment_set(setc, voter, v)
+            else: 
+                pass
 
     def get(self, request, id): 
         hacker = Hacker.objects.get(id=id)
         # print(hacker.username)
         hacker_comments = hacker.get_comments()
         self.comments = {}
-        
-
 
         try:
             for comment in hacker_comments:
                 self.comments[comment] = self.get_replies(comment)
+
+            votes_c = set()
+            self.create_comment_set(votes_c, hacker, self.comments)
             
         except Exception as e:
             # Back to square one
@@ -46,7 +58,8 @@ class UserComments(View):
 
         context = {
             'replies': self.comments,
-            'threads': True
+            'threads': True,
+            'c_votes': votes_c
         }
         return render(request, self.template_name, context)
 
@@ -103,11 +116,10 @@ class ProfileView(View):
 
     def post(self, request):
         new_description = request.POST['description']  
-        if (new_description != ""):    
-            user = User.objects.get(username=request.user)
-            hacker = Hacker.objects.get(user=user)
-            hacker.set_description(new_description)
-            hacker.save()
+        user = User.objects.get(username=request.user)
+        hacker = Hacker.objects.get(user=user)
+        hacker.set_description(new_description)
+        hacker.save()
         return HttpResponseRedirect(reverse('show_user_view', kwargs={'id':hacker.user.id}))
  
 
