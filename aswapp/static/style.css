@@ -76,7 +76,14 @@ body > div {
     align-self: flex-start;
     justify-self: center;
     color: grey;
+    width: 100%;
 }
+
+.contribution .counter p {
+    text-align: left;
+    margin-left: 10px;
+}
+
 .contrib-nav {
     display: flex;
     flex-direction: row;
