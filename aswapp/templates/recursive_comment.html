@@ -1,7 +1,7 @@
 
 {% load humanize %} 
 <div class="about">
-    {% if user.id == contribution.author.id %}
+    {% if user.id == contribution.author.id or user.id == reply.author.id%}
         <a style="color: rgb(27, 160, 0) !important;" href="{% url 'show_user_view' id=reply.author.id %}">
             {{ reply.author.username }}
         </a> 
@@ -40,7 +40,7 @@
 <div id="content-to-hide-{{ reply.id }}">
     <p class="content">{{ reply.comment }}</p>
     <p class="comment-reply"><a href="{% url 'reply_view' id=reply.id %}">reply</a></p>
-
+    
     {% if subreplies %}
         {% for r, s in subreplies.items %}
             <table border="0">
@@ -48,7 +48,9 @@
                     <td valign="top">
                         {% if not user.is_authenticated %}
                         <a href="{% url 'social:begin' 'google-oauth2' %}">▲</a>
-                        {% elif reply.id not in c_votes %}
+                        {% elif r.author.id == user.id %}
+                        <span class='star'>*</span>
+                        {% elif r.id not in c_votes and r.author.id != user.id%}
                         <a href="{% url 'vote_publication_view' kind='comment' id=r.id %}">▲</a>
                         {% endif %}
                     </td>

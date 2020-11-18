@@ -42,7 +42,11 @@
         <table class="comment-tree">
             <tbody>
                 <td valign="top" style="width: 5px;">
-                    {% if reply.id not in c_votes %}
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'social:begin' 'google-oauth2' %}">▲</a>
+                    {% elif reply.author.id == user.id %}
+                    <span class='star'>*</span>
+                    {% elif reply.id not in c_votes %}
                     <a href="{% url 'vote_publication_view' kind='comment' id=reply.id %}">▲</a>
                     {% endif %}
                 </td>
