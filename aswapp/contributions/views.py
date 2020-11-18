@@ -354,3 +354,38 @@ class UnvoteView(View):
             
         else:
             return HttpResponseRedirect('/login/google-oauth2') # TODO
+
+
+class AskView(View):
+    template_name = "news.html"
+    publications = []
+    
+    def get_publications(self): 
+        # This method gets all the publications
+        self.publications = Publication.objects.filter(kind=0) 
+    
+    def sort_publications(self):
+        # This method returns the publications sorted by number of votes
+        self.publications = sorted(self.publications, key = lambda x: x.created_at, reverse=True)
+        
+    def get(self, request, *args, **kwargs):
+        # This method builds the client page newests.html with the publications sorted 
+        
+        self.get_publications()
+        self.sort_publications()
+        context = {'contributions': self.publications}
+
+        if request.user.is_authenticated and request.user.username != 'root':
+            hacker = Hacker.objects.get(user=request.user)
+
+            context['hacker'] = hacker
+
+            # Add boolean vars for votes for hacker 
+            votes = set()
+            for c in self.publications:
+                if VotePublication.objects.filter(voter=hacker, contribution=c).exists():
+                    votes.add(c.id)
+            
+            context['votes'] = votes
+
+        return render(request, self.template_name, context) 
