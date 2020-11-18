@@ -102,7 +102,7 @@ TEMPLATES = [
 ]
 
 TEMPLATE_DIRS = (
-    os.path.join(SETTINGS_PATH, 'templates'),
+    os.path.join(BASE_DIR, 'templates'),
 )
 
 WSGI_APPLICATION = 'aswapp.wsgi.application'
