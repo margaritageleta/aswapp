@@ -10,11 +10,21 @@
     <div style="height: 10px;"></div>
     <div class="about" style="margin-left: 23px;">
       <div style="grid-template-columns: 30px auto;">
-        <span>
+        {% if user.id == comment.author.id %}
+          <a style="color: rgb(27, 160, 0) !important;" href="{% url 'profile_view' %}">
+            {{ comment.author.username }}
+          </a> 
+        {% else %}
+            <a href="{% url 'show_user_view' id=comment.author.id %}">
+                {{ comment.author.username }}
+            </a> 
+        {% endif %}
+
+        <!-- <span>
           <a href="{% url 'show_user_view' id=comment.author.id %}">
             {{ comment.author.username }}
           </a>        
-        </span>
+        </span> -->
         <span class="about" >
           <a href="{% url 'show_contribution_view' id=comment.referenced_publication.id %}"> 
               | on: {{ comment.referenced_publication.title }} |
