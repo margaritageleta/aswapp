@@ -67,7 +67,7 @@ class ProfileView(View):
     # users' profiles
     template_name = "profile.html"
     context = {}
-    form = ProfileForm()
+    # form = ProfileForm()
 
     def get(self, request, *args, **kwargs):
         # This method builds the client page profie.html 
@@ -94,7 +94,7 @@ class ProfileView(View):
             'joined': hacker.get_created_time(),
             'email': hacker.get_email(),  
             'description': hacker.get_description(),
-            'form': self.form         
+            'form': ProfileForm(initial={'description': hacker.get_description()})        
         }
 
         print(context)
@@ -137,7 +137,7 @@ class UserView(View):
             'karma': hacker.get_karma(),
             'joined': hacker.get_created_time(),
             'email': hacker.get_email(),       
-
+            'description': hacker.get_description(),
         }
         
         if (str(hacker.get_username()) == str(request.user)): 

@@ -4,6 +4,7 @@
 
 {% block content %}
     {% load humanize %} 
+    <div style="height: 10px;"></div>
         <table>
             <tr>
                 <th class="profile-tag">user:</th>
@@ -11,35 +12,48 @@
             </tr> 
             <tr>
                 <th class="profile-tag">created at:</th>
-                <td> {{ joined | naturaltime }} </td> 
+                <td style="color: black;"> {{ joined | naturaltime }} </td> 
             </tr>
             <tr>
-                <th class="profile-tag">karma</th>
+                <th class="profile-tag">karma:</th>
                 <td>{{ karma }}</td> 
             </tr>
             <tr>
-                <th class="profile-tag">email</th>
+                <th class="profile-tag">email:</th>
                 <td>{{ email }}</td> 
             </tr> 
-            <tr>
-                <th>description</th>
-                <td>{{ description }}</td>
-            </tr>
-                <form action="{% url 'profile_view' %}", method="POST">
+            <form action="{% url 'profile_view' %}" method="POST"></form>
+                <tr>
+                    {% if user.id != hackerid %}
+                    <th class="profile-tag">description:</th>
+                    <td>{{ description }}</td>
+                    {% else %}
+                        
                     {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit"> update </button>
-                </form>
+                    {% for field in form %}
+                    <th class="label-tag" valign="top">{{ field.label_tag }}</th>
+                    <td>
+                        {{ field.errors }}
+                        {{ field }}
+                    </td>
+                    {% endfor %}
+                    {% endif %}
+                </tr>
+                <tr>
+                    <th></th>
+                    <td><button type="submit"> update </button></td>
+                </tr>
+            </form>
             <tr class="profile-options">
+                <th></th>
                 <td>
-                    <p>
-                        <a href="{% url 'show_contributions_user' id=hackerid %}">
-                            Submissions
-                        </a>
-                    </p>
+                    <a href="{% url 'show_contributions_user' id=hackerid %}">
+                        Submissions
+                    </a>
                 </td>                
             </tr>
             <tr class="profile-options">
+                <th></th>
                 <td>
                     <p>
                         <a href="{% url 'show_comments_user' id=hackerid %}">

@@ -37,12 +37,12 @@ li {
     padding: 2px 6px;
 }
 
-.login-wrapper, ul {
+.login-wrapper {
     display: flex;
     flex-direction: row;
 }
 
-.login-wrapper > *, ul * {
+.login-wrapper > * {
     margin-right: 5px;
     align-self: center;
 }
