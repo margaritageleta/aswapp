@@ -41,18 +41,15 @@ class NewsView(View):
         if request.user.is_authenticated and request.user.username != 'root':
             hacker = Hacker.objects.get(user=request.user)
 
-            #voted_publications = VotePublication.objects.filter(voter=hacker).all()
-            #print(voted_publications)
-
             context['hacker'] = hacker
 
+            # Add boolean vars for votes for hacker 
             votes = set()
             for c in self.publications:
                 if VotePublication.objects.filter(voter=hacker, contribution=c).exists():
                     votes.add(c.id)
             
             context['votes'] = votes
-            print(votes)
 
         return render(request, self.template_name, context)
 
@@ -79,11 +76,18 @@ class NewestView(View):
 
         if request.user.is_authenticated and request.user.username != 'root':
             hacker = Hacker.objects.get(user=request.user)
+
             context['hacker'] = hacker
 
+            # Add boolean vars for votes for hacker 
+            votes = set()
+            for c in self.publications:
+                if VotePublication.objects.filter(voter=hacker, contribution=c).exists():
+                    votes.add(c.id)
+            
+            context['votes'] = votes
+
         return render(request, self.template_name, context) 
-
-
 
 class ReplyView(FormView):
     form = CommentForm()
@@ -124,22 +128,17 @@ class CommentView(FormView):
     template_name = 'contribution.html'
     context = {} 
 
-
     def post(self, request, id): 
         publication =  Publication.objects.get(id=id)
         text = request.POST['comment']
         user = User.objects.get(username=request.user)
         hacker = Hacker.objects.get(user=user)
 
-
         new_comment = Comment(comment=text, referenced_publication=publication, author=hacker)
 
         new_comment.save()         
 
         return HttpResponseRedirect('/item/' + str(id))
-
-            
-   
 
 class SubmitView(FormView):
     # This class manages the display of a form for 
@@ -167,23 +166,22 @@ class SubmitView(FormView):
 
         kind = 0 if url == '' or url is None else 1
 
-
-        #Url Publication Options
+        # Url Publication Options
         if kind == 1: 
-            #If already exists: redirect to existing post
+            # If already exists: redirect to existing post
             if Publication.objects.filter(url=url).exists(): 
                 id = Publication.objects.get(url=url).id
                 return HttpResponseRedirect('/item/' + str(id))
-            #Else, create a new Publication type Url
+            # Else, create a new Publication type Url
             else: 
                 new_publication = Publication(title=title, url=url, kind=kind, author=hacker)
                 new_publication.save()
-                #If has text associated - it is a comment associated to the publication
+                # If has text associated - it is a comment associated to the publication
                 print(text.isspace())
                 if len(text) > 0:
                     new_comment = Comment(comment=text, referenced_publication=new_publication, author=hacker)
                     new_comment.save() 
-        #Ask Submission
+        # Ask Submission
         else:  
             new_publication = Publication(title=title, kind=kind, author=hacker, question=text)
             new_publication.save()
