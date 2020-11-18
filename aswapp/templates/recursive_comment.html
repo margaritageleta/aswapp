@@ -18,6 +18,7 @@
         </a>
     </span>
     {% endif %}
+    
     {% if reply.id in c_votes %}
     <span class="delete" >
         <a href="{% url 'unvote_publication_view' kind='comment' id=reply.id %}"> 
@@ -25,6 +26,14 @@
         </a>
     </span>
     {% endif %}
+    {% if threads %}
+    <span class="delete" >
+        <a href="{% url 'show_contribution_view' id=reply.referenced_publication.id %}"> 
+            |  on: {{ reply.referenced_publication.title }}
+        </a>
+    </span>
+    {% endif %}
+
     <span id="hide-{{ reply.id }}" class="hide">[ - ]</span>
     
 </div>

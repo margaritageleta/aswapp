@@ -6,6 +6,7 @@ from django.views import View
 from django.contrib.auth.models import User
 from users.models import Hacker
 from users.forms import ProfileForm
+from contributions.models import Comment
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
@@ -15,12 +16,33 @@ from django.urls import reverse
 
 
 class UserComments(View): 
-    template_name = "news.html"
+    template_name = "comments.html"
+    comments = {}
+
+    def get_replies(self, comment):
+        # Obtains replies of comments recursively
+        subcomments = {}
+        subreplies = Comment.objects.filter(parent=comment)
+        for subreply in subreplies:
+            subcomments[subreply] = self.get_replies(subreply)
+        return subcomments if subcomments else None
+
 
     def get(self, request, id): 
-        hacker = Hacker.objects.get(username=id)
+        hacker = Hacker.objects.get(id=id)
+        hacker_comments = hacker.get_comments()
+
+        try:
+            for comment in hacker_comments:
+                self.comments[comment] = self.get_replies(comment)
+            
+        except Exception as e:
+            # Back to square one
+            return HttpResponseRedirect(reverse('news_view'))
+
         context = {
-            'contributions': hacker.get_comments(),
+            'replies': self.comments,
+            'threads': True
         }
         return render(request, self.template_name, context)
 
