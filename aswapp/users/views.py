@@ -84,7 +84,7 @@ class ProfileView(View):
 
     def get(self, request, *args, **kwargs):
         # This method builds the client page profie.html 
-        # with the requested user dataç
+        # with the requested user data
         
         user_name = request.user
         user = User.objects.get(username=user_name)
@@ -115,12 +115,13 @@ class ProfileView(View):
         return render(request, self.template_name, context)
 
     def post(self, request):
+        print("enter")
         new_description = request.POST['description']  
         user = User.objects.get(username=request.user)
         hacker = Hacker.objects.get(user=user)
         hacker.set_description(new_description)
         hacker.save()
-        return HttpResponseRedirect(reverse('show_user_view', kwargs={'id':hacker.user.id}))
+        return HttpResponseRedirect(reverse('profile_view'))
  
 
 class UserView(View):
@@ -132,7 +133,6 @@ class UserView(View):
     def get(self, request, id):
         # This method builds the client page profie.html 
         # with the requested user data
-
         user = User.objects.get(id=id)
 
         # See if the user has been registered in 
