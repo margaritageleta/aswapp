@@ -15,7 +15,8 @@
         <li class="bar"><a href="/news/">News/Principal</a></li>
         <li class="bar"><a href="/newest/">Newest</a></li>
         {% if user.is_authenticated %}
-            <li><a href="/submit/">Submit</a></li>
+            <li class="bar"><a href="/submit/">Submit</a></li>
+            <li><a href="{% url 'show_comments_user' id=user.id %}">Threads</a></li>
         {% endif %}
     {% endif %}
 </ul>
