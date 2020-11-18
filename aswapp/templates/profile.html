@@ -31,15 +31,22 @@
                     <button type="submit"> update </button>
                 </form>
             <tr class="profile-options">
-                <th></th>
                 <td>
                     <p>
                         <a href="{% url 'show_contributions_user' id=username %}">
                             Submissions
                         </a>
                     </p>
-                </td>
-                
+                </td>                
+            </tr>
+            <tr class="profile-options">
+                <td>
+                    <p>
+                        <a href="{% url 'show_comments_user' id=username %}" method="get">
+                            Comments
+                        </a>
+                    </p>
+                </td>                
             </tr>
            
         </table>

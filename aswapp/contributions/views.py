@@ -250,13 +250,13 @@ class DeleteView(View):
 class VoteView(View):
 
     def get(self, request, id):
-        print('VOTE')
+        # print('VOTE')
         if request.user.is_authenticated and request.user.username != 'root':
 
             hacker = Hacker.objects.get(user=request.user)
 
             if Publication.objects.filter(id=id).exists():
-                print('voted publi')
+                # print('voted publi')
                 publi = Publication.objects.get(id=id) 
 
                 if VotePublication.objects.filter(voter=hacker, contribution=publi).count() == 0:
