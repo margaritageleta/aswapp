@@ -30,7 +30,11 @@ class UserComments(View):
 
     def get(self, request, id): 
         hacker = Hacker.objects.get(id=id)
+        # print(hacker.username)
         hacker_comments = hacker.get_comments()
+        self.comments = {}
+        
+
 
         try:
             for comment in hacker_comments:

@@ -23,6 +23,7 @@ nav {
     background-color: var(--orange-hn);
     display: flex;
     justify-content: space-between;
+    font-size: medium
 }
 
 ul, li {
@@ -36,12 +37,12 @@ li {
     padding: 2px 6px;
 }
 
-.login-wrapper {
+.login-wrapper, ul {
     display: flex;
     flex-direction: row;
 }
 
-.login-wrapper > * {
+.login-wrapper > *, ul * {
     margin-right: 5px;
     align-self: center;
 }
