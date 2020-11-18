@@ -48,8 +48,6 @@ class ProfileView(View):
         else: 
             hacker = Hacker.objects.get(user=user)  
 
-        self.form.set_description(hacker.get_description())      
-
         context = {
             'username': hacker.get_username(),
             'karma': hacker.get_karma(),
