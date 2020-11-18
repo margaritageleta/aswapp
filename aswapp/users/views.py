@@ -31,12 +31,12 @@ class ProfileView(View):
     # users' profiles
     template_name = "profile.html"
     context = {}
-    form = ProfileForm
+    form = ProfileForm()
 
     def get(self, request, *args, **kwargs):
         # This method builds the client page profie.html 
         # with the requested user dataç
-
+        
         user_name = request.user
         user = User.objects.get(username=user_name)
     
@@ -46,10 +46,7 @@ class ProfileView(View):
             hacker.save()
             
         else: 
-            hacker = Hacker.objects.get(user=user)
-        
-        self.form.username = hacker.get_username()
-        
+            hacker = Hacker.objects.get(user=user)  
 
         context = {
             'username': hacker.get_username(),
@@ -63,14 +60,12 @@ class ProfileView(View):
         return render(request, self.template_name, context)
 
     def post(self, request):
-        new_username = request.POST['username']
-        new_description = request.POST['description']
-        
-        user = User.objects.get(username=request.user)
-        hacker = Hacker.objects.get(user=user)
-        hacker.set_username(new_username)
-        hacker.set_description(new_description)
-        hacker.save()
+        new_description = request.POST['description']  
+        if (new_description != ""):    
+            user = User.objects.get(username=request.user)
+            hacker = Hacker.objects.get(user=user)
+            hacker.set_description(new_description)
+            hacker.save()
         return HttpResponseRedirect(reverse('profile_view'))
  
 
@@ -84,9 +79,11 @@ class UserView(View):
         # This method builds the client page profie.html 
         # with the requested user dataç
 
-        user = User.objects.get(id=id)
     
-        # #See if the user has been registered in 
+        user = User.objects.get(id=id)
+        
+
+        #See if the user has been registered in 
         if Hacker.objects.filter(user = user).count() == 0: 
             hacker = Hacker(user=user, username=user.username)
             hacker.save()
@@ -98,13 +95,15 @@ class UserView(View):
             'username': hacker.get_username(),
             'karma': hacker.get_karma(),
             'joined': hacker.get_created_time(),
-            'email': hacker.get_email(),
-
-            
+            'email': hacker.get_email(),       
 
         }
-        print("_____________________________")
-        return render(request, self.template_name, context)
+        
+
+        if (str(hacker.get_username()) == str(request.user)): 
+            return HttpResponseRedirect(reverse('profile_view'))
+        else: 
+            return render(request, self.template_name, context)
 
 def logout(request):
     #end session
