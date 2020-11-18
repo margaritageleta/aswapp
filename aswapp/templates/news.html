@@ -17,7 +17,9 @@
             {% else %}
                 <div class="counter">
                     <p>{{ forloop.counter }}. 
-                        <a href="{% url 'vote_publication_view' id=contribution.id %}">▲</a>
+                        {% if not contribution.id in votes %}
+                            <a href="{% url 'vote_publication_view' id=contribution.id %}">▲</a>
+                        {% endif %}
                     </p>
                 </div>
             {% endif %}
@@ -50,6 +52,12 @@
                                 <span> | </span>
                                 <a href="{% url 'delete_publication_view' id=contribution.id %}">
                                     delete
+                                </a> 
+                            {% endif %}
+                            {% if contribution.id in votes %}
+                                <span> | </span>
+                                <a href="{% url 'unvote_publication_view' id=contribution.id %}">
+                                    unvote
                                 </a> 
                             {% endif %}
                         </span>
