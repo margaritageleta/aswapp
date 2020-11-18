@@ -15,7 +15,7 @@
         {% if user.is_authenticated %}
             <li class="bar"><a href="{% url 'show_comments_user' id=user.id %}">threads</a></li>
         {% endif %}
-        <li class="bar"><a href="{% url 'show_comments_user' id=user.id %}">ask</a></li>
+        <li class="bar"><a href="{% url 'ask_view' %}">ask</a></li>
         <li><a href="/submit/">submit</a></li>
     {% endif %}
 </ul>
