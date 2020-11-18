@@ -41,17 +41,18 @@ class NewsView(View):
         if request.user.is_authenticated and request.user.username != 'root':
             hacker = Hacker.objects.get(user=request.user)
 
-            voted_publications = VotePublication.objects.filter(voter=hacker).all()
-            print(voted_publications)
+            #voted_publications = VotePublication.objects.filter(voter=hacker).all()
+            #print(voted_publications)
 
             context['hacker'] = hacker
 
             votes = set()
             for c in self.publications:
-                if VotePublication.objects.filter(contribution=c).exists():
+                if VotePublication.objects.filter(voter=hacker, contribution=c).exists():
                     votes.add(c.id)
             
             context['votes'] = votes
+            print(votes)
 
         return render(request, self.template_name, context)
 
@@ -230,9 +231,13 @@ class PublicationView(View):
         context = {
             'contribution': self.publication,
             'form': CommentForm(),
-            'replies': self.comments
+            'replies': self.comments,
         }
-        
+
+        if request.user.is_authenticated and request.user.username != 'root':
+            hacker = Hacker.objects.get(user=request.user)
+            context['publi_vote'] = VotePublication.objects.filter(voter=hacker, contribution=self.publication).exists()
+        print(context)
         return render(request, "contribution.html", context)
 
 class DeleteView(View):
@@ -245,12 +250,12 @@ class DeleteView(View):
         else:
             id_pub = Comment.objects.get(id=id).referenced_publication.id
             Comment.objects.get(id=id).delete() 
-            return HttpResponseRedirect("/item/" + str(id_pub))
+            return HttpResponseRedirect("/item/" + str(id_pub))         
 
 class VoteView(View):
 
     def get(self, request, id):
-        print('VOTE')
+        
         if request.user.is_authenticated and request.user.username != 'root':
 
             hacker = Hacker.objects.get(user=request.user)
@@ -262,7 +267,6 @@ class VoteView(View):
                 if VotePublication.objects.filter(voter=hacker, contribution=publi).count() == 0:
                     
                     vote = VotePublication.objects.create(voter=hacker, contribution=publi)
-                    # vote.save(force_insert=True)
                     
                     publi.author.add_upvotes()
                     publi.author.save()
@@ -271,12 +275,15 @@ class VoteView(View):
                     publi.save()
                 else:
                     print('NO PUEDES PASAR HAHAAHAH')
+                    print(VotePublication.objects.filter(voter=hacker, contribution=publi).count())
+                
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
+            
             else:
                 id_pub = Comment.objects.get(id=id).referenced_publication.id
                 print('voted comment')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
         
         else:
             return HttpResponseRedirect('/login/google-oauth2') # TODO
@@ -285,7 +292,7 @@ class VoteView(View):
 class UnvoteView(View):
 
     def get(self, request, id):
-        print('UNVOTE')
+
         if request.user.is_authenticated and request.user.username != 'root':
 
             hacker = Hacker.objects.get(user=request.user)
@@ -298,26 +305,24 @@ class UnvoteView(View):
 
                 if VotePublication.objects.filter(voter=hacker, contribution=publi).count() > 0:
                     
-                    VotePublication.objects.filter(voter=hacker, contribution=publi).delete()
+                    VotePublication.objects.get(voter=hacker, contribution=publi).delete()
                     
                     publi.author.remove_upvotes()
                     publi.author.save()
 
-                    publi.remove_votes()
+                    publi.delete_votes()
                     publi.save()
                     
                 else:
                     print('NO PUEDES PASAR HAHAAHAH')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+            
             else:
                 id_pub = Comment.objects.get(id=id).referenced_publication.id
                 print('voted comment')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            
         
         else:
             return HttpResponseRedirect('/login/google-oauth2') # TODO
-            
-        
-
-       
