@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout as do_logout
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login as do_login
 from django.views import View
 from django.contrib.auth.models import User
 from users.models import Hacker
@@ -59,15 +58,21 @@ class ProfileView(View):
         else: 
             hacker = Hacker.objects.get(user=user)  
 
+        print('PRE')
+        print(f' HACKER {hacker.user.id}')
+
         context = {
+            'hackerid': hacker.user.id,
             'username': hacker.get_username(),
             'karma': hacker.get_karma(),
             'joined': hacker.get_created_time(),
             'email': hacker.get_email(),  
             'description': hacker.get_description(),
             'form': self.form         
-
         }
+
+        print(context)
+
         return render(request, self.template_name, context)
 
     def post(self, request):
@@ -77,7 +82,7 @@ class ProfileView(View):
             hacker = Hacker.objects.get(user=user)
             hacker.set_description(new_description)
             hacker.save()
-        return HttpResponseRedirect(reverse('profile_view'))
+        return HttpResponseRedirect(reverse('show_user_view', kwargs={'id':hacker.user.id}))
  
 
 class UserView(View):
@@ -88,13 +93,11 @@ class UserView(View):
     context = {}
     def get(self, request, id):
         # This method builds the client page profie.html 
-        # with the requested user dataç
+        # with the requested user data
 
-    
         user = User.objects.get(id=id)
-        
 
-        #See if the user has been registered in 
+        # See if the user has been registered in 
         if Hacker.objects.filter(user = user).count() == 0: 
             hacker = Hacker(user=user, username=user.username)
             hacker.save()
@@ -103,6 +106,7 @@ class UserView(View):
             hacker = Hacker.objects.get(user=user)
                  
         context = {
+            'hackerid': hacker.user.id,
             'username': hacker.get_username(),
             'karma': hacker.get_karma(),
             'joined': hacker.get_created_time(),
@@ -110,14 +114,13 @@ class UserView(View):
 
         }
         
-
         if (str(hacker.get_username()) == str(request.user)): 
-            return HttpResponseRedirect(reverse('profile_view'))
+            return HttpResponseRedirect(reverse('show_user_view', kwargs={'id':hacker.user.id}))
         else: 
             return render(request, self.template_name, context)
 
 def logout(request):
-    #end session
+    # end session
     do_logout(request)
-    #deberia redireccionar a la misma donde se hace logout pero aun no se
+    # deberia redireccionar a la misma donde se hace logout pero aun no se
     return redirect('/news')
