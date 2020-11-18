@@ -46,7 +46,9 @@
             <table border="0">
                 <tbody>
                     <td valign="top">
-                        {% if r.id not in c_votes %}
+                        {% if not user.is_authenticated %}
+                        <a href="{% url 'social:begin' 'google-oauth2' %}">▲</a>
+                        {% elif reply.id not in c_votes %}
                         <a href="{% url 'vote_publication_view' kind='comment' id=r.id %}">▲</a>
                         {% endif %}
                     </td>
