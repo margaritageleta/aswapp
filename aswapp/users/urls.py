@@ -8,15 +8,12 @@ from users import views
 
 
 urlpatterns =[
-    #path(r'register', views.register, name='register_view'),
-    #path(r'login', views.login, name='login_view'),
-    #path(r'forgot', views.forgot, name='forgot_view'),
-    path(r'^logout/$', views.logout, name='logout'),
-    path (r'profile/', views.ProfileView.as_view(), name='profile_view'),
-    path (r'profile_user/(?P<id>[0-9A-Za-z_\-]+)/$', views.UserView.as_view(), name='show_user_view'),
-    path (r'profile_user/(?P<id>[0-9A-Za-z_\-]+)/contributions/', views.UserContributions.as_view(), name='show_contributions_user'),
-    path('', include('social_django.urls', namespace='social')),
 
-    
+    url(r'^logout/$', views.logout, name='logout'),
+    url(r'^profile/$', views.ProfileView.as_view(), name='profile_view'),
+    url(r'^profile/(?P<id>[0-9A-Za-z_\-]+)/$', views.UserView.as_view(), name='show_user_view'),
+    url(r'^profile/(?P<id>[0-9A-Za-z_\-]+)/contributions/$', views.UserContributions.as_view(), name='show_contributions_user'),
+    url(r'^profile/(?P<id>[0-9A-Za-z_\-]+)/comments/$', views.UserComments.as_view(), name='show_comments_user'),
+    path('', include('social_django.urls', namespace='social')),
 
 ]

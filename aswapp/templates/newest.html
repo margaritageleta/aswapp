@@ -7,21 +7,16 @@
     {% load get_domain %}
     {% for contribution in contributions %}
     <div style="height: 10px;"></div>
-        <p>{{contribution}}</p>
-        <p>{{hacker.voted_publications}}</p>
     <div class="contribution">
         <div>
             {% if user.id == contribution.author.id %}
-                <div class="counter"><p>{{ forloop.counter }}. *</p></div>
+                <div class="counter"><p>{{ forloop.counter }}. <span class='star'>*</span></p></div>
             {% else %}
-                
-                {% if contribution in user.voted_publications %}
-                    <p>Hello</p>
-                    
-                {% endif %}
                 <div class="counter">
                     <p>{{ forloop.counter }}. 
-                        <a href="{% url 'vote_publication_view' id=contribution.id %}">▲</a>
+                        {% if not contribution.id in votes %}
+                            <a href="{% url 'vote_publication_view' kind='publication' id=contribution.id %}">▲</a>
+                        {% endif %}
                     </p>
                 </div>
             {% endif %}
@@ -39,7 +34,7 @@
                         <span class="created-at">
                             <span>{{ contribution.number_votes }} point{% if contribution.number_votes > 1 %}s{% endif %} by</span>
                             {% if user.id == contribution.author.id %}
-                                <a style="color: rgb(27, 160, 0) !important;" href="{% url 'show_user_view' id=contribution.author.id %}">
+                                <a style="color: rgb(27, 160, 0) !important;" href="{% url 'profile_view' %}">
                                     {{ contribution.author.username }}
                                 </a> 
                             {% else %}
@@ -54,6 +49,12 @@
                                 <span> | </span>
                                 <a href="{% url 'delete_publication_view' id=contribution.id %}">
                                     delete
+                                </a> 
+                            {% endif %}
+                            {% if contribution.id in votes %}
+                                <span> | </span>
+                                <a href="{% url 'unvote_publication_view' kind='publication' id=contribution.id %}">
+                                    unvote
                                 </a> 
                             {% endif %}
                         </span>

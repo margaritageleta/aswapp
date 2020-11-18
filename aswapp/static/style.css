@@ -23,6 +23,7 @@ nav {
     background-color: var(--orange-hn);
     display: flex;
     justify-content: space-between;
+    font-size: medium
 }
 
 ul, li {
@@ -75,7 +76,14 @@ body > div {
     align-self: flex-start;
     justify-self: center;
     color: grey;
+    width: 100%;
 }
+
+.contribution .counter p {
+    text-align: left;
+    margin-left: 10px;
+}
+
 .contrib-nav {
     display: flex;
     flex-direction: row;
@@ -144,7 +152,6 @@ table input[type='text'], table input[type='url'], table textarea {
 
 .comment-tree .comment .content, .comment {
     color: black;
-    font-size: initial;
     margin: 5px 0;
 }
 
@@ -161,4 +168,8 @@ table input[type='text'], table input[type='url'], table textarea {
     color: black;
     text-decoration: underline;
     font-size: small;
+}
+
+.star {
+    color: var(--orange-hn);
 }

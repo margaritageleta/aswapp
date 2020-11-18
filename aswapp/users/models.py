@@ -22,9 +22,9 @@ class Hacker(models.Model):
         Publication = apps.get_model('contributions', 'Publication') #This is done due circular imports
         return Publication.objects.filter(author=self)
     
-    def get_comment(self):
-        Comment = apps.get_model('contribution', 'Comments')
-        return Comment.objects.filter(author=self)
+    def get_comments(self):
+        Comment = apps.get_model('contributions', 'Comment')
+        return Comment.objects.filter(author=self, parent=None)
 
     def get_created_time(self):
         return self.user.date_joined

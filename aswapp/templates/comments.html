@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}<title>News</title>{% endblock %}
+
+{% block content %}
+    {% load humanize %} 
+    <div style="height: 10px;"></div>
+
+    <script>
+        window.onload = function() {
+            if (window.jQuery) {
+                console.log('jQUERY ON BBY');
+            } else {
+                console.log('sad :(');
+            }
+            $(document).on('click', '[id^="hide-"]', function () {
+                var id = this.id.match(/\d+$/i);
+                var blockContent = "#content-to-hide-" + id;
+                var hiddenClass = "hidden";
+                if ($(blockContent).hasClass(hiddenClass)) {
+                    $(this).html('[ - ]');
+                    $(blockContent).removeClass(hiddenClass);
+                    $(blockContent).show();
+                    $(blockContent).find('*').each(function () {
+                        var elem = this;
+                        if (!$(elem).hasClass(hiddenClass)) {
+                            $(elem).show();
+                        } else {
+                            $(elem).hide();
+                        }
+                    });
+                } else {
+                    $(this).html('[ + ]');
+                    $(blockContent).addClass(hiddenClass);
+                    $(blockContent).find('*').hide();
+                }
+            });
+        }
+    </script>
+
+    {% for reply, subreplies in replies.items %}
+        <table class="comment-tree">
+            <tbody>
+                <td valign="top" style="width: 5px;">
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'social:begin' 'google-oauth2' %}">▲</a>
+                    {% elif reply.author.id == user.id %}
+                    <span class='star'>*</span>
+                    {% elif reply.id not in c_votes %}
+                    <a href="{% url 'vote_publication_view' kind='comment' id=reply.id %}">▲</a>
+                    {% endif %}
+                </td>
+                <td class="comment">{%include "recursive_comment.html" %}</td>
+            </tbody>
+        </table>
+    {% endfor %}
+
+{% endblock %}

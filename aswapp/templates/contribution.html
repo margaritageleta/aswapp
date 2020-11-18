@@ -6,11 +6,19 @@
     {% load humanize %} 
     <div style="height: 10px;"></div>
     <div class="contribution">
+        <p>{{ votes }}</p>
+        
         <div style="grid-template-columns: 30px auto;">
             {% if user.id == contribution.author.id %}
-                <div class="counter"><p>*</p></div>
+                <div class="counter"><p class="star">*</p></div>
             {% else %}
-                <div class="counter"><p>▲</p></div>
+                <div class="counter">
+                    <p>
+                    {% if not publi_vote %}
+                        <a href="{% url 'vote_publication_view' kind='publication' id=contribution.id %}">▲</a>
+                    {% endif %}
+                    </p>
+                </div>
             {% endif %}
             <div>
                 <p class="title">{{ contribution.title }}</p>
@@ -19,7 +27,7 @@
                         <span class="created-at">
                             <span>{{ contribution.number_votes }} point{% if contribution.number_votes > 1 %}s{% endif %} by</span>
                             {% if user.id == contribution.author.id %}
-                                <a style="color: rgb(27, 160, 0) !important;" href="{% url 'show_user_view' id=contribution.author.id %}">
+                                <a style="color: rgb(27, 160, 0) !important;" href="{% url 'profile_view' %}">
                                     {{ contribution.author.username }}
                                 </a> 
                             {% else %}
@@ -34,6 +42,12 @@
                                 <span> | </span>
                                 <a href="{% url 'delete_publication_view' id=contribution.id %}">
                                     delete
+                                </a> 
+                            {% endif %}
+                            {% if publi_vote %}
+                                <span> | </span>
+                                <a href="{% url 'unvote_publication_view' kind='publication' id=contribution.id %}">
+                                    unvote
                                 </a> 
                             {% endif %}
                         </span>
@@ -83,7 +97,15 @@
     {% for reply, subreplies in replies.items %}
         <table class="comment-tree">
             <tbody>
-                <td valign="top" style="width: 5px;">▲</td>
+                <td valign="top" style="width: 5px;">
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'social:begin' 'google-oauth2' %}">▲</a>
+                    {% elif reply.author.id == user.id %}
+                    <span class="star">*</span>
+                    {% elif reply.id not in c_votes and reply.author.id != user.id %}
+                    <a href="{% url 'vote_publication_view' kind='comment' id=reply.id %}">▲</a>
+                    {% endif %}
+                </td>
                 <td class="comment">{%include "recursive_comment.html" %}</td>
             </tbody>
         </table>

@@ -10,13 +10,13 @@
     {% elif type == 'submit' %}
         <li><b>Submit</b></li>
     {% else %}
-        <li><b>Hacker News</b></li>
-        <li class="bar"><a href="/admin/">Admin</a></li>
-        <li class="bar"><a href="/news/">News/Principal</a></li>
-        <li class="bar"><a href="/newest/">Newest</a></li>
+        <li><b><a href="/news/">Hacker News</a></b></li>
+        <li class="bar"><a href="/newest/">new</a></li>
         {% if user.is_authenticated %}
-            <li><a href="/submit/">Submit</a></li>
+            <li class="bar"><a href="{% url 'show_comments_user' id=user.id %}">threads</a></li>
         {% endif %}
+        <li class="bar"><a href="{% url 'ask_view' %}">ask</a></li>
+        <li><a href="/submit/">submit</a></li>
     {% endif %}
 </ul>
 {% if type != 'submit' %}
