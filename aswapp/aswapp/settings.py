@@ -116,7 +116,6 @@ HEROKU_SERVER = os.environ.get('HEROKU_SERVER')
 
 
 if ON_HEROKU:
-    print("ON HEROKUU")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
