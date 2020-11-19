@@ -16,13 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import include, url, handler404
 from django.conf.urls.static import static
-from contributions.views import news_view
+from contributions.views import NewsView, NewestView, PublicationView
+from users.views import ProfileView
+
 
 urlpatterns = [
     path(r'admin/', admin.site.urls),
     path(r'', include('contributions.urls')),
+    path(r'', include('users.urls')),
+    # url(r'.*', error_404_view, name='error_404_view'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

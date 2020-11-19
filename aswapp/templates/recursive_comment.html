@@ -1,0 +1,66 @@
+
+{% load humanize %} 
+<div class="about">
+    {% if user.id == contribution.author.id or user.id == reply.author.id%}
+        <a style="color: rgb(27, 160, 0) !important;" href="{% url 'profile_view' %}">
+            {{ reply.author.username }}
+        </a> 
+    {% else %}
+        <a href="{% url 'show_user_view' id=reply.author.id %}">
+            {{ reply.author.username }}
+        </a> 
+    {% endif %}
+    <span>{{ reply.created_at|naturaltime }}</span>
+    {% if user.id == reply.author.id %}
+    <span class="delete" >
+        <a href="{% url 'delete_publication_view' id=reply.id %}"> 
+            | delete
+        </a>
+    </span>
+    {% endif %}
+    
+    {% if reply.id in c_votes %}
+    <span class="delete" >
+        <a href="{% url 'unvote_publication_view' kind='comment' id=reply.id %}"> 
+            | unvote
+        </a>
+    </span>
+    {% endif %}
+    {% if threads %}
+    <span class="delete" >
+        <a href="{% url 'show_contribution_view' id=reply.referenced_publication.id %}"> 
+            |  on: {{ reply.referenced_publication.title }}
+        </a>
+    </span>
+    {% endif %}
+
+    <span id="hide-{{ reply.id }}" class="hide">[ - ]</span>
+    
+</div>
+<div id="content-to-hide-{{ reply.id }}">
+    <p class="content">{{ reply.comment }}</p>
+    <p class="comment-reply"><a href="{% url 'reply_view' id=reply.id %}">reply</a></p>
+    
+    {% if subreplies %}
+        {% for r, s in subreplies.items %}
+            <table border="0">
+                <tbody>
+                    <td valign="top">
+                        {% if not user.is_authenticated %}
+                        <a href="{% url 'social:begin' 'google-oauth2' %}">▲</a>
+                        {% elif r.author.id == user.id %}
+                        <span class='star'>*</span>
+                        {% elif r.id not in c_votes and r.author.id != user.id%}
+                        <a href="{% url 'vote_publication_view' kind='comment' id=r.id %}">▲</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {%with reply=r subreplies=s template_name="recursive_comment.html" %}
+                            {% include template_name %}
+                        {% endwith %}
+                    </td>
+                </tbody>
+            </table>
+        {% endfor %}
+    {% endif %}
+</div>

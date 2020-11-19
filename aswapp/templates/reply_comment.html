@@ -1,0 +1,94 @@
+
+{% extends 'base.html' %}
+
+    {% block title %} 
+    <title>Add Comment</title> 
+    {% endblock %}
+
+{% block content %}
+    {% load humanize %} 
+    <div style="height: 10px;"></div>
+    <div class="about" style="margin-left: 23px;">
+      <div style="display: grid; grid-template-columns: 15px repeat(3,max-content);">
+            {% if user.id == comment.author.id %}
+                <div class="counter"><span class="star">*</span></div>
+            {% else %}
+                <div class="counter">
+                  <span>
+                    {% if not comment_vote and comment.author.id != user.id %}
+                      <a href="{% url 'vote_publication_view' kind='comment' id=comment.id %}">▲</a>
+                  {% endif %}
+                  </span>
+                </div>
+            {% endif %}
+                  <span>
+                    {% if user.id == comment.author.id %}
+                      <a style="color: rgb(27, 160, 0) !important;" href="{% url 'profile_view' %}">
+                        {{ comment.author.username }}
+                      </a>
+                    {% else %}
+                      <a href="{% url 'show_user_view' id=comment.author.id %}">
+                        {{ comment.author.username }}&nbsp;
+                      </a>    
+                    {% endif %}  &nbsp;  
+                  </span>
+                  <span style="align-self: center;">
+                    <a href="{% url 'show_contribution_view' id=comment.referenced_publication.id %}">
+                      {{comment.created_at|naturaltime }}&nbsp;
+                    </a>
+                  </span>
+                  {% if comment_vote %}
+                  <span> | </span>
+                  <a href="{% url 'unvote_publication_view' kind='comment' id=comment.id %}">
+                    unvote
+                  </a> 
+                  {% endif %}
+                  <a href="{% url 'show_contribution_view' id=comment.referenced_publication.id %}"> 
+                    | on: {{ comment.referenced_publication.title }} 
+                  </a>
+      </div>
+        <p class="comment"> {{ comment.comment }}</p>
+      
+        <form action="", method="POST">
+          {% csrf_token %}
+          <table>
+            {% for field in form %}
+              {% if forloop.counter == 1 %}
+              <tr>
+                <th></th>
+                <td></td> 
+              </tr>  
+              {% endif %}
+              <tr>
+                <th class="label-tag">{{ field.label_tag }}</th>
+                <td>
+                  {{ field.errors }}
+                  {{ field }}
+                </td>
+              </tr>
+              {% if forloop.counter == 2 %}
+              <tr>
+                <th></th>
+                <td><b>or</b></td> 
+              </tr>  
+              {% endif %}
+            {% endfor %}
+            <tr>
+              <th></th>
+              <td><button type="submit">Add comment</button></td>
+            </tr>
+            <tr>
+              <th></th>
+              <td>
+              </td>
+            </tr>
+          </table>
+          
+        </form>  
+      
+    </div>
+
+
+  
+
+{% endblock %}

@@ -5,9 +5,30 @@
             <span>Y</span>
         </div>
     </li>
-    <li><b>Hacker News</b></li>
-    <li class="bar"><a href="/admin/">Admin</a></li>
-    <li class="bar"><a href="/news/">News/Principal</a></li>
-    <li class="bar"><a href="/newest/">Newest</a></li>
-    <li><a href="/submit/">Submit</a></li>
+    {% if type == 'comment' %}
+        <li><b>Add Comment</b></li>
+    {% elif type == 'submit' %}
+        <li><b>Submit</b></li>
+    {% else %}
+        <li><b><a href="/news/">Hacker News</a></b></li>
+        <li class="bar"><a href="/newest/">new</a></li>
+        {% if user.is_authenticated %}
+            <li class="bar"><a href="{% url 'show_comments_user' id=user.id %}">threads</a></li>
+        {% endif %}
+        <li class="bar"><a href="{% url 'ask_view' %}">ask</a></li>
+        <li><a href="/submit/">submit</a></li>
+    {% endif %}
 </ul>
+{% if type != 'submit' %}
+
+<div class="login-wrapper">
+    {% if not user.is_authenticated %}
+        <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">login</a>
+    {% else %}
+        <a class="btn btn-primary" href="{% url 'profile_view' %}">{{ user.username }}</a>
+        <span> | </span>
+        <a class="btn btn-primary" href="{% url 'logout' %}">logout</a>
+    {% endif %}
+
+</div>
+{% endif %}

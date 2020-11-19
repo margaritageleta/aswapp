@@ -4,21 +4,119 @@
 
 {% block content %}
     {% load humanize %} 
+    {% load get_domain %}
     <div style="height: 10px;"></div>
     <div class="contribution">
+        <p>{{ votes }}</p>
+        
         <div style="grid-template-columns: 30px auto;">
-            <div class="counter"><p>▲</p></div>
+            {% if user.id == contribution.author.id %}
+                <div class="counter"><p class="star">*</p></div>
+            {% else %}
+                <div class="counter">
+                    <p>
+                    {% if not publi_vote %}
+                        <a href="{% url 'vote_publication_view' kind='publication' id=contribution.id %}">▲</a>
+                    {% endif %}
+                    </p>
+                </div>
+            {% endif %}
             <div>
-                <p class="title">{{ contribution.title }}</p>
-                <!--<p>{{ contribution.content }}</p>-->
-                <p class="created-at"><a href="{% url 'show_contribution_view' kind=contribution.kind id=contribution.id %}">{{ contribution.created_at|naturaltime }}</a></p>
-                <form action="", method="POST">
+                <p class="title">
+                    {% if contribution.kind == 1 %}
+                        <a href= "{{ contribution.url }}">  {{ contribution.title }} </a> 
+                        <span class="url">({{ contribution.url | domain }})</span>
+                    {% else %} 
+                        {{ contribution.title }}
+                    {% endif %}
+                </p>
+                <div class="contrib-nav">
+                    <p>
+                        <span class="created-at">
+                            <span>{{ contribution.number_votes }} point{% if contribution.number_votes > 1 %}s{% endif %} by</span>
+                            {% if user.id == contribution.author.id %}
+                                <a style="color: rgb(27, 160, 0) !important;" href="{% url 'profile_view' %}">
+                                    {{ contribution.author.username }}
+                                </a> 
+                            {% else %}
+                                <a href="{% url 'show_user_view' id=contribution.author.id %}">
+                                    {{ contribution.author.username }}
+                                </a> 
+                            {% endif %}
+                            <a href="{% url 'show_contribution_view' id=contribution.id %}">
+                                {{ contribution.created_at|naturaltime }}
+                            </a> 
+                            {% if user.id == contribution.author.id %}
+                                <span> | </span>
+                                <a href="{% url 'delete_publication_view' id=contribution.id %}">
+                                    delete
+                                </a> 
+                            {% endif %}
+                            {% if publi_vote %}
+                                <span> | </span>
+                                <a href="{% url 'unvote_publication_view' kind='publication' id=contribution.id %}">
+                                    unvote
+                                </a> 
+                            {% endif %}
+                        </span>
+                    </p>
+                </div>
+                <form action="{% url 'comment_view' id=contribution.id %}", method="POST">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <button type="submit">Submit </button>
+                    <button type="submit"> Add comment </button>
                 </form> 
             </div>
         </div>
     </div>
+
+    <script>
+        window.onload = function() {
+            if (window.jQuery) {
+                console.log('jQUERY ON BBY');
+            } else {
+                console.log('sad :(');
+            }
+            $(document).on('click', '[id^="hide-"]', function () {
+                var id = this.id.match(/\d+$/i);
+                var blockContent = "#content-to-hide-" + id;
+                var hiddenClass = "hidden";
+                if ($(blockContent).hasClass(hiddenClass)) {
+                    $(this).html('[ - ]');
+                    $(blockContent).removeClass(hiddenClass);
+                    $(blockContent).show();
+                    $(blockContent).find('*').each(function () {
+                        var elem = this;
+                        if (!$(elem).hasClass(hiddenClass)) {
+                            $(elem).show();
+                        } else {
+                            $(elem).hide();
+                        }
+                    });
+                } else {
+                    $(this).html('[ + ]');
+                    $(blockContent).addClass(hiddenClass);
+                    $(blockContent).find('*').hide();
+                }
+            });
+        }
+    </script>
+
+    {% for reply, subreplies in replies.items %}
+        <table class="comment-tree">
+            <tbody>
+                <td valign="top" style="width: 5px;">
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'social:begin' 'google-oauth2' %}">▲</a>
+                    {% elif reply.author.id == user.id %}
+                    <span class="star">*</span>
+                    {% elif reply.id not in c_votes and reply.author.id != user.id %}
+                    <a href="{% url 'vote_publication_view' kind='comment' id=reply.id %}">▲</a>
+                    {% endif %}
+                </td>
+                <td class="comment">{%include "recursive_comment.html" %}</td>
+            </tbody>
+        </table>
+    {% endfor %}
 
 {% endblock %}

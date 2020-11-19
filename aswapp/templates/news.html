@@ -4,15 +4,62 @@
 
 {% block content %}
     {% load humanize %} 
+    {% load get_domain %}
     {% for contribution in contributions %}
     <div style="height: 10px;"></div>
     <div class="contribution">
         <div>
-            <div class="counter"><p>{{ forloop.counter }}. ▲</p></div>
+            {% if user.id == contribution.author.id %}
+                <div class="counter"><p>{{ forloop.counter }}. <span class='star'>*</span></p></div>
+            {% else %}
+                <div class="counter">
+                    <p>{{ forloop.counter }}. 
+                        {% if not contribution.id in votes %}
+                            <a href="{% url 'vote_publication_view' kind='publication' id=contribution.id %}">▲</a>
+                        {% endif %}
+                    </p>
+                </div>
+            {% endif %}
             <div>
-                <p class="title">{{ contribution.title }}</p>
-                <!--<p>{{ contribution.content }}</p>-->
-                <p class="created-at"><a href="{% url 'show_contribution_view' kind=contribution.kind id=contribution.id %}">{{ contribution.created_at|naturaltime }}</a></p>
+                <p class="title">
+                    <a href="{{ contribution.url }}">
+                        {{ contribution.title }}
+                    </a>
+                    {% if contribution.kind == 1 %} 
+                        <span class="url">({{ contribution.url | domain }})</span>
+                    {% endif %}
+                </p>
+                <div class="contrib-nav">
+                    <p>
+                        <span class="created-at">
+                            <span>{{ contribution.number_votes }} point{% if contribution.number_votes > 1 %}s{% endif %} by</span>
+                            {% if user.id == contribution.author.id %}
+                                <a style="color: rgb(27, 160, 0) !important;" href="{% url 'profile_view' %}">
+                                    {{ contribution.author.username }}
+                                </a> 
+                            {% else %}
+                                <a href="{% url 'show_user_view' id=contribution.author.id %}">
+                                    {{ contribution.author.username }}
+                                </a> 
+                            {% endif %}
+                            <a href="{% url 'show_contribution_view' id=contribution.id %}">
+                                {{ contribution.created_at|naturaltime }}
+                            </a> 
+                            {% if user.id == contribution.author.id %}
+                                <span> | </span>
+                                <a href="{% url 'delete_publication_view' id=contribution.id %}">
+                                    delete
+                                </a> 
+                            {% endif %}
+                            {% if contribution.id in votes %}
+                                <span> | </span>
+                                <a href="{% url 'unvote_publication_view' kind='publication' id=contribution.id %}">
+                                    unvote
+                                </a> 
+                            {% endif %}
+                        </span>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
