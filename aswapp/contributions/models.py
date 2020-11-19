@@ -37,7 +37,7 @@ class Publication(Contribution):
     
 
     title = models.CharField(max_length=80, null=False)
-    question = models.TextField(max_length=1000,blank=True)
+    question = models.TextField(max_length=1000,blank=True, null=True)
     url = models.URLField(blank=True)
     kind = models.IntegerField(max_length=1, choices=PublicationTypes.choices) 
 
