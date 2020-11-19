@@ -13,3 +13,6 @@
 Framework: **[Django](https://www.djangoproject.com/)**
 
 Deployed at: **[Heroku](http://hackernews-project.herokuapp.com)**
+
+### UX Model
+![Hacker News UX model](img/im2.png)
