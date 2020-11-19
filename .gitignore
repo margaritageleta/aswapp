@@ -11,4 +11,4 @@ aswapp/db.sqlite3
 aswapp/static/admin/*
 aswapp/static/staticfiles.json
 .env
-aswapp/staticfiles
+aswapp/staticfiles/*
