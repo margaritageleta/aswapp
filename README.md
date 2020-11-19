@@ -10,5 +10,6 @@
 + Adrià de Castro
 + Antonio Calvin
 
-Framework: **Django**
+Framework: **[Django](https://www.djangoproject.com/)**
+
 Deployed at: **[Heroku](http://hackernews-project.herokuapp.com)**
