@@ -4,6 +4,7 @@
 
 {% block content %}
     {% load humanize %} 
+    {% load get_domain %}
     <div style="height: 10px;"></div>
     <div class="contribution">
         <p>{{ votes }}</p>
@@ -24,6 +25,7 @@
                 <p class="title">
                     {% if contribution.kind == 1 %}
                         <a href= "{{ contribution.url }}">  {{ contribution.title }} </a> 
+                        <span class="url">({{ contribution.url | domain }})</span>
                     {% else %} 
                         {{ contribution.title }}
                     {% endif %}
