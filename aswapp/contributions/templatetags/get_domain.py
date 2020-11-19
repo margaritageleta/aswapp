@@ -9,7 +9,7 @@ register = template.Library()
 def domain(url): 
     """ Extracts the domain of an URL """
     match = re.search(r'^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)', url)
-    match = re.sub(r'((^https?:\/\/(www)?)|(^www.))', '', match.group()) 
+    match = re.sub(r'((^https?:\/\/(www.)?)|(^www.))', '', match.group()) 
     return match
     
     
