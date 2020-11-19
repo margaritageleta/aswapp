@@ -1,7 +1,7 @@
 from django import forms
 
 class ProfileForm(forms.Form): 
-    description = forms.TextField(
+    description = forms.CharField(
         widget=forms.Textarea(
             attrs={'rows': 10, 'cols': 50}
         ), 
