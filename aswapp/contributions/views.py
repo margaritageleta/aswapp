@@ -14,8 +14,6 @@ from django.contrib.auth.models import User
 from contributions.models import VotePublication, VoteComment
 
 # Create your views here.
-def error_404_view(request, Exception):
-    return render(request, 'error.html', {})
 
 class NewsView(View): 
     # This class manages the display of the 

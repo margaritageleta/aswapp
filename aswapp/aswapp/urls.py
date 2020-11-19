@@ -18,7 +18,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls import include, url, handler404
 from django.conf.urls.static import static
-from contributions.views import NewsView, NewestView, PublicationView, error_404_view
+from contributions.views import NewsView, NewestView, PublicationView
 from users.views import ProfileView
 
 
@@ -29,7 +29,6 @@ urlpatterns = [
     # url(r'.*', error_404_view, name='error_404_view'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-handler404= 'contributions.views.error_404_view'
 
 """
 
