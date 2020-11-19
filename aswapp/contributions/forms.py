@@ -4,7 +4,7 @@ from django import forms
 class SubmissionForm(forms.Form): 
     title = forms.CharField(max_length=80, required=True, label="title")
     url = forms.URLField(required=False, label="url")
-    text = forms.CharField(
+    text = forms.TextField(
         required=False, 
         widget=forms.Textarea(
             attrs={'rows': 10, 'cols': 50}
@@ -15,7 +15,7 @@ class SubmissionForm(forms.Form):
 
 
 class CommentForm(forms.Form):
-    comment = forms.CharField(
+    comment = forms.TextField(
         widget=forms.Textarea(
             attrs={'rows': 10, 'cols': 50}
         ), 
