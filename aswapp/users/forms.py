@@ -5,6 +5,6 @@ class ProfileForm(forms.Form):
         widget=forms.Textarea(
             attrs={'rows': 10, 'cols': 50}
         ), 
-        max_length=500,
+        max_length=1000,
         label='description',
     )

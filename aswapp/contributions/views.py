@@ -138,11 +138,10 @@ class CommentView(FormView):
         else:
             publication =  Publication.objects.get(id=id)
             text = request.POST['comment']
+            
             user = User.objects.get(username=request.user)
             hacker = Hacker.objects.get(user=user)
-
             new_comment = Comment(comment=text, referenced_publication=publication, author=hacker)
-
             new_comment.save()         
 
             return HttpResponseRedirect('/item/' + str(id))
