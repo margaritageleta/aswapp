@@ -21,7 +21,13 @@
                 </div>
             {% endif %}
             <div>
-                <p class="title">{{ contribution.title }}</p>
+                <p class="title">
+                    {% if contribution.kind == 1 %}
+                        <a href= "{{ contribution.url }}">  {{ contribution.title }} </a> 
+                    {% else %} 
+                        {{ contribution.title }}
+                    {% endif %}
+                </p>
                 <div class="contrib-nav">
                     <p>
                         <span class="created-at">
