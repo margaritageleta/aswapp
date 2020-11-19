@@ -8,5 +8,6 @@ Collaborators
 + Antonio Calvin
 
 Framework: **Django**
+
 Link to Heroku: http://hackernews-project.herokuapp.com/
 
