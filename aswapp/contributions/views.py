@@ -112,18 +112,20 @@ class ReplyView(FormView):
         return render(request, self.template_name, context)
         
     def post(self, request, id):
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect('/login/google-oauth2')
+        else:
+            reply_text = request.POST['comment']
 
-        reply_text = request.POST['comment']
+            parent_comment = Comment.objects.get(id=id)
+            parent_publication = parent_comment.referenced_publication
+            user = User.objects.get(username=request.user)
+            hacker = Hacker.objects.get(user=user)
 
-        parent_comment = Comment.objects.get(id=id)
-        parent_publication = parent_comment.referenced_publication
-        user = User.objects.get(username=request.user)
-        hacker = Hacker.objects.get(user=user)
+            new_reply = Comment(comment=reply_text, parent=parent_comment, referenced_publication=parent_publication, author=hacker)
+            new_reply.save()
 
-        new_reply = Comment(comment=reply_text, parent=parent_comment, referenced_publication=parent_publication, author=hacker)
-        new_reply.save()
-
-        return HttpResponseRedirect(reverse('show_contribution_view',args=[parent_publication.pk]))
+            return HttpResponseRedirect(reverse('show_contribution_view',args=[parent_publication.pk]))
 
 class CommentView(FormView):
     form_class = CommentForm
@@ -131,16 +133,19 @@ class CommentView(FormView):
     context = {} 
 
     def post(self, request, id): 
-        publication =  Publication.objects.get(id=id)
-        text = request.POST['comment']
-        user = User.objects.get(username=request.user)
-        hacker = Hacker.objects.get(user=user)
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect('/login/google-oauth2')
+        else:
+            publication =  Publication.objects.get(id=id)
+            text = request.POST['comment']
+            user = User.objects.get(username=request.user)
+            hacker = Hacker.objects.get(user=user)
 
-        new_comment = Comment(comment=text, referenced_publication=publication, author=hacker)
+            new_comment = Comment(comment=text, referenced_publication=publication, author=hacker)
 
-        new_comment.save()         
+            new_comment.save()         
 
-        return HttpResponseRedirect('/item/' + str(id))
+            return HttpResponseRedirect('/item/' + str(id))
 
 class SubmitView(FormView):
     # This class manages the display of a form for 
