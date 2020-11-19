@@ -46,7 +46,7 @@
                   <a href="{% url 'show_contribution_view' id=comment.referenced_publication.id %}"> 
                     | on: {{ comment.referenced_publication.title }} 
                   </a>
-        <p class="comment"> {{comment.comment }}</p>
+        <p class="comment"> {{ comment.comment }}</p>
       </div>
         <form action="", method="POST">
           {% csrf_token %}
