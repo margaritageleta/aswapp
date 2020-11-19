@@ -1,6 +1,9 @@
-## ASW app
+## Hacker News on Django
+#### Web Services and Aplications project
 
-Collaborators
+![Hacker News principal](img/im1.png)
+
+##### Collaborators
 
 + Margarita Geleta
 + Rafael Moles
@@ -8,4 +11,4 @@ Collaborators
 + Antonio Calvin
 
 Framework: **Django**
-
+Deployed at: **[Heroku](http://hackernews-project.herokuapp.com)**
