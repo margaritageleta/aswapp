@@ -79,20 +79,39 @@ class SubmitView(FormView):
 
     def form_valid(self, form):
         data = form.cleaned_data
-        # print("_________________")
-        # print(data)
-        # print("_________________")
+        #print("_________________")
+        #print(data)
+        #print("_________________")
         title = data['title']
         url = data['url']
         text = data['text']     
 
-        if url is not '' and text is not '': #Throw Error
-            contrib = Ask(title = title, content = text)
-            return HttpResponseRedirect('/submit/badsubmission')
-        else: #An Url submission
-            contrib = Url(title=title, content=text, url=url)
-            return HttpResponseRedirect('/news')        
-        contrib.save()
+       
+
+        if url is not '': #An url submission 
+
+            if (Url.objects.filter(url=url).count() == 1):#it already exists
+                # print("Hey i entered")  
+                my_id = Url.objects.get(url=url).id #id of the references contribution
+                # print(my_id)            
+                uri = r"/url/" + str(my_id)
+                return HttpResponseRedirect(uri)   
+            else: 
+                print("Im in the URL CZONE")
+                contrib = Url(title = title, url = url) 
+
+                if text is not '': #With a comment associated
+                    contrib.addComment(text)
+                
+                contrib.save()
+
+        else: #An ask submission
+            print("Im in the ask CZONE")
+            contrib = Ask(title=title, content=text)
+            contrib.save() 
+        
+        return HttpResponseRedirect("/news")        
+
 
         
 
