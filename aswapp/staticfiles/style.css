@@ -153,6 +153,7 @@ table input[type='text'], table input[type='url'], table textarea {
 .comment-tree .comment .content, .comment {
     color: black;
     margin: 5px 0;
+    word-wrap: anywhere;
 }
 
 .comment-reply {
