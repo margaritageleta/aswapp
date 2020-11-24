@@ -115,6 +115,9 @@ WSGI_APPLICATION = 'aswapp.wsgi.application'
 ON_HEROKU = os.environ.get('ON_HEROKU')
 HEROKU_SERVER = os.environ.get('HEROKU_SERVER')
 
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
+
 
 if ON_HEROKU:
     DATABASES = {
