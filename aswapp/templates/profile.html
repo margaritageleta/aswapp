@@ -55,11 +55,25 @@
             <tr class="profile-options">
                 <th></th>
                 <td>
-                    <p>
-                        <a href="{% url 'show_comments_user' id=hackerid %}">
-                            Comments
-                        </a>
-                    </p>
+                    <a href="{% url 'show_comments_user' id=hackerid %}">
+                        Comments
+                    </a>
+                </td>                
+            </tr>
+            <tr class="profile-options">
+                <th></th>
+                <td>
+                    <a href="{% url 'upvoted_contributions_view' id=hackerid kind='publications' %}">
+                        Upvoted submissions
+                    </a>
+                </td>                
+            </tr>
+            <tr class="profile-options">
+                <th></th>
+                <td>
+                    <a href="{% url 'upvoted_contributions_view' id=hackerid kind='comments' %}">
+                        Upvoted comments
+                    </a>
                 </td>                
             </tr>
            

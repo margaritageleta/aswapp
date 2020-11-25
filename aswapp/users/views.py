@@ -9,7 +9,7 @@ from users.forms import ProfileForm
 from contributions.models import Comment
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from contributions.models import VoteComment
+from contributions.models import VoteComment, VotePublication, Publication, Comment
 
 
 
@@ -162,3 +162,79 @@ def logout(request):
     do_logout(request)
     # deberia redireccionar a la misma donde se hace logout pero aun no se
     return redirect('/news')
+
+class UpvotedView(View):
+     # This class manages the display of the 
+    # URL publications, sorted by the number of votes
+
+    def get_replies(self, comment):
+        # Obtains replies of comments recursively
+        subcomments = {}
+        subreplies = Comment.objects.filter(parent=comment)
+        for subreply in subreplies:
+            subcomments[subreply] = self.get_replies(subreply)
+        return subcomments if subcomments else None
+
+    def create_comment_set(self, setc, voter, comments):
+        for c, v in comments.items():
+            if VoteComment.objects.filter(voter=voter, contribution=c).exists():
+                setc.add(c.id)
+            if v != None: 
+                self.create_comment_set(setc, voter, v)
+            else: 
+                pass
+
+    def get(self, request, id, kind, *args, **kwargs):
+
+        context = {}
+        hacker = Hacker.objects.get(id=id)
+        context['hacker'] = hacker
+        contributions = []
+
+        if kind == 'publications' and hacker != None:
+            template_name = "news.html"
+            publications = Publication.objects.filter(kind = 1).all() 
+
+            votes = set()
+            for p in publications:
+                if VotePublication.objects.filter(voter=hacker, contribution=p).exists():
+                    contributions.append(p)
+                    # Add boolean vars for votes for hacker 
+                    votes.add(p.id)
+
+            context['contributions'] = contributions
+            context['votes'] = votes
+
+            return render(request, template_name, context)
+
+        elif kind == 'comments' and hacker != None:
+            template_name = "comments.html"
+            comments = Comment.objects.all() 
+
+            for c in comments:
+                if VoteComment.objects.filter(voter=hacker, contribution=c).exists():
+                    contributions.append(c)
+            
+            comments = {}
+
+            try:
+                for comment in contributions:
+                    comments[comment] = self.get_replies(comment)
+
+                votes_c = set()
+                self.create_comment_set(votes_c, hacker, comments)
+            
+            except Exception as e:
+                # Back to square one
+                return HttpResponseRedirect(reverse('news_view'))
+
+            context['replies'] = comments
+            context['c_votes'] = votes_c
+
+            print(template_name, context)
+            
+            return render(request, template_name, context)
+
+
+        else:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
