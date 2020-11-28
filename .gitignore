@@ -10,4 +10,5 @@ aswapp/.DS_Store
 aswapp/register/*
 aswapp/db.sqlite3
 aswapp/static/admin/*
+aswapp/tutorial/*
 .env
