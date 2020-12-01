@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from contributions.models import Publication
+from contributions.models import Publication, Comment
 
 class PublicationSerializer(serializers.ModelSerializer):
     class Meta: 
@@ -13,4 +13,15 @@ class PublicationSerializer(serializers.ModelSerializer):
             'question',
             'url',
             'kind'           
+        ]
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = Comment
+        fields = [
+            'id',
+            'comment',
+            'created_at',
+            'referenced_publication',
+            'parent',         
         ]
