@@ -23,13 +23,13 @@ class ItemsListAPIView(ListAPIView):
         serializer_class = PublicationSerializer(data=request.data)
         if serializer_class.is_valid():
             if request.data['kind'] == '1' and Publication.objects.filter(url=request.data['url']).exists():
-                return Response(serializer_class.errors, status=status.HTTP_409_CONFLICT)
+                return Response({'status': 'Error 409, url already exists'}, status=status.HTTP_409_CONFLICT)
             else:
                 serializer_class.save()
                 # CommentAPI.post() <-- hipotesis POST 201
                 return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
         else:
-            return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'status': 'Error 400, bad request'}, status=status.HTTP_400_BAD_REQUEST)
         # TODO 401
         # TODO Look up the creation of asks -> not comment associated
 
@@ -52,7 +52,17 @@ class ItemUrlsListAPIView(ListAPIView):
         return Response(serializer_class.data, status=status.HTTP_200_OK)
 
 class ItemAPIView(ListAPIView):
-    pass
+    queryset = ''
+    serializer_class = PublicationSerializer
+
+    def get(self, request, id, format=None):
+        queryset = Publication.objects.filter(id=id).first()
+        serializer_class = PublicationSerializer(queryset, many=False)
+        if queryset:
+            return Response(serializer_class.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
+
 class ItemCommentsListAPIView(ListAPIView):
     pass
 class CommentAPIView(ListAPIView):
