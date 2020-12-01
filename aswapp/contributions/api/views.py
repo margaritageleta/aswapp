@@ -67,7 +67,6 @@ class ItemAPIView(ListAPIView):
     # Delete an item by id
     def delete(self, request, id, format=None):
         queryset = Publication.objects.filter(id=id).first()
-        serializer_class = PublicationSerializer(data=request.data)
         # On successful delete, return no content
         if queryset:
             queryset.delete()
@@ -109,4 +108,42 @@ class ItemCommentsListAPIView(ListAPIView):
             return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
 
 class CommentAPIView(ListAPIView):
-    pass
+    queryset = ''
+    serializer_class = CommentSerializer
+    # Get a comment by id
+    def get(self, request, id, format=None):
+        queryset = Comment.objects.filter(id=id).first()
+        serializer_class = CommentSerializer(queryset, many=False)
+        # If comment exists, return JSON
+        if queryset:
+            return Response(serializer_class.data, status=status.HTTP_200_OK)
+        # Otherwise, it does not exist, return error
+        else:
+            return Response({'status': 'Error 404, comment not found'}, status=status.HTTP_404_NOT_FOUND)
+    # Delete a comment by id
+    def delete(self, request, id, format=None):
+        queryset = Comment.objects.filter(id=id).first()
+        # On successful delete, return no content
+        if queryset:
+            queryset.delete()
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        # Otherwise return error
+        else:
+            return Response({'status': 'Error 404, comment not found'}, status=status.HTTP_404_NOT_FOUND)
+        # TODO 403 forbidden to delete not yours
+        # TODO 401 authorization to delete yours
+    
+    # TODO How to update votes?
+    """
+    def patch(self, request, id, format=None):
+        queryset = Publication.objects.filter(id=id).first()
+        serializer_class = PublicationSerializer(queryset, many=False)
+        # On successful delete, return no content
+        if queryset and serializer_class.is_valid():
+            ...
+        # Otherwise return error
+        else:
+            return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
+        # TODO 403 forbidden to delete not yours
+        # TODO 401 authorization to delete yours
+    """
