@@ -19,35 +19,38 @@ class ItemsListAPIView(ListAPIView):
     def item_existing(self, url): 
         return Publication.objects.filter(url=url).count()
 
-
-
     def post(self,request):
         serializer_class = PublicationSerializer(data=request.data)
-
         if serializer_class.is_valid():
-            print(":"*100)
-            # print(request.data['kind'] and  self.item_existing(request.data['url']))
-            if request.data['kind'] == 1 and Publication.objects.filter(url=request.data['url']).exists():
-                print("error")
+            if request.data['kind'] == '1' and Publication.objects.filter(url=request.data['url']).exists():
                 return Response(serializer_class.errors, status=status.HTTP_409_CONFLICT)
             else:
-                print("ok")
                 serializer_class.save()
+                # CommentAPI.post() <-- hipotesis POST 201
                 return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
         else:
             return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
-        # Look for the other errors
-        # Look up the creation of asks -> not comment associated
-
-
-
-
-    
+        # TODO 401
+        # TODO Look up the creation of asks -> not comment associated
 
 class ItemsAsksListAPIView(ListAPIView):
-    pass
+    queryset = ''
+    serializer_class = PublicationSerializer
+
+    def get(self, request): 
+        queryset = Publication.objects.filter(kind=0).all()
+        serializer_class = PublicationSerializer(queryset, many=True)
+        return Response(serializer_class.data, status=status.HTTP_200_OK)
+
 class ItemUrlsListAPIView(ListAPIView):
-    pass
+    queryset = ''
+    serializer_class = PublicationSerializer
+
+    def get(self, request): 
+        queryset = Publication.objects.filter(kind=1).all()
+        serializer_class = PublicationSerializer(queryset, many=True)
+        return Response(serializer_class.data, status=status.HTTP_200_OK)
+
 class ItemAPIView(ListAPIView):
     pass
 class ItemCommentsListAPIView(ListAPIView):
