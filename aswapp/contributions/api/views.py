@@ -1,8 +1,8 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
-from contributions.models import Publication
-from contributions.api.serializers import PublicationSerializer
+from contributions.models import Publication, Comment
+from contributions.api.serializers import PublicationSerializer, CommentSerializer
 
 
 
@@ -67,8 +67,10 @@ class ItemAPIView(ListAPIView):
     # Delete an item by id
     def delete(self, request, id, format=None):
         queryset = Publication.objects.filter(id=id).first()
+        serializer_class = PublicationSerializer(data=request.data)
         # On successful delete, return no content
         if queryset:
+            queryset.delete()
             return Response({}, status=status.HTTP_204_NO_CONTENT)
         # Otherwise return error
         else:
@@ -92,7 +94,19 @@ class ItemAPIView(ListAPIView):
     """
 
 class ItemCommentsListAPIView(ListAPIView):
-    pass
+    queryset = ''
+    serializer_class = CommentSerializer
+    # Get all comments of a given publication
+    def get(self, request, id, format=None): 
+        ref_publication = Publication.objects.filter(id=id).first()
+        queryset = Comment.objects.filter(referenced_publication=ref_publication).all()
+        # If referenced publication exists
+        if queryset:
+            serializer_class = CommentSerializer(queryset, many=True)
+            return Response(serializer_class.data, status=status.HTTP_200_OK)
+        # Otherwise, it does not exist, return error
+        else:
+            return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
 
 class CommentAPIView(ListAPIView):
     pass
