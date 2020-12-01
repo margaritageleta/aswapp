@@ -49,7 +49,7 @@ if os.path.isfile(dotenv_file):
 SECRET_KEY = 'y=p&6$u0le5s-b0%#gm@77&w_0xb+zid2om+u%)o7(9e!066pp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'social_django',
     # third party
-    
+    'rest_framework',
     # own
     'contributions',
     'users',

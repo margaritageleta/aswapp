@@ -12,3 +12,5 @@ aswapp/db.sqlite3
 aswapp/static/admin/*
 .env
 tutorial/tutorial/*
+aswapp/contributions/api/*
+aswapp/users/api/__pycache__/*

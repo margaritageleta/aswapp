@@ -26,10 +26,8 @@ urlpatterns = [
     path(r'admin/', admin.site.urls),
     path(r'', include('contributions.urls')),
     path(r'', include('users.urls')),
-    path(r'api/items/^', include("contributions.api.urls", namespace='items')),
-    path(r'api/comments/^', include("contributions.api.urls", namespace='comments')),
-    path(r'api/users/^', include("users.api.urls", namespace='users')),
-    # url(r'.*', error_404_view, name='error_404_view'),
+    path(r'api/items/', include('contributions.api.urls')),
+    # path(r'api/users/^', include('users.api.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
