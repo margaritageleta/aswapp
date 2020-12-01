@@ -4,9 +4,6 @@ from rest_framework import status
 from contributions.models import Publication, Comment
 from contributions.api.serializers import PublicationSerializer, CommentSerializer
 
-
-
-
 class ItemsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = PublicationSerializer
