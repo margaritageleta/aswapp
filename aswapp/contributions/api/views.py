@@ -1,47 +1,59 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
-from contributions.models import Publication, Comment, VotePublication
+from rest_framework_api_key.permissions import HasAPIKey
+from rest_framework_api_key.models import APIKey
+from contributions.models import Publication, Comment, VotePublication, Hacker
 from contributions.api.serializers import PublicationSerializer, CommentSerializer, VoteItemSerializer
 
 class ItemsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = PublicationSerializer
+    permission_classes = [HasAPIKey]
+
     # Get all publications (all kinds)
     def get(self, request): 
         queryset = Publication.objects.all()
         serializer_class = PublicationSerializer(queryset, many=True)
         return Response(serializer_class.data, status=status.HTTP_200_OK)
+
     # Create a new publication
     def post(self, request):
         serializer_class = PublicationSerializer(data=request.data)
-        # If form data is valid (all params set)
-        if serializer_class.is_valid():
-            # If is url
-            if request.data['kind'] == '1':
-                #If repeated
-                if Publication.objects.filter(url=request.data['url'], kind=1).exists():
-                    return Response({'status': 'Error 409, url already exists'}, status=status.HTTP_409_CONFLICT)
-                else: 
-                    if len(request.data['url']) > 0:
-                        if len(request.data['question']) > 0: 
-                            return Response({'status': 'Error 409, question must be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
+        key = request.META["HTTP_AUTHORIZATION"].split()[1]
+
+        # Check for authorization
+        if Hacker.objects.filter(api_key=key).exists():
+            # If form data is valid (all params set)
+            if serializer_class.is_valid():
+                # If is url
+                if request.data['author'] != Hacker.objects.filter(api_key=key).first().id:
+                    return Response({'status': 'Error 403, author does not match with id'}, status=status.HTTP_403_FORBIDDEN)     
+                else:
+                    if request.data['kind'] == '1':
+                        #If repeated
+                        if Publication.objects.filter(url=request.data['url'], kind=1).exists():
+                            return Response({'status': 'Error 409, url already exists'}, status=status.HTTP_409_CONFLICT)
                         else: 
+                            if len(request.data['url']) > 0:
+                                if len(request.data['question']) > 0: 
+                                    return Response({'status': 'Error 409, question must be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
+                                else: 
+                                    serializer_class.save()
+                                    return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
+                            else: 
+                                return Response({'status': 'Error 409, url must not be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
+                    # Otherwise a completely new publication
+                    else:
+                        if len(request.data['url']) > 0:
+                            return Response({'status': 'Error 409, url must be empty in a ask kind publication'}, status=status.HTTP_409_CONFLICT)
+                        else:
                             serializer_class.save()
                             return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
-                    else: 
-                        return Response({'status': 'Error 409, url must not be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
-            # Otherwise a completely new publication
             else:
-                if len(request.data['url']) > 0:
-                    return Response({'status': 'Error 409, url must be empty in a ask kind publication'}, status=status.HTTP_409_CONFLICT)
-                else:
-                    serializer_class.save()
-                    return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
+                return Response({'status': 'Error 400, bad request'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'status': 'Error 400, bad request'}, status=status.HTTP_400_BAD_REQUEST)
-        # TODO 401 authorization to create an item
-        # TODO Look up the creation of asks -> not comment associated
+            return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class ItemsAsksListAPIView(ListAPIView):
     queryset = ''
@@ -64,6 +76,8 @@ class ItemUrlsListAPIView(ListAPIView):
 class ItemAPIView(ListAPIView):
     queryset = ''
     serializer_class = PublicationSerializer
+    permission_classes = [HasAPIKey]
+
     # Get an item by id
     def get(self, request, id, format=None):
         queryset = Publication.objects.filter(id=id).first()
@@ -74,18 +88,28 @@ class ItemAPIView(ListAPIView):
         # Otherwise, it does not exist, return error
         else:
             return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
+    
     # Delete an item by id
+    # TODO DELETE redirected to GET 😱
     def delete(self, request, id, format=None):
         queryset = Publication.objects.filter(id=id).first()
-        # On successful delete, return no content
-        if queryset:
-            queryset.delete()
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-        # Otherwise return error
+        key = request.META["HTTP_AUTHORIZATION"].split()[1]
+
+        # Check for authorization
+        if Hacker.objects.filter(api_key=key).exists():
+            # If deleted item author id marches with api key 
+            if queryset.author.id == Hacker.objects.filter(api_key=key).first().id:
+                # On successful delete, return no content
+                if queryset:
+                    queryset.delete()
+                    return Response({}, status=status.HTTP_204_NO_CONTENT)
+                # Otherwise return error
+                else:
+                    return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
+            else:
+               return Response({'status': 'Error 403, forbidden to delete this item'}, status=status.HTTP_403_FORBIDDEN)      
         else:
-            return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
-        # TODO 403 forbidden to delete not yours
-        # TODO 401 authorization to delete yours
+            return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
     
     # TODO How to update votes?
 class ItemVotesAPIView(ListAPIView):
@@ -98,6 +122,8 @@ class ItemVotesAPIView(ListAPIView):
         queryset = VotePublication.objects.filter(contribution=id, voter=self.voter).first() # hardcoded
         serializer_class = VoteItemSerializer(queryset, many=False)
 
+
+
         if self.user == 'rita.geleta': # autheticated
             return Response(serializer_class.data, status=status.HTTP_200_OK)
 
@@ -105,6 +131,10 @@ class ItemVotesAPIView(ListAPIView):
             return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
 
     def post(self, request, id, format=None):
+
+
+        print(request.META["HTTP_AUTHORIZATION"])
+        
         print(request)
         print(request.data)
         print(request.GET.get('api_key'))

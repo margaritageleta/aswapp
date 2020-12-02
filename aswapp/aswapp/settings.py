@@ -20,7 +20,13 @@ import django_heroku
 # social auth configuration
 
 AUTHENTICATION_BACKENDS = (
+     # Google OAuth2
     'social_core.backends.google.GoogleOAuth2',
+
+    # django-rest-framework-social-oauth2
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+
+    # Django
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -66,13 +72,20 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'social_django',
     # third party
+    'oauth2_provider',
     'rest_framework',
     'rest_framework_api_key',
+    'rest_framework_social_oauth2',
     # own
     'contributions',
     'users',
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -136,8 +149,8 @@ else:
     }
 }
 
-db_from_env = dj_database_url.config(conn_max_age=600)
-DATABASES['default'].update(db_from_env)
+# db_from_env = dj_database_url.config(conn_max_age=600)
+# DATABASES['default'].update(db_from_env)
 
 # DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
