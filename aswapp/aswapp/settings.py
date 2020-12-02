@@ -67,10 +67,17 @@ INSTALLED_APPS = [
     'social_django',
     # third party
     'rest_framework',
+    'rest_framework_api_key',
     # own
     'contributions',
     'users',
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework_api_key.permissions.HasAPIKey",
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
