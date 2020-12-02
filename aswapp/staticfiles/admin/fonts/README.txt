@@ -1,3 +1,1 @@
-Roboto webfont source: https://www.google.com/fonts/specimen/Roboto
-WOFF files extracted using https://github.com/majodev/google-webfonts-helper
-Weights used in this project: Light (300), Regular (400), Bold (700)
+/Users/adria/Desktop/UNI/ASW/Proyecto/aswapp/env/lib/python3.9/site-packages/django/contrib/admin/static/admin/fonts/README.txt
