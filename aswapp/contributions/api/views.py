@@ -256,7 +256,6 @@ class CommentAPIView(ListAPIView):
     
     # Delete a comment by id
     def delete(self, request, id, format=None):
-        print('-'*1000)
         self.permission_classes = [HasAPIKey]
         self.queryset = Comment.objects.filter(id=id).first()
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
