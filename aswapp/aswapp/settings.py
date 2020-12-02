@@ -20,7 +20,13 @@ import django_heroku
 # social auth configuration
 
 AUTHENTICATION_BACKENDS = (
+     # Google OAuth2
     'social_core.backends.google.GoogleOAuth2',
+
+    # django-rest-framework-social-oauth2
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+
+    # Django
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -49,7 +55,7 @@ if os.path.isfile(dotenv_file):
 SECRET_KEY = 'y=p&6$u0le5s-b0%#gm@77&w_0xb+zid2om+u%)o7(9e!066pp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -66,11 +72,18 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'social_django',
     # third party
-    
+    'rest_framework',
+    'rest_framework_api_key',
     # own
     'contributions',
     'users',
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

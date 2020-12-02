@@ -26,7 +26,8 @@ urlpatterns = [
     path(r'admin/', admin.site.urls),
     path(r'', include('contributions.urls')),
     path(r'', include('users.urls')),
-    # url(r'.*', error_404_view, name='error_404_view'),
+    path(r'api/items/', include('contributions.api.urls')),
+    path(r'api/users/', include('users.api.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
