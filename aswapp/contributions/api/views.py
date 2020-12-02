@@ -90,25 +90,26 @@ class ItemAPIView(ListAPIView):
             return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
     
     # Delete an item by id
+    # TODO DELETE redirected to GET 😱
     def delete(self, request, id, format=None):
         queryset = Publication.objects.filter(id=id).first()
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
 
         # Check for authorization
         if Hacker.objects.filter(api_key=key).exists():
-
-            # On successful delete, return no content
-            if queryset:
-                queryset.delete()
-                return Response({}, status=status.HTTP_204_NO_CONTENT)
-            # Otherwise return error
+            # If deleted item author id marches with api key 
+            if queryset.author.id == Hacker.objects.filter(api_key=key).first().id:
+                # On successful delete, return no content
+                if queryset:
+                    queryset.delete()
+                    return Response({}, status=status.HTTP_204_NO_CONTENT)
+                # Otherwise return error
+                else:
+                    return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
             else:
-                return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
-        
+               return Response({'status': 'Error 403, forbidden to delete this item'}, status=status.HTTP_403_FORBIDDEN)      
         else:
             return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
-        # TODO 403 forbidden to delete not yours
-        # TODO 401 authorization to delete yours
     
     # TODO How to update votes?
 class ItemVotesAPIView(ListAPIView):
