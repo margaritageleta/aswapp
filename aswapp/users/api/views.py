@@ -5,11 +5,14 @@ from contributions.models import Publication, Comment, VoteComment, VotePublicat
 from contributions.api.serializers import PublicationSerializer, CommentSerializer
 from users.models import Hacker
 from users.api.serializers import HackerSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework_api_key.permissions import HasAPIKey
 
 
 class UserAPIView(ListAPIView):
     queryset = ''
     serializer_class = HackerSerializer
+    permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
         queryset = Hacker.objects.filter(id=id).first()
@@ -24,6 +27,7 @@ class UserAPIView(ListAPIView):
 class UserItemsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = PublicationSerializer
+    permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
         author = Hacker.objects.get(id=id)
@@ -40,6 +44,7 @@ class UserItemsListAPIView(ListAPIView):
 class UserCommentsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = CommentSerializer
+    permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
         author = Hacker.objects.get(id=id)
@@ -56,6 +61,7 @@ class UserCommentsListAPIView(ListAPIView):
 class UserVotedItemsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = PublicationSerializer
+    permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
         author = Hacker.objects.get(id=id)
@@ -85,6 +91,7 @@ class UserVotedItemsListAPIView(ListAPIView):
 class UserVotedCommentsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = CommentSerializer
+    permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
         author = Hacker.objects.get(id=id)
