@@ -72,8 +72,10 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'social_django',
     # third party
+    'oauth2_provider',
     'rest_framework',
     'rest_framework_api_key',
+    'rest_framework_social_oauth2',
     # own
     'contributions',
     'users',
