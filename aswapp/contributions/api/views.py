@@ -17,14 +17,27 @@ class ItemsListAPIView(ListAPIView):
         serializer_class = PublicationSerializer(data=request.data)
         # If form data is valid (all params set)
         if serializer_class.is_valid():
-            # If the url is repeated
-            if request.data['kind'] == '1' and Publication.objects.filter(url=request.data['url']).exists():
-                return Response({'status': 'Error 409, url already exists'}, status=status.HTTP_409_CONFLICT)
+            # If is url
+            if request.data['kind'] == '1':
+                #If repeated
+                if Publication.objects.filter(url=request.data['url'], kind=1).exists():
+                    return Response({'status': 'Error 409, url already exists'}, status=status.HTTP_409_CONFLICT)
+                else: 
+                    if len(request.data['url']) > 0:
+                        if len(request.data['question']) > 0: 
+                            return Response({'status': 'Error 409, question must be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
+                        else: 
+                            serializer_class.save()
+                            return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
+                    else: 
+                        return Response({'status': 'Error 409, url must not be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
             # Otherwise a completely new publication
             else:
-                serializer_class.save()
-                # TODO CommentAPI.post() <-- hipotesis POST 201
-                return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
+                if len(request.data['url']) > 0:
+                    return Response({'status': 'Error 409, url must be empty in a ask kind publication'}, status=status.HTTP_409_CONFLICT)
+                else:
+                    serializer_class.save()
+                    return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
         else:
             return Response({'status': 'Error 400, bad request'}, status=status.HTTP_400_BAD_REQUEST)
         # TODO 401 authorization to create an item
