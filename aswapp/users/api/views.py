@@ -4,12 +4,15 @@ from rest_framework import status
 from contributions.models import Publication, Comment, VoteComment, VotePublication
 from contributions.api.serializers import PublicationSerializer, CommentSerializer
 from users.models import Hacker
-from users.api.serializers import HackerSerializer
+from users.api.serializers import HackerSerializer, ProfileSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework_api_key.permissions import HasAPIKey
 
 
 class UserAPIView(ListAPIView):
     queryset = ''
     serializer_class = HackerSerializer
+    permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
         queryset = Hacker.objects.filter(id=id).first()
@@ -20,14 +23,42 @@ class UserAPIView(ListAPIView):
         # Otherwise, it does not exist, return error
         else:
             return Response({'status': 'Error 404, user not found'}, status=status.HTTP_404_NOT_FOUND)
+    def patch(self, request, id, format=None):
+        print(':'*100)
+        serializer_class = ProfileSerializer(data=request.data)
+        permission_classes = [HasAPIKey]
+        key = request.META["HTTP_AUTHORIZATION"].split()[1]
+
+        if Hacker.objects.filter(id = id, api_key=key).exists():
+            if serializer_class.is_valid():
+                h = Hacker.objects.get(id = id, api_key=key)
+                h.description = request.data['description']
+                h.save()
+                data= {
+                    'username': h.username, 
+                    'karma': h.karma,
+                    'upvotes': h.upvotes,
+                    'downvotes': h.downvotes,
+                    'created_at': h.created_at,
+                    'description': h.description                    
+                
+                    }
+                serializer_class = data
+                return Response(serializer_class, status=status.HTTP_201_CREATED)
+            else: 
+                return Response({'status': 'Error 400, bad request'}, status=status.HTTP_400_BAD_REQUEST)
+        else: 
+            return Response({'status': 'Error 404, user not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
 
 class UserItemsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = PublicationSerializer
+    permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
-        author = Hacker.objects.get(id=id)
-               
+        author = Hacker.objects.get(id=id)               
         # If there are publications, return JSON
         if Publication.objects.filter(author=author).exists():
             queryset = Publication.objects.filter(author=author).all()
@@ -40,6 +71,7 @@ class UserItemsListAPIView(ListAPIView):
 class UserCommentsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = CommentSerializer
+    permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
         author = Hacker.objects.get(id=id)
@@ -56,6 +88,7 @@ class UserCommentsListAPIView(ListAPIView):
 class UserVotedItemsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = PublicationSerializer
+    permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
         author = Hacker.objects.get(id=id)
@@ -85,6 +118,7 @@ class UserVotedItemsListAPIView(ListAPIView):
 class UserVotedCommentsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = CommentSerializer
+    permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
         author = Hacker.objects.get(id=id)

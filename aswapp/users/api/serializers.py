@@ -15,3 +15,11 @@ class HackerSerializer(serializers.ModelSerializer):
             'created_at',
             'description'           
         ]
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hacker
+        fields = [
+            'description',
+        ]
+    

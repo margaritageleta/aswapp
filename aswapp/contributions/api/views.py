@@ -78,7 +78,7 @@ class ItemUrlsListAPIView(ListAPIView):
 class ItemAPIView(ListAPIView):
     queryset = ''
     serializer_class = PublicationSerializer
-    permission_classes = [HasAPIKey]
+    permission_classes = [AllowAny]
 
     # Get an item by id
     def get(self, request, id, format=None):
@@ -92,8 +92,8 @@ class ItemAPIView(ListAPIView):
             return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
     
     # Delete an item by id
-    # TODO DELETE redirected to GET 😱
     def delete(self, request, id, format=None):
+        self.permission_classes = [HasAPIKey]
         queryset = Publication.objects.filter(id=id).first()
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
 
@@ -161,6 +161,7 @@ class ItemVotesAPIView(ListAPIView):
 class ItemCommentsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = CommentSerializer
+    permission_classes = [AllowAny]
     # Get all comments of a given publication
     def get(self, request, id, format=None): 
         ref_publication = Publication.objects.filter(id=id).first()
@@ -172,10 +173,41 @@ class ItemCommentsListAPIView(ListAPIView):
         # Otherwise, it does not exist, return error
         else:
             return Response({'status': 'Error 404, item of comment not found'}, status=status.HTTP_404_NOT_FOUND)
+    def post(self, request, id, format=None): 
+        queryset = Comment.objects.none()
+        serializer_class = CommentSerializer
+        permission_classes = [HasAPIKey]
+        key = request.META["HTTP_AUTHORIZATION"].split()[1]
+
+
+        if Hacker.objects.filter(api_key = key).exists(): 
+            serializer_class = CommentSerializer(data=request.data)
+            # If form data is valid (all params set)
+            if serializer_class.is_valid():
+                
+                ref_publication = Publication.objects.get(id=request.data['referenced_publication'])
+                # author = Hacker.objects.get(api_key=key)
+                
+
+                # If publication referenced does not exist 
+                if not ref_publication:
+                    return Response({'status': 'Error 404, referenced publication must be specified'}, status=status.HTTP_404_NOT_FOUND)
+                # Otherwise, create comment to that publication
+                else:
+                    # If match save, otherwise return conflict
+                        serializer_class.save()
+                        return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
+            else:
+                return Response({'status': 'Error 400, bad request'}, status=status.HTTP_400_BAD_REQUEST)
+        else: 
+            return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 class CommentListAPIView(ListAPIView):
     queryset = ''
     serializer_class = CommentSerializer
+    permission_classes = [AllowAny]
+
     # Get all comments of a given publication
     def get(self, request, format=None): 
         queryset = Comment.objects.all()
@@ -209,6 +241,8 @@ class CommentListAPIView(ListAPIView):
 class CommentAPIView(ListAPIView):
     queryset = ''
     serializer_class = CommentSerializer
+    permission_classes = [AllowAny]
+
     # Get a comment by id
     def get(self, request, id, format=None):
         queryset = Comment.objects.filter(id=id).first()
@@ -219,30 +253,27 @@ class CommentAPIView(ListAPIView):
         # Otherwise, it does not exist, return error
         else:
             return Response({'status': 'Error 404, comment not found'}, status=status.HTTP_404_NOT_FOUND)
+    
     # Delete a comment by id
     def delete(self, request, id, format=None):
-        queryset = Comment.objects.filter(id=id).first()
-        # On successful delete, return no content
-        if queryset:
-            queryset.delete()
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-        # Otherwise return error
+        self.permission_classes = [HasAPIKey]
+        self.queryset = Comment.objects.filter(id=id).first()
+        key = request.META["HTTP_AUTHORIZATION"].split()[1]
+        # Check for authorization
+        if Hacker.objects.filter(api_key=key).exists():
+            print(":"*100)
+            # If deleted item author id marches with api key 
+            if self.queryset.author.id == Hacker.objects.filter(api_key=key).first().id:
+                # On successful delete, return no content
+                if self.queryset:
+                    Comment.objects.get(id=id).delete()
+                    return Response({}, status=status.HTTP_204_NO_CONTENT)
+                # Otherwise return error
+                else:
+                    return Response({'status': 'Error 404, comment not found'}, status=status.HTTP_404_NOT_FOUND)
+            else:
+               return Response({'status': 'Error 403, forbidden to delete this comment'}, status=status.HTTP_403_FORBIDDEN)      
         else:
-            return Response({'status': 'Error 404, comment not found'}, status=status.HTTP_404_NOT_FOUND)
-        # TODO 403 forbidden to delete not yours
-        # TODO 401 authorization to delete yours
-    
+            return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
     # TODO How to update votes?
-    """
-    def patch(self, request, id, format=None):
-        queryset = Publication.objects.filter(id=id).first()
-        serializer_class = PublicationSerializer(queryset, many=False)
-        # On successful delete, return no content
-        if queryset and serializer_class.is_valid():
-            ...
-        # Otherwise return error
-        else:
-            return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
-        # TODO 403 forbidden to delete not yours
-        # TODO 401 authorization to delete yours
-    """
+    
