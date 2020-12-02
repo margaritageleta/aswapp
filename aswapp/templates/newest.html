@@ -22,7 +22,7 @@
             {% endif %}
             <div>
                 <p class="title">
-                    <a href="{% url 'show_contribution_view' id=contribution.id %}">
+                    <a href="{{ contribution.url }}">
                         {{ contribution.title }}
                     </a>
                     {% if contribution.kind == 1 %} 
