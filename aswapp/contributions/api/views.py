@@ -92,7 +92,6 @@ class ItemAPIView(ListAPIView):
             return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
     
     # Delete an item by id
-    # TODO DELETE redirected to GET 😱
     def delete(self, request, id, format=None):
         self.permission_classes = [HasAPIKey]
         queryset = Publication.objects.filter(id=id).first()
@@ -254,30 +253,28 @@ class CommentAPIView(ListAPIView):
         # Otherwise, it does not exist, return error
         else:
             return Response({'status': 'Error 404, comment not found'}, status=status.HTTP_404_NOT_FOUND)
+    
     # Delete a comment by id
     def delete(self, request, id, format=None):
-        queryset = Comment.objects.filter(id=id).first()
-        # On successful delete, return no content
-        if queryset:
-            queryset.delete()
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-        # Otherwise return error
+        print('-'*1000)
+        self.permission_classes = [HasAPIKey]
+        self.queryset = Comment.objects.filter(id=id).first()
+        key = request.META["HTTP_AUTHORIZATION"].split()[1]
+        # Check for authorization
+        if Hacker.objects.filter(api_key=key).exists():
+            print(":"*100)
+            # If deleted item author id marches with api key 
+            if self.queryset.author.id == Hacker.objects.filter(api_key=key).first().id:
+                # On successful delete, return no content
+                if self.queryset:
+                    Comment.objects.get(id=id).delete()
+                    return Response({}, status=status.HTTP_204_NO_CONTENT)
+                # Otherwise return error
+                else:
+                    return Response({'status': 'Error 404, comment not found'}, status=status.HTTP_404_NOT_FOUND)
+            else:
+               return Response({'status': 'Error 403, forbidden to delete this comment'}, status=status.HTTP_403_FORBIDDEN)      
         else:
-            return Response({'status': 'Error 404, comment not found'}, status=status.HTTP_404_NOT_FOUND)
-        # TODO 403 forbidden to delete not yours
-        # TODO 401 authorization to delete yours
-    
+            return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
     # TODO How to update votes?
-    """
-    def patch(self, request, id, format=None):
-        queryset = Publication.objects.filter(id=id).first()
-        serializer_class = PublicationSerializer(queryset, many=False)
-        # On successful delete, return no content
-        if queryset and serializer_class.is_valid():
-            ...
-        # Otherwise return error
-        else:
-            return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
-        # TODO 403 forbidden to delete not yours
-        # TODO 401 authorization to delete yours
-    """
+    
