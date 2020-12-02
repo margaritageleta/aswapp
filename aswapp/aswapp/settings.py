@@ -123,6 +123,8 @@ ON_HEROKU = os.environ.get('ON_HEROKU')
 HEROKU_SERVER = os.environ.get('HEROKU_SERVER')
 
 
+
+
 if ON_HEROKU:
     DATABASES = {
         'default': {
@@ -138,6 +140,9 @@ else:
         'PORT': '8000',
     }
 }
+
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
 
 # DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 

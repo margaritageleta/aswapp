@@ -27,7 +27,7 @@ urlpatterns = [
     path(r'', include('contributions.urls')),
     path(r'', include('users.urls')),
     path(r'api/items/', include('contributions.api.urls')),
-    # path(r'api/users/^', include('users.api.urls')),
+    path(r'api/users/', include('users.api.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

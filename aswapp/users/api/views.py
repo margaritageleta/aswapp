@@ -6,11 +6,19 @@ from users.models import Hacker
 from users.api.serializers import HackerSerializer
 
 
-class UsersAPIView(ListAPIView):
-    pass
-
 class UserAPIView(ListAPIView):
-    pass
+    queryset = ''
+    serializer_class = HackerSerializer
+    # Get an user by id
+    def get(self, request, id, format=None):
+        queryset = Hacker.objects.filter(id=id).first()
+        serializer_class = HackerSerializer(queryset, many=False)
+        # If user exists, return JSON
+        if queryset:
+            return Response(serializer_class.data, status=status.HTTP_200_OK)
+        # Otherwise, it does not exist, return error
+        else:
+            return Response({'status': 'Error 404, user not found'}, status=status.HTTP_404_NOT_FOUND)
 
 class UserItemsListAPIView(ListAPIView):
     pass

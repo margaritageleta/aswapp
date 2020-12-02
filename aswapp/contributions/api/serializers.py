@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from contributions.models import Publication, Comment
+from contributions.models import Publication, Comment, VotePublication
 
 class PublicationSerializer(serializers.ModelSerializer):
     class Meta: 
@@ -9,6 +9,7 @@ class PublicationSerializer(serializers.ModelSerializer):
             'id',
             'author',
             'created_at',
+            'number_votes',
             'title',
             'question',
             'url',
@@ -25,4 +26,13 @@ class CommentSerializer(serializers.ModelSerializer):
             'created_at',
             'referenced_publication',
             'parent',         
+        ]
+
+class VoteItemSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = VotePublication
+        fields = [
+            'id',
+            'voter',
+            'contribution',         
         ]
