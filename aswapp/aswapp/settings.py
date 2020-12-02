@@ -20,7 +20,13 @@ import django_heroku
 # social auth configuration
 
 AUTHENTICATION_BACKENDS = (
+     # Google OAuth2
     'social_core.backends.google.GoogleOAuth2',
+
+    # django-rest-framework-social-oauth2
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+
+    # Django
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -75,7 +81,7 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework_api_key.permissions.HasAPIKey",
+        "rest_framework.permissions.IsAuthenticated",
     ]
 }
 
