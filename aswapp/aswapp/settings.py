@@ -73,7 +73,7 @@ INSTALLED_APPS = [
     'social_django',
     # third party
     'rest_framework',
-    #'rest_framework_social_oauth2'
+    'rest_framework_social_oauth2'
     'rest_framework_api_key',
     # own
     'contributions',
