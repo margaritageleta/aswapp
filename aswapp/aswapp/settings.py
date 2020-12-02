@@ -125,6 +125,16 @@ TEMPLATES = [
     },
 ]
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
+}
+
 # TEMPLATE_DIRS = (
 #     os.path.join(BASE_DIR, 'templates'),
 # )
