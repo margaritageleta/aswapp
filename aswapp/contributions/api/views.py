@@ -1,47 +1,56 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
-from contributions.models import Publication, Comment, VotePublication
+from rest_framework_api_key.permissions import HasAPIKey
+from rest_framework_api_key.models import APIKey
+from contributions.models import Publication, Comment, VotePublication, Hacker
 from contributions.api.serializers import PublicationSerializer, CommentSerializer, VoteItemSerializer
 
 class ItemsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = PublicationSerializer
+    permission_classes = [HasAPIKey]
+
     # Get all publications (all kinds)
     def get(self, request): 
         queryset = Publication.objects.all()
         serializer_class = PublicationSerializer(queryset, many=True)
         return Response(serializer_class.data, status=status.HTTP_200_OK)
+
     # Create a new publication
     def post(self, request):
         serializer_class = PublicationSerializer(data=request.data)
-        # If form data is valid (all params set)
-        if serializer_class.is_valid():
-            # If is url
-            if request.data['kind'] == '1':
-                #If repeated
-                if Publication.objects.filter(url=request.data['url'], kind=1).exists():
-                    return Response({'status': 'Error 409, url already exists'}, status=status.HTTP_409_CONFLICT)
-                else: 
-                    if len(request.data['url']) > 0:
-                        if len(request.data['question']) > 0: 
-                            return Response({'status': 'Error 409, question must be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
-                        else: 
-                            serializer_class.save()
-                            return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
+        key = request.META["HTTP_AUTHORIZATION"].split()[1]
+
+        # Check for authorization
+        if Hacker.objects.filter(api_key=key).exists():
+            # If form data is valid (all params set)
+            if serializer_class.is_valid():
+                # If is url
+                if request.data['kind'] == '1':
+                    #If repeated
+                    if Publication.objects.filter(url=request.data['url'], kind=1).exists():
+                        return Response({'status': 'Error 409, url already exists'}, status=status.HTTP_409_CONFLICT)
                     else: 
-                        return Response({'status': 'Error 409, url must not be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
-            # Otherwise a completely new publication
-            else:
-                if len(request.data['url']) > 0:
-                    return Response({'status': 'Error 409, url must be empty in a ask kind publication'}, status=status.HTTP_409_CONFLICT)
+                        if len(request.data['url']) > 0:
+                            if len(request.data['question']) > 0: 
+                                return Response({'status': 'Error 409, question must be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
+                            else: 
+                                serializer_class.save()
+                                return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
+                        else: 
+                            return Response({'status': 'Error 409, url must not be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
+                # Otherwise a completely new publication
                 else:
-                    serializer_class.save()
-                    return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
+                    if len(request.data['url']) > 0:
+                        return Response({'status': 'Error 409, url must be empty in a ask kind publication'}, status=status.HTTP_409_CONFLICT)
+                    else:
+                        serializer_class.save()
+                        return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
+            else:
+                return Response({'status': 'Error 400, bad request'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'status': 'Error 400, bad request'}, status=status.HTTP_400_BAD_REQUEST)
-        # TODO 401 authorization to create an item
-        # TODO Look up the creation of asks -> not comment associated
+            return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class ItemsAsksListAPIView(ListAPIView):
     queryset = ''
@@ -98,6 +107,8 @@ class ItemVotesAPIView(ListAPIView):
         queryset = VotePublication.objects.filter(contribution=id, voter=self.voter).first() # hardcoded
         serializer_class = VoteItemSerializer(queryset, many=False)
 
+
+
         if self.user == 'rita.geleta': # autheticated
             return Response(serializer_class.data, status=status.HTTP_200_OK)
 
@@ -105,6 +116,10 @@ class ItemVotesAPIView(ListAPIView):
             return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
 
     def post(self, request, id, format=None):
+
+
+        print(request.META["HTTP_AUTHORIZATION"])
+        
         print(request)
         print(request.data)
         print(request.GET.get('api_key'))
