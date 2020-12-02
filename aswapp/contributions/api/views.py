@@ -27,26 +27,29 @@ class ItemsListAPIView(ListAPIView):
             # If form data is valid (all params set)
             if serializer_class.is_valid():
                 # If is url
-                if request.data['kind'] == '1':
-                    #If repeated
-                    if Publication.objects.filter(url=request.data['url'], kind=1).exists():
-                        return Response({'status': 'Error 409, url already exists'}, status=status.HTTP_409_CONFLICT)
-                    else: 
-                        if len(request.data['url']) > 0:
-                            if len(request.data['question']) > 0: 
-                                return Response({'status': 'Error 409, question must be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
-                            else: 
-                                serializer_class.save()
-                                return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
-                        else: 
-                            return Response({'status': 'Error 409, url must not be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
-                # Otherwise a completely new publication
+                if request.data['author'] != Hacker.objects.filter(api_key=key).first().id:
+                    return Response({'status': 'Error 403, author does not match with id'}, status=status.HTTP_403_FORBIDDEN)     
                 else:
-                    if len(request.data['url']) > 0:
-                        return Response({'status': 'Error 409, url must be empty in a ask kind publication'}, status=status.HTTP_409_CONFLICT)
+                    if request.data['kind'] == '1':
+                        #If repeated
+                        if Publication.objects.filter(url=request.data['url'], kind=1).exists():
+                            return Response({'status': 'Error 409, url already exists'}, status=status.HTTP_409_CONFLICT)
+                        else: 
+                            if len(request.data['url']) > 0:
+                                if len(request.data['question']) > 0: 
+                                    return Response({'status': 'Error 409, question must be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
+                                else: 
+                                    serializer_class.save()
+                                    return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
+                            else: 
+                                return Response({'status': 'Error 409, url must not be empty in a url kind publication'}, status=status.HTTP_409_CONFLICT)
+                    # Otherwise a completely new publication
                     else:
-                        serializer_class.save()
-                        return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
+                        if len(request.data['url']) > 0:
+                            return Response({'status': 'Error 409, url must be empty in a ask kind publication'}, status=status.HTTP_409_CONFLICT)
+                        else:
+                            serializer_class.save()
+                            return Response(serializer_class.data, status=status.HTTP_201_CREATED)  
             else:
                 return Response({'status': 'Error 400, bad request'}, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -73,6 +76,8 @@ class ItemUrlsListAPIView(ListAPIView):
 class ItemAPIView(ListAPIView):
     queryset = ''
     serializer_class = PublicationSerializer
+    permission_classes = [HasAPIKey]
+
     # Get an item by id
     def get(self, request, id, format=None):
         queryset = Publication.objects.filter(id=id).first()
@@ -83,18 +88,28 @@ class ItemAPIView(ListAPIView):
         # Otherwise, it does not exist, return error
         else:
             return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
+    
     # Delete an item by id
+    # TODO DELETE redirected to GET 😱
     def delete(self, request, id, format=None):
         queryset = Publication.objects.filter(id=id).first()
-        # On successful delete, return no content
-        if queryset:
-            queryset.delete()
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-        # Otherwise return error
+        key = request.META["HTTP_AUTHORIZATION"].split()[1]
+
+        # Check for authorization
+        if Hacker.objects.filter(api_key=key).exists():
+            # If deleted item author id marches with api key 
+            if queryset.author.id == Hacker.objects.filter(api_key=key).first().id:
+                # On successful delete, return no content
+                if queryset:
+                    queryset.delete()
+                    return Response({}, status=status.HTTP_204_NO_CONTENT)
+                # Otherwise return error
+                else:
+                    return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
+            else:
+               return Response({'status': 'Error 403, forbidden to delete this item'}, status=status.HTTP_403_FORBIDDEN)      
         else:
-            return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
-        # TODO 403 forbidden to delete not yours
-        # TODO 401 authorization to delete yours
+            return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
     
     # TODO How to update votes?
 class ItemVotesAPIView(ListAPIView):
