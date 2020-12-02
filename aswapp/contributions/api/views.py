@@ -1,8 +1,8 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
-from contributions.models import Publication, Comment
-from contributions.api.serializers import PublicationSerializer, CommentSerializer
+from contributions.models import Publication, Comment, VotePublication
+from contributions.api.serializers import PublicationSerializer, CommentSerializer, VoteItemSerializer
 
 class ItemsListAPIView(ListAPIView):
     queryset = ''
@@ -75,6 +75,30 @@ class ItemAPIView(ListAPIView):
         # TODO 401 authorization to delete yours
     
     # TODO How to update votes?
+class ItemVotesAPIView(ListAPIView):
+    """
+    queryset = ''
+    serializer_class = PublicationSerializer
+    user, voter = 'rita.geleta', 1 # hardcoded
+
+    def get(self, request, id, format=None):
+        queryset = VotePublication.objects.filter(contribution=id, voter=self.voter).first() # hardcoded
+        serializer_class = VoteItemSerializer(queryset, many=False)
+
+        if self.user == 'rita.geleta': # autheticated
+            return Response(serializer_class.data, status=status.HTTP_200_OK)
+
+        else: # not autheticated
+            return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    def post(self, request, id, format=None):
+        print(request)
+        print(request.data)
+        print(request.GET.get('api_key'))
+        return Response({'status' : 'hello'}, status=status.HTTP_200_OK)
+    """
+    pass
+
     """
     def patch(self, request, id, format=None):
         queryset = Publication.objects.filter(id=id).first()
