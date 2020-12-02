@@ -1,6 +1,7 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework_api_key.permissions import HasAPIKey
 from rest_framework_api_key.models import APIKey
 from contributions.models import Publication, Comment, VotePublication, Hacker
@@ -9,7 +10,7 @@ from contributions.api.serializers import PublicationSerializer, CommentSerializ
 class ItemsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = PublicationSerializer
-    permission_classes = [HasAPIKey]
+    permission_classes = [AllowAny]
 
     # Get all publications (all kinds)
     def get(self, request): 
@@ -19,6 +20,7 @@ class ItemsListAPIView(ListAPIView):
 
     # Create a new publication
     def post(self, request):
+        self.permission_classes = [HasAPIKey]
         serializer_class = PublicationSerializer(data=request.data)
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
 
