@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework_api_key.permissions import HasAPIKey
 from rest_framework_api_key.models import APIKey
-from contributions.models import Publication, Comment, VotePublication, Hacker
+from contributions.models import Publication, Comment, VotePublication, Hacker, VoteComment
 from contributions.api.serializers import PublicationSerializer, CommentSerializer
 
 class ItemsListAPIView(ListAPIView):
@@ -260,3 +260,28 @@ class CommentAPIView(ListAPIView):
             return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
     # TODO How to update votes?
     
+class CommentVotesAPIView(ListAPIView):
+    #Votar y desvotar
+    permission_classes = ''
+    def post(self, request, id, format=None): 
+        permission_classes = [HasAPIKey]
+        key = request.META["HTTP_AUTHORIZATION"].split()[1]
+    
+        if Comment.objects.filter(id=id).exists():
+            c = Comment.objects.get(id=id) 
+            if c.author.api_key != key:
+                if  Hacker.objects.filter(api_key=key).exists():
+                    h = Hacker.objects.get(api_key=key)
+                    if VoteComment.objects.filter(voter=h, contribution=c).exists():
+                        VoteComment.objects.get(voter=h, contribution=c).delete()
+                        return Response({'status': '202, comment unvoted'}, status=status.HTTP_404_NOT_FOUND)
+                    else: 
+                        VoteComment(voter=h, contribution=c).save()
+                        return Response({'status': '202, comment voted'}, status=status.HTTP_404_NOT_FOUND)
+                else: 
+                    return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+            else: 
+                return Response({'status': 'Error 409, cannot vote your own comment'}, status=status.HTTP_409_CONFLICT)
+
+        else: 
+            return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)

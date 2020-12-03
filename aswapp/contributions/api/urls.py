@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^(?P<id>[0-9A-Za-z_\-]+)/votes/$', views.ItemVotesAPIView.as_view(), name='vote_item'),
     url(r'^(?P<id>[0-9A-Za-z_\-]+)/comments/$', views.ItemCommentsListAPIView.as_view(), name='item_comments'),
     url(r'^comments/(?P<id>[0-9A-Za-z_\-]+)/$', views.CommentAPIView.as_view(), name='comment'),
+    url(r'^comments/(?P<id>[0-9A-Za-z_\-]+)/votes/$', views.CommentVotesAPIView.as_view(), name='comment'),
+
 ]
