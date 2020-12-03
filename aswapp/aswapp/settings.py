@@ -73,13 +73,13 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'social_django',
     # third party
+    'corsheaders',
     'oauth2_provider',
     'rest_framework',
     'rest_framework_api_key',
     'rest_framework_social_oauth2',
     'rest_framework_swagger',
     'drf_yasg',
-    'corsheaders',
     # own
     'contributions',
     'users',
