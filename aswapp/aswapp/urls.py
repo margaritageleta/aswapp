@@ -47,7 +47,7 @@ urlpatterns = [
     path(r'', include('contributions.urls')),
     path(r'', include('users.urls')),
     #url(r'^social/', include('social.apps.django_app.urls', namespace='social')),
-    #url(r'^auth/', include('rest_framework_social_oauth2.urls')),
+    url(r'^auth/', include('rest_framework_social_oauth2.urls')),
     path(r'api/items/', include('contributions.api.urls')),
     path(r'api/users/', include('users.api.urls')),
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
