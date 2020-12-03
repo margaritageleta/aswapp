@@ -136,10 +136,10 @@ class ItemVotesAPIView(ListAPIView):
                     h = Hacker.objects.get(api_key=key)
                     if VotePublication.objects.filter(voter=h, contribution=c).exists():
                         VotePublication.objects.get(voter=h, contribution=c).delete()
-                        return Response({'status': '202, publication unvoted'}, status=status.HTTP_404_NOT_FOUND)
+                        return Response({'status': '202, publication unvoted'}, status=status.HTTP_202_ACCEPTED)
                     else: 
                         VotePublication(voter=h, contribution=c).save()
-                        return Response({'status': '202, publication voted'}, status=status.HTTP_404_NOT_FOUND)
+                        return Response({'status': '202, publication voted'}, status=status.HTTP_202_ACCEPTED)
                 else: 
                     return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
             else: 
@@ -287,10 +287,10 @@ class CommentVotesAPIView(ListAPIView):
                     h = Hacker.objects.get(api_key=key)
                     if VoteComment.objects.filter(voter=h, contribution=c).exists():
                         VoteComment.objects.get(voter=h, contribution=c).delete()
-                        return Response({'status': '202, comment unvoted'}, status=status.HTTP_404_NOT_FOUND)
+                        return Response({'status': '202, comment unvoted'}, status=status.HTTP_202_ACCEPTED)
                     else: 
                         VoteComment(voter=h, contribution=c).save()
-                        return Response({'status': '202, comment voted'}, status=status.HTTP_404_NOT_FOUND)
+                        return Response({'status': '202, comment voted'}, status=status.HTTP_202_ACCEPTED)
                 else: 
                     return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
             else: 
