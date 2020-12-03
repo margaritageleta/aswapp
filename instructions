@@ -54,3 +54,6 @@ heroku run python aswapp/manage.py migrate --run-syncdb
 # To open heroku
 heroku open
 
+# To load google keys
+source env/bin/vars.sh
+
