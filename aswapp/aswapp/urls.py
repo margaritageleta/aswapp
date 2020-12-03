@@ -31,7 +31,7 @@ schema_view = get_schema_view(
    openapi.Info(
       title="Hackernews API",
       default_version='v1',
-      description="At this page you can try out our API requests",
+      description="This is the Open API documentation for the REST API of our beloved application **HackerNews API** deployed at <https://hackernews-project.herokuapp.com/api>. <br>All operations are executable. The operations that requires authentication: `deletePost`, `updateUser` and `deleteComment`. In this case, you must **Authorize** your request by providing the api_key vaule you got when you created the tweet.",
       terms_of_service="https://www.google.com/policies/terms/",
       #contact=openapi.Contact(email="contact@snippets.local"),
       #license=openapi.License(name="BSD License"),
@@ -47,7 +47,7 @@ urlpatterns = [
     path(r'', include('contributions.urls')),
     path(r'', include('users.urls')),
     #url(r'^social/', include('social.apps.django_app.urls', namespace='social')),
-    url(r'^auth/', include('rest_framework_social_oauth2.urls')),
+    #url(r'^auth/', include('rest_framework_social_oauth2.urls')),
     path(r'api/items/', include('contributions.api.urls')),
     path(r'api/users/', include('users.api.urls')),
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),

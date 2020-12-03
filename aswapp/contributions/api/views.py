@@ -14,6 +14,16 @@ class ItemsListAPIView(ListAPIView):
 
     # Get all publications (all kinds)
     def get(self, request): 
+        """
+        Get all the publications.
+
+        Return all the publications regardless it's a url or ask publication
+        ---
+        responseMessages:
+                - code: 200
+                    description: 'OK'
+        """
+        
         permission_classes = [AllowAny]
         queryset = Publication.objects.all()
         serializer_class = PublicationSerializer(queryset, many=True)
@@ -21,6 +31,13 @@ class ItemsListAPIView(ListAPIView):
 
     # Create a new publication
     def post(self, request):
+        """
+        Post a new publications.
+
+        Return all the publications regardless it's a url or ask publication
+        ---  
+        """
+        
         self.permission_classes = [HasAPIKey]
         serializer_class = PublicationSerializer(data=request.data)
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
@@ -65,6 +82,12 @@ class ItemsAsksListAPIView(ListAPIView):
 
     # Get all publications of type ASK
     def get(self, request): 
+        """
+        Get all the publications of type ask.
+
+        Return all the ask publications in the system.
+        ---  
+        """
         queryset = Publication.objects.filter(kind=0).all()
         serializer_class = PublicationSerializer(queryset, many=True)
         return Response(serializer_class.data, status=status.HTTP_200_OK)
@@ -76,6 +99,12 @@ class ItemUrlsListAPIView(ListAPIView):
 
     # Get all publications of type URL
     def get(self, request): 
+        """
+        Get all publications of type URL.
+
+        Return all publications of type URL.
+        ---  
+        """
         queryset = Publication.objects.filter(kind=1).all()
         serializer_class = PublicationSerializer(queryset, many=True)
         return Response(serializer_class.data, status=status.HTTP_200_OK)
@@ -87,6 +116,12 @@ class ItemAPIView(ListAPIView):
 
     # Get an item by id
     def get(self, request, id, format=None):
+        """
+        Get an item by id.
+
+        Return an item identified by an id.
+        ---  
+        """
         permission_classes = [AllowAny]
 
         queryset = Publication.objects.filter(id=id).first()
@@ -101,6 +136,12 @@ class ItemAPIView(ListAPIView):
     
     # Delete an item by id
     def delete(self, request, id, format=None):
+        """
+        Delete an item by id.
+
+        Delete from the system an item indentified by an id.
+        ---  
+        """
         self.permission_classes = [HasAPIKey]
         queryset = Publication.objects.filter(id=id).first()
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
@@ -126,6 +167,12 @@ class ItemVotesAPIView(ListAPIView):
     #Votar y desvotar
     permission_classes = ''
     def post(self, request, id, format=None): 
+        """
+        Vote/Unvote a publication by id.
+
+        Vote and unvote a publication identified by an id.
+        ---  
+        """
         permission_classes = [HasAPIKey]
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
     
@@ -154,6 +201,12 @@ class ItemCommentsListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     # Get all comments of a given publication
     def get(self, request, id, format=None): 
+        """
+        Get comments of a publication.
+
+        Get all comments of a given publication, indentified by the publication id.
+        ---  
+        """
         permission_classes = [AllowAny]
 
         ref_publication = Publication.objects.filter(id=id).first()
@@ -165,7 +218,13 @@ class ItemCommentsListAPIView(ListAPIView):
         # Otherwise, it does not exist, return error
         else:
             return Response({'status': 'Error 404, item of comment not found'}, status=status.HTTP_404_NOT_FOUND)
-    def post(self, request, id, format=None): 
+    def post(self, request, id, format=None):
+        """
+        Post a comment in a publication.
+
+        Create a new comment for a publication identified by the publication id.
+        ---  
+        """
         queryset = Comment.objects.none()
         serializer_class = CommentSerializer
         permission_classes = [HasAPIKey]
@@ -200,8 +259,14 @@ class CommentListAPIView(ListAPIView):
     serializer_class = CommentSerializer
     permission_classes = [AllowAny]
 
-    # Get all comments of a given publication
-    def get(self, request, format=None): 
+    # Get all comments
+    def get(self, request, format=None):
+        """
+        Get all comments.
+
+        Return all the existing comments.
+        ---  
+        """
         permission_classes = [AllowAny]
 
         queryset = Comment.objects.all()
@@ -209,6 +274,12 @@ class CommentListAPIView(ListAPIView):
         return Response(serializer_class.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        """
+        Post a comment.
+
+        Create a new comment.
+        ---  
+        """
         serializer_class = CommentSerializer(data=request.data)
         # If form data is valid (all params set)
         if serializer_class.is_valid():
@@ -239,6 +310,12 @@ class CommentAPIView(ListAPIView):
 
     # Get a comment by id
     def get(self, request, id, format=None):
+        """
+        Get a comment by id
+
+        Return a comment identified by the comment id.
+        ---  
+        """
         permission_classes = [AllowAny]
 
         queryset = Comment.objects.filter(id=id).first()
@@ -252,6 +329,12 @@ class CommentAPIView(ListAPIView):
     
     # Delete a comment by id
     def delete(self, request, id, format=None):
+        """
+        Delete a comment by id
+
+        Delete a comment identified by the comment id.
+        ---  
+        """
         self.permission_classes = [HasAPIKey]
         self.queryset = Comment.objects.filter(id=id).first()
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
@@ -277,6 +360,12 @@ class CommentVotesAPIView(ListAPIView):
     #Votar y desvotar
     permission_classes = ''
     def post(self, request, id, format=None): 
+        """
+        Vote/Unvote a comment.
+
+        Vote and unvote a comment identified by the comment id.
+        ---  
+        """
         permission_classes = [HasAPIKey]
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
     
