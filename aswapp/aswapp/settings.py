@@ -41,6 +41,7 @@ CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
     'authorization',
+    'Authorization',
     'api_key',
     'content-type',
     'dnt',
@@ -49,6 +50,7 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
     'access-control-allow-origin',
+    'access-control-allow-headers',
 ]
 
 
