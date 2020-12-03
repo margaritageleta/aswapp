@@ -13,9 +13,7 @@ class Hacker(models.Model):
     downvotes = models.IntegerField(default=0)
     created_at = models.DateTimeField(default=timezone.now(), null=False)
 
-    objects = models.Manager()
-
-    
+    objects = models.Manager()    
 
     
     def get_username(self):
@@ -26,6 +24,10 @@ class Hacker(models.Model):
     def get_publications(self):
         Publication = apps.get_model('contributions', 'Publication') #This is done due circular imports
         return Publication.objects.filter(author=self)
+    
+    def get_comment(self):
+        Comment = apps.get_model('contribution', 'Comments')
+        return Comment.objects.filter(author=self)
 
     def get_created_time(self):
         return self.user.date_joined
@@ -48,7 +50,7 @@ class Hacker(models.Model):
 
     def remove_downvotes(self):
         self.downvotes -= 1
-        self.calculate_karma
+        self.calculate_karma()
 
     def set_username(self, new_username):
         self.username = new_username

@@ -57,3 +57,5 @@ heroku open
 # To load google keys
 source env/bin/vars.sh
 
+#Run pgAdmin
+python aswapp/env/lib/python3.6/site-packages/pgadmin4/pgAdmin4.py

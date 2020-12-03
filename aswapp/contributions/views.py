@@ -139,33 +139,33 @@ class SubmitView(FormView):
         title = request.POST['title']
         url = request.POST['url']
         text = request.POST['text']
+
         hacker = Hacker.objects.get(username=request.user)
 
         kind = 0 if url == '' or url is None else 1
 
-        # If url publication exists in out system then redirect to that publication 
-        if kind == 1 and Publication.objects.filter(url=url).exists(): 
-            id = Publication.objects.get(url=url).id
-            return HttpResponseRedirect('/item/' + str(id))
 
-        else:
-            #Create a new publication 
-            if text == '' or text is None: 
-                 new_publication = Publication(title=title, url=url, kind=kind, author=hacker)
-            else:
-                new_publication = Publication(title=title, question=text, url=url, kind=kind, author=hacker)
-            
+        #Url Publication Options
+        if kind == 1: 
+            #If already exists: redirect to existing post
+            if Publication.objects.filter(url=url).exists(): 
+                id = Publication.objects.get(url=url).id
+                return HttpResponseRedirect('/item/' + str(id))
+            #Else, create a new Publication type Url
+            else: 
+                new_publication = Publication(title=title, url=url, kind=kind, author=hacker)
+                new_publication.save()
+                #If has text associated - it is a comment associated to the publication
+                if text.isspace() :
+                    new_comment = Comment(comment=text, referenced_publication=new_publication, author=hacker)
+                    new_comment.save() 
+        #Ask Submission
+        else:  
+            new_publication = Publication(title=title, kind=kind, author=hacker, question=text)
             new_publication.save()
-            # print(new_publication)
-
-            # If it is a URL publications and has a comment associated
-            # Create the comment and associate with publication
-
-            if kind == 1 and (text is not '' or text is not None):
-                new_comment = Comment(comment=text, referenced_publication=new_publication, author=hacker)
-                new_comment.save()            
+    
         
-            return HttpResponseRedirect("/news")   
+        return HttpResponseRedirect("/news")   
 
 
 
