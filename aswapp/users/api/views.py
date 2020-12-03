@@ -15,6 +15,12 @@ class UserAPIView(ListAPIView):
     permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
+        """
+        Get an user by id.
+
+        Return a user identified by the user id.
+        ---  
+        """
         permission_classes = [AllowAny]
 
         queryset = Hacker.objects.filter(id=id).first()
@@ -26,6 +32,12 @@ class UserAPIView(ListAPIView):
         else:
             return Response({'status': 'Error 404, user not found'}, status=status.HTTP_404_NOT_FOUND)
     def patch(self, request, id, format=None):
+        """
+        Change user description.
+
+        Return the user information with the changed description.
+        ---  
+        """
         serializer_class = ProfileSerializer(data=request.data)
         permission_classes = [HasAPIKey]
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
@@ -59,6 +71,12 @@ class UserItemsListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
+        """
+        Get user publication.
+
+        Return the user publications list.
+        ---  
+        """
         permission_classes = [AllowAny]
 
         author = Hacker.objects.get(id=id)               
@@ -77,6 +95,12 @@ class UserCommentsListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
+        """
+        Get user comments.
+
+        Return the user comments list.
+        ---  
+        """
         permission_classes = [AllowAny]
 
         author = Hacker.objects.get(id=id)
@@ -96,6 +120,12 @@ class UserVotedItemsListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
+        """
+        Get user voted publications.
+
+        Return the user voted publications list.
+        ---  
+        """
         author = Hacker.objects.get(id=id)
         permission_classes = [AllowAny]
 
@@ -127,6 +157,12 @@ class UserVotedCommentsListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
+        """
+        Get user voted comments.
+
+        Return the user voted comments list.
+        ---  
+        """
         permission_classes = [AllowAny]
         author = Hacker.objects.get(id=id)
                
