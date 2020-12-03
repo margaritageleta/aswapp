@@ -15,6 +15,8 @@ class UserAPIView(ListAPIView):
     permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
+        permission_classes = [AllowAny]
+
         queryset = Hacker.objects.filter(id=id).first()
         serializer_class = HackerSerializer(queryset, many=False)
         # If user exists, return JSON
@@ -57,6 +59,8 @@ class UserItemsListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
+        permission_classes = [AllowAny]
+
         author = Hacker.objects.get(id=id)               
         # If there are publications, return JSON
         if Publication.objects.filter(author=author).exists():
@@ -73,6 +77,8 @@ class UserCommentsListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
+        permission_classes = [AllowAny]
+
         author = Hacker.objects.get(id=id)
                
         # If there are publications, return JSON
@@ -91,7 +97,8 @@ class UserVotedItemsListAPIView(ListAPIView):
     # Get an user by id
     def get(self, request, id, format=None):
         author = Hacker.objects.get(id=id)
-               
+        permission_classes = [AllowAny]
+
         # If there are voted publications, return JSON
         if VotePublication.objects.filter(voter=author).exists():
             data = []
@@ -120,6 +127,7 @@ class UserVotedCommentsListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     # Get an user by id
     def get(self, request, id, format=None):
+        permission_classes = [AllowAny]
         author = Hacker.objects.get(id=id)
                
         # If there are voted publications, return JSON
