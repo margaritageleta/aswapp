@@ -14,6 +14,7 @@ class ItemsListAPIView(ListAPIView):
 
     # Get all publications (all kinds)
     def get(self, request): 
+        permission_classes = [AllowAny]
         queryset = Publication.objects.all()
         serializer_class = PublicationSerializer(queryset, many=True)
         return Response(serializer_class.data, status=status.HTTP_200_OK)
@@ -60,6 +61,8 @@ class ItemsListAPIView(ListAPIView):
 class ItemsAsksListAPIView(ListAPIView):
     queryset = ''
     serializer_class = PublicationSerializer
+    permission_classes = [AllowAny]
+
     # Get all publications of type ASK
     def get(self, request): 
         queryset = Publication.objects.filter(kind=0).all()
@@ -69,6 +72,8 @@ class ItemsAsksListAPIView(ListAPIView):
 class ItemUrlsListAPIView(ListAPIView):
     queryset = ''
     serializer_class = PublicationSerializer
+    permission_classes = [AllowAny]
+
     # Get all publications of type URL
     def get(self, request): 
         queryset = Publication.objects.filter(kind=1).all()
@@ -82,6 +87,8 @@ class ItemAPIView(ListAPIView):
 
     # Get an item by id
     def get(self, request, id, format=None):
+        permission_classes = [AllowAny]
+
         queryset = Publication.objects.filter(id=id).first()
         serializer_class = PublicationSerializer(queryset, many=False)
         # If items exists, return JSON
@@ -147,6 +154,8 @@ class ItemCommentsListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     # Get all comments of a given publication
     def get(self, request, id, format=None): 
+        permission_classes = [AllowAny]
+
         ref_publication = Publication.objects.filter(id=id).first()
         queryset = Comment.objects.filter(referenced_publication=ref_publication).all()
         # If referenced publication exists
@@ -193,6 +202,8 @@ class CommentListAPIView(ListAPIView):
 
     # Get all comments of a given publication
     def get(self, request, format=None): 
+        permission_classes = [AllowAny]
+
         queryset = Comment.objects.all()
         serializer_class = CommentSerializer(queryset, many=True)
         return Response(serializer_class.data, status=status.HTTP_200_OK)
@@ -228,6 +239,8 @@ class CommentAPIView(ListAPIView):
 
     # Get a comment by id
     def get(self, request, id, format=None):
+        permission_classes = [AllowAny]
+
         queryset = Comment.objects.filter(id=id).first()
         serializer_class = CommentSerializer(queryset, many=False)
         # If comment exists, return JSON
