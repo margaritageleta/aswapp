@@ -28,11 +28,3 @@ class CommentSerializer(serializers.ModelSerializer):
             'parent',         
         ]
 
-class VoteItemSerializer(serializers.ModelSerializer):
-    class Meta: 
-        model = VotePublication
-        fields = [
-            'id',
-            'voter',
-            'contribution',         
-        ]

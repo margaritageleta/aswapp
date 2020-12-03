@@ -24,7 +24,6 @@ class UserAPIView(ListAPIView):
         else:
             return Response({'status': 'Error 404, user not found'}, status=status.HTTP_404_NOT_FOUND)
     def patch(self, request, id, format=None):
-        print(':'*100)
         serializer_class = ProfileSerializer(data=request.data)
         permission_classes = [HasAPIKey]
         key = request.META["HTTP_AUTHORIZATION"].split()[1]

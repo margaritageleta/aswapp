@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework_api_key.permissions import HasAPIKey
 from rest_framework_api_key.models import APIKey
 from contributions.models import Publication, Comment, VotePublication, Hacker
-from contributions.api.serializers import PublicationSerializer, CommentSerializer, VoteItemSerializer
+from contributions.api.serializers import PublicationSerializer, CommentSerializer
 
 class ItemsListAPIView(ListAPIView):
     queryset = ''
@@ -90,6 +90,7 @@ class ItemAPIView(ListAPIView):
         # Otherwise, it does not exist, return error
         else:
             return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
+
     
     # Delete an item by id
     def delete(self, request, id, format=None):
@@ -115,48 +116,30 @@ class ItemAPIView(ListAPIView):
     
     # TODO How to update votes?
 class ItemVotesAPIView(ListAPIView):
-    """
-    queryset = ''
-    serializer_class = PublicationSerializer
-    user, voter = 'rita.geleta', 1 # hardcoded
+    #Votar y desvotar
+    permission_classes = ''
+    def post(self, request, id, format=None): 
+        permission_classes = [HasAPIKey]
+        key = request.META["HTTP_AUTHORIZATION"].split()[1]
+    
+        if Publication.objects.filter(id=id).exists():
+            c = Publication.objects.get(id=id) 
+            if c.author.api_key != key:
+                if  Hacker.objects.filter(api_key=key).exists():
+                    h = Hacker.objects.get(api_key=key)
+                    if VotePublication.objects.filter(voter=h, contribution=c).exists():
+                        VotePublication.objects.get(voter=h, contribution=c).delete()
+                        return Response({'status': '202, publication unvoted'}, status=status.HTTP_404_NOT_FOUND)
+                    else: 
+                        VotePublication(voter=h, contribution=c).save()
+                        return Response({'status': '202, publication voted'}, status=status.HTTP_404_NOT_FOUND)
+                else: 
+                    return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+            else: 
+                return Response({'status': 'Error 409, cannot vote your own publication'}, status=status.HTTP_409_CONFLICT)
 
-    def get(self, request, id, format=None):
-        queryset = VotePublication.objects.filter(contribution=id, voter=self.voter).first() # hardcoded
-        serializer_class = VoteItemSerializer(queryset, many=False)
-
-
-
-        if self.user == 'rita.geleta': # autheticated
-            return Response(serializer_class.data, status=status.HTTP_200_OK)
-
-        else: # not autheticated
-            return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
-
-    def post(self, request, id, format=None):
-
-
-        print(request.META["HTTP_AUTHORIZATION"])
-        
-        print(request)
-        print(request.data)
-        print(request.GET.get('api_key'))
-        return Response({'status' : 'hello'}, status=status.HTTP_200_OK)
-    """
-    pass
-
-    """
-    def patch(self, request, id, format=None):
-        queryset = Publication.objects.filter(id=id).first()
-        serializer_class = PublicationSerializer(queryset, many=False)
-        # On successful delete, return no content
-        if queryset and serializer_class.is_valid():
-            ...
-        # Otherwise return error
-        else:
+        else: 
             return Response({'status': 'Error 404, item not found'}, status=status.HTTP_404_NOT_FOUND)
-        # TODO 403 forbidden to delete not yours
-        # TODO 401 authorization to delete yours
-    """
 
 class ItemCommentsListAPIView(ListAPIView):
     queryset = ''

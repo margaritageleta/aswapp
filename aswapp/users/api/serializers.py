@@ -22,4 +22,3 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = [
             'description',
         ]
-    
