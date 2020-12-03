@@ -31,7 +31,7 @@ schema_view = get_schema_view(
    openapi.Info(
       title="Hackernews API",
       default_version='v1',
-      description="Here you can find all API documentation",
+      description="At this page you can try out our API requests",
       terms_of_service="https://www.google.com/policies/terms/",
       #contact=openapi.Contact(email="contact@snippets.local"),
       #license=openapi.License(name="BSD License"),
