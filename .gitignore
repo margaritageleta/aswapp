@@ -14,3 +14,4 @@ aswapp/static/admin/*
 tutorial/tutorial/*
 aswapp/contributions/api/*
 aswapp/users/api/__pycache__/*
+react-application/*
