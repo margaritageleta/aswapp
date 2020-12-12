@@ -20,7 +20,13 @@ import django_heroku
 # social auth configuration
 
 AUTHENTICATION_BACKENDS = (
+     # Google OAuth2
     'social_core.backends.google.GoogleOAuth2',
+
+    # django-rest-framework-social-oauth2
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+
+    # Django
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -28,9 +34,6 @@ LOGIN_URL = '/auth/login/google-oauth2/'
 LOGIN_REDIRECT_URL = '/profile/'
 LOGOUT_REDIRECT_URL = '/'
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
-
-
-
 
 
 
@@ -56,33 +59,72 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.staticfiles',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'django.contrib.humanize',
     'social_django',
     # third party
-    
+    'corsheaders',
+    'oauth2_provider',
+    'rest_framework',
+    'rest_framework_api_key',
+    'rest_framework_social_oauth2',
+    'corsheaders',
+    'rest_framework_swagger',
+    'drf_yasg',
     # own
     'contributions',
     'users',
 ]
 
+REST_FRAMEWORK = {
+
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ]
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
+    
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'Authorization',
+    'api_key',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'access-control-allow-origin',
+    'access-control-allow-headers',
+]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'aswapp.urls'
 
@@ -102,6 +144,16 @@ TEMPLATES = [
     },
 ]
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
+}
+
 # TEMPLATE_DIRS = (
 #     os.path.join(BASE_DIR, 'templates'),
 # )
@@ -114,6 +166,8 @@ WSGI_APPLICATION = 'aswapp.wsgi.application'
 
 ON_HEROKU = os.environ.get('ON_HEROKU')
 HEROKU_SERVER = os.environ.get('HEROKU_SERVER')
+
+
 
 
 if ON_HEROKU:
@@ -131,6 +185,9 @@ else:
         'PORT': '8000',
     }
 }
+
+# db_from_env = dj_database_url.config(conn_max_age=600)
+# DATABASES['default'].update(db_from_env)
 
 # DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
@@ -173,6 +230,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
 
 
 # Internationalization

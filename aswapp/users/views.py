@@ -10,6 +10,8 @@ from contributions.models import Comment
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from contributions.models import VoteComment, VotePublication, Publication, Comment
+from rest_framework_api_key.models import APIKey
+
 
 
 
@@ -88,21 +90,27 @@ class ProfileView(View):
         
         user_name = request.user
         user = User.objects.get(username=user_name)
-    
+
         # #See if the user has been registered in 
         if Hacker.objects.filter(user = user).count() == 0: 
-            hacker = Hacker(user=user, username=user_name)
+            api_key, key = APIKey.objects.create_key(name='API_KEY')
+            hacker = Hacker(user=user,username=user_name,api_key=key)
             hacker.save()
-            
         else: 
             hacker = Hacker.objects.get(user=user)  
+            print(hacker.api_key)
+            if hacker.api_key is None:
+                api_key, key = APIKey.objects.create_key(name='API_KEY')
+                hacker.api_key = key
+                hacker.save()
 
         print('PRE')
-        print(f' HACKER {hacker.user.id}')
+        print(f' HACKER {hacker.user.id}') 
 
         context = {
             'hackerid': hacker.user.id,
             'username': hacker.get_username(),
+            'api_key': hacker.api_key,
             'karma': hacker.get_karma(),
             'joined': hacker.get_created_time(),
             'email': hacker.get_email(),  

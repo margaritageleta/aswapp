@@ -2,8 +2,8 @@ from django.conf.urls import url
 from contributions import views
 
 
+
 urlpatterns = [
-    
     url(r'^$', views.NewsView.as_view(), name='news_view'),
     url(r'news/$', views.NewsView.as_view(), name='news_view'),
     url(r'newest/$', views.NewestView.as_view(), name='newest_view'),
