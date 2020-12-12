@@ -75,7 +75,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_api_key',
     'rest_framework_social_oauth2',
-    'corsheaders',
     'rest_framework_swagger',
     'drf_yasg',
     # own
