@@ -1,0 +1,553 @@
+swagger: '2.0'
+info:
+  title: Hackernews API
+  description: 'This is the Open API documentation for the REST API of our beloved
+    application **HackerNews API** deployed at <https://hackernews-project.herokuapp.com/api>.
+    <br>All operations are executable. The operations that requires authentication:
+    `deletePost`, `updateUser` and `deleteComment`. In this case, you must **Authorize**
+    your request by providing the api_key vaule you got when you created the tweet.'
+  termsOfService: https://www.google.com/policies/terms/
+  version: v1
+host: hackernews-project.herokuapp.com
+schemes:
+  - http
+basePath: /
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  api_key:
+    in: header
+    name: Authorization
+    type: apiKey
+security:
+  - api_key: []
+paths:
+  /api/items/:
+    get:
+      operationId: api_items_list
+      summary: Get all the publications.
+      description: |-
+        Return all the publications regardless it's a url or ask publication
+        ---
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Publication'
+      tags:
+        - api
+    post:
+      operationId: api_items_create
+      summary: Post a new publications.
+      description: |-
+        Return all the publications regardless it's a url or ask publication
+        ---
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Publication'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Publication'
+      tags:
+        - api
+    parameters: []
+  /api/items/asks/:
+    get:
+      operationId: api_items_asks_list
+      summary: Get all the publications of type ask.
+      description: |-
+        Return all the ask publications in the system.
+        ---
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Publication'
+      tags:
+        - api
+    parameters: []
+  /api/items/comments/{id}/:
+    get:
+      operationId: api_items_comments_read
+      summary: Get a comment by id
+      description: |-
+        Return a comment identified by the comment id.
+        ---
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Comment'
+      tags:
+        - api
+    delete:
+      operationId: api_items_comments_delete
+      summary: Delete a comment by id
+      description: |-
+        Delete a comment identified by the comment id.
+        ---
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+  /api/items/comments/{id}/votes/:
+    get:
+      operationId: api_items_comments_votes_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - api
+    post:
+      operationId: api_items_comments_votes_create
+      summary: Vote/Unvote a comment.
+      description: |-
+        Vote and unvote a comment identified by the comment id.
+        ---
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+  /api/items/urls/:
+    get:
+      operationId: api_items_urls_list
+      summary: Get all publications of type URL.
+      description: |-
+        Return all publications of type URL.
+        ---
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Publication'
+      tags:
+        - api
+    parameters: []
+  /api/items/{id}/:
+    get:
+      operationId: api_items_read
+      summary: Get an item by id.
+      description: |-
+        Return an item identified by an id.
+        ---
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Publication'
+      tags:
+        - api
+    delete:
+      operationId: api_items_delete
+      summary: Delete an item by id.
+      description: |-
+        Delete from the system an item indentified by an id.
+        ---
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+  /api/items/{id}/comments/:
+    get:
+      operationId: api_items_comments_list
+      summary: Get comments of a publication.
+      description: |-
+        Get all comments of a given publication, indentified by the publication id.
+        ---
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Comment'
+      tags:
+        - api
+    post:
+      operationId: api_items_comments_create
+      summary: Post a comment in a publication.
+      description: |-
+        Create a new comment for a publication identified by the publication id.
+        ---
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Comment'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Comment'
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+  /api/items/{id}/votes/:
+    get:
+      operationId: api_items_votes_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - api
+    post:
+      operationId: api_items_votes_create
+      summary: Vote/Unvote a publication by id.
+      description: |-
+        Vote and unvote a publication identified by an id.
+        ---
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+  /api/users/{id}/:
+    get:
+      operationId: api_users_read
+      summary: Get an user by id.
+      description: |-
+        Return a user identified by the user id.
+        ---
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Hacker'
+      tags:
+        - api
+    patch:
+      operationId: api_users_partial_update
+      summary: Change user description.
+      description: |-
+        Return the user information with the changed description.
+        ---
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Hacker'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Hacker'
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+  /api/users/{id}/comments/:
+    get:
+      operationId: api_users_comments_list
+      summary: Get user comments.
+      description: |-
+        Return the user comments list.
+        ---
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Comment'
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+  /api/users/{id}/items/:
+    get:
+      operationId: api_users_items_list
+      summary: Get user publication.
+      description: |-
+        Return the user publications list.
+        ---
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Publication'
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+  /api/users/{id}/votedComments/:
+    get:
+      operationId: api_users_votedComments_list
+      summary: Get user voted comments.
+      description: |-
+        Return the user voted comments list.
+        ---
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Comment'
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+  /api/users/{id}/votedItems/:
+    get:
+      operationId: api_users_votedItems_list
+      summary: Get user voted publications.
+      description: |-
+        Return the user voted publications list.
+        ---
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Publication'
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+  /auth/convert-token/:
+    post:
+      operationId: auth_convert-token_create
+      summary: Implements an endpoint to convert a provider token to an access token
+      description: |-
+        The endpoint is used in the following flows:
+
+        * Authorization code
+        * Client credentials
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - auth
+    parameters: []
+  /auth/invalidate-sessions/:
+    post:
+      operationId: auth_invalidate-sessions_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - auth
+    parameters: []
+  /auth/revoke-token/:
+    post:
+      operationId: auth_revoke-token_create
+      description: Implements an endpoint to revoke access or refresh tokens
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - auth
+    parameters: []
+  /auth/token/:
+    post:
+      operationId: auth_token_create
+      summary: Implements an endpoint to provide access tokens
+      description: |-
+        The endpoint is used in the following flows:
+
+        * Authorization code
+        * Password
+        * Client credentials
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - auth
+    parameters: []
+definitions:
+  Publication:
+    required:
+      - author
+      - title
+      - kind
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      author:
+        title: Author
+        type: integer
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+      number_votes:
+        title: Number votes
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      title:
+        title: Title
+        type: string
+        maxLength: 80
+        minLength: 1
+      question:
+        title: Question
+        type: string
+        maxLength: 1000
+      url:
+        title: Url
+        type: string
+        format: uri
+        maxLength: 200
+      kind:
+        title: Kind
+        type: integer
+        enum:
+          - 0
+          - 1
+  Comment:
+    required:
+      - author
+      - comment
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      author:
+        title: Author
+        type: integer
+      comment:
+        title: Comment
+        type: string
+        minLength: 1
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+      referenced_publication:
+        title: Referenced publication
+        type: integer
+        x-nullable: true
+      parent:
+        title: Parent
+        type: integer
+        x-nullable: true
+  Hacker:
+    required:
+      - username
+    type: object
+    properties:
+      username:
+        title: Username
+        type: string
+        maxLength: 80
+        minLength: 1
+      karma:
+        title: Karma
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      upvotes:
+        title: Upvotes
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      downvotes:
+        title: Downvotes
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+      description:
+        title: Description
+        type: string
+        maxLength: 500
+        minLength: 1

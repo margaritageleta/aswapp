@@ -31,7 +31,7 @@ schema_view = get_schema_view(
    openapi.Info(
       title="Hackernews API",
       default_version='v1',
-      description="At this page you can try out our API requests",
+      description="This is the Open API documentation for the REST API of our beloved application **HackerNews API** deployed at <https://hackernews-project.herokuapp.com/api>. <br>All operations are executable. The operations that requires authentication: `deletePost`, `updateUser` and `deleteComment`. In this case, you must **Authorize** your request by providing the api_key vaule you got when you created the tweet.",
       terms_of_service="https://www.google.com/policies/terms/",
       #contact=openapi.Contact(email="contact@snippets.local"),
       #license=openapi.License(name="BSD License"),

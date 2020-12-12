@@ -37,9 +37,6 @@ SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 
 
-
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -55,12 +52,13 @@ if os.path.isfile(dotenv_file):
 SECRET_KEY = 'y=p&6$u0le5s-b0%#gm@77&w_0xb+zid2om+u%)o7(9e!066pp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
 
 # Application definition
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -72,13 +70,14 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'social_django',
     # third party
+    'corsheaders',
     'oauth2_provider',
     'rest_framework',
     'rest_framework_api_key',
     'rest_framework_social_oauth2',
+    'corsheaders',
     'rest_framework_swagger',
     'drf_yasg',
-    'corsheaders',
     # own
     'contributions',
     'users',
@@ -94,18 +93,38 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
     
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'Authorization',
+    'api_key',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'access-control-allow-origin',
+    'access-control-allow-headers',
+]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'aswapp.urls'
 
@@ -211,6 +230,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
 
 
 # Internationalization
