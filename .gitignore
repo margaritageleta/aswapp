@@ -11,7 +11,26 @@ aswapp/register/*
 aswapp/db.sqlite3
 aswapp/static/admin/*
 .env
+
 tutorial/tutorial/*
 aswapp/contributions/api/*
 aswapp/users/api/__pycache__/*
+<<<<<<< HEAD
 react-application/*
+=======
+
+tutorial/tutorial/manage.py
+tutorial/tutorial/quickstart/__init__.py
+tutorial/tutorial/quickstart/admin.py
+tutorial/tutorial/quickstart/apps.py
+tutorial/tutorial/quickstart/models.py
+tutorial/tutorial/quickstart/tests.py
+tutorial/tutorial/quickstart/views.py
+tutorial/tutorial/quickstart/migrations/__init__.py
+tutorial/tutorial/tutorial/__init__.py
+tutorial/tutorial/tutorial/asgi.py
+tutorial/tutorial/tutorial/settings.py
+tutorial/tutorial/tutorial/urls.py
+tutorial/tutorial/tutorial/wsgi.py
+
+>>>>>>> 57beba9a43d4a26d76498d1bb9f6183b94ee67ab
