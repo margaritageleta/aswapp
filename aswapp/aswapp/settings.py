@@ -75,7 +75,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_api_key',
     'rest_framework_social_oauth2',
-    'corsheaders',
     'rest_framework_swagger',
     'drf_yasg',
     # own
@@ -98,7 +97,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
