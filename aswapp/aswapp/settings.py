@@ -15,6 +15,7 @@ import os
 import dj_database_url
 import dotenv
 import django_heroku
+from corsheaders.defaults import default_headers
 
 
 # social auth configuration
@@ -118,7 +119,9 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
-    'access-control-allow-origin',
+    'Access-Control-Allow-Origin',
+    'access-control-allow-Origin',
+    'Access-Control-Allow-Headers',
     'access-control-allow-headers',
 ]
 
