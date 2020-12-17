@@ -8,7 +8,6 @@ class PublicationSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'author',
-            'created_at',
             'number_votes',
             'title',
             'question',
@@ -23,7 +22,6 @@ class CommentSerializer(serializers.ModelSerializer):
             'id',
             'author',
             'comment',
-            'created_at',
             'referenced_publication',
             'parent',         
         ]
