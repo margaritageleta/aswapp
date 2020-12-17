@@ -183,9 +183,13 @@ class ItemVotesAPIView(ListAPIView):
                     h = Hacker.objects.get(api_key=key)
                     if VotePublication.objects.filter(voter=h, contribution=c).exists():
                         VotePublication.objects.get(voter=h, contribution=c).delete()
+                        c.number_votes -= 1
+                        c.save()
                         return Response({'status': '202, publication unvoted'}, status=status.HTTP_202_ACCEPTED)
                     else: 
                         VotePublication(voter=h, contribution=c).save()
+                        c.number_votes += 1
+                        c.save()
                         return Response({'status': '202, publication voted'}, status=status.HTTP_202_ACCEPTED)
                 else: 
                     return Response({'status': 'Error 401, unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
